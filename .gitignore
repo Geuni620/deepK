@@ -1,0 +1,36 @@
+# Xcode
+DerivedData/
+build/
+*.xcuserstate
+xcuserdata/
+*.xccheckout
+*.moved-aside
+*.hmap
+
+# Swift Package Manager
+.build/
+
+# Local Python test fixture caches
+__pycache__/
+*.pyc
+
+# macOS
+.DS_Store
+
+# Local signing and environment files
+*.p12
+*.mobileprovision
+.env
+.env.*
+
+# Local release packages and notarization output
+dist/
+
+# Landing dependencies, build caches, and local environment
+/landing/node_modules/
+/landing/.astro/
+/landing/.wrangler/
+/landing/.dev.vars
+/landing/.dev.vars.*
+!/landing/.env.example
+!/landing/.dev.vars.example

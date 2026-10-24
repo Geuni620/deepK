@@ -1,0 +1,5 @@
+{
+  "schemaVersion": 1,
+  "policy": "Only the exact expected check failure is XFAIL. Other failures and unexpected passes fail the run. --strict also fails on all XFAIL entries.",
+  "failures": []
+}

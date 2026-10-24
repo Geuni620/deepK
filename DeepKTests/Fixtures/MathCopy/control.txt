@@ -1,0 +1,28 @@
+Release checklist
+Before tagging, run the suite twice and read every warning.
+Then update the notes:
+x
+I
+I wrote them last week.
+
+n
+x
++
+2
+Apples
+Pears
+k	v
+1	2
+a	b
+let x = 1
+x
++
+2
+}
+Click the
+X
+button to close, then read the guide.
+
+HTML sup/sub: E = mc2, H2O, and typed math T ∝ √(L/g), n × n.
+
+Inline-block chips: n × n done.

@@ -1,0 +1,246 @@
+{
+  "schemaVersion": 1,
+  "provenance": "Synthetic inputs and independently specified literal / structure expectations from the 2026-10-17 audit.",
+  "cases": [
+    {
+      "id": "short-english",
+      "label": "짧은 영어",
+      "source": "en",
+      "target": "ko",
+      "text": "I smell fear",
+      "literals": [],
+      "codeLines": [],
+      "minLinks": 0,
+      "minChips": 0,
+      "minBlocks": 0,
+      "expectedURLs": []
+    },
+    {
+      "id": "plain-numbers",
+      "label": "일반 문장·숫자·부정",
+      "source": "en",
+      "target": "ko",
+      "text": "Do not close the original window. Retry after 1.5 seconds, at most 2 times. Keep invoice INV-2048 and version v2.4.1 unchanged.",
+      "literals": [
+        "1.5",
+        "2",
+        "INV-2048",
+        "v2.4.1"
+      ],
+      "numericTokens": ["1.5", "2", "2048", "2.4.1"],
+      "codeLines": [],
+      "minLinks": 0,
+      "minChips": 0,
+      "minBlocks": 0,
+      "expectedURLs": []
+    },
+    {
+      "id": "korean-english",
+      "label": "한국어→영어",
+      "source": "ko",
+      "target": "en",
+      "text": "원래 창을 닫지 마세요. 보고서 12부를 가져오세요. 파일 이름 report-2048.pdf는 바꾸지 마세요.",
+      "literals": [
+        "12",
+        "report-2048.pdf"
+      ],
+      "numericTokens": ["12", "2048"],
+      "codeLines": [],
+      "minLinks": 0,
+      "minChips": 0,
+      "minBlocks": 0,
+      "expectedURLs": []
+    },
+    {
+      "id": "markdown-list",
+      "label": "Markdown 제목·목록·인용",
+      "source": "en",
+      "target": "ko",
+      "text": "# Release checklist\n\n- Keep **10** original files.\n- Do not delete the backup.\n- Retry only after confirmation.\n\n> This operation cannot be undone.\n\n1. Open Settings.\n2. Select the original window.",
+      "literals": [
+        "10"
+      ],
+      "codeLines": [],
+      "minLinks": 0,
+      "minChips": 0,
+      "minBlocks": 0,
+      "expectedURLs": []
+    },
+    {
+      "id": "inline-code",
+      "label": "인라인 코드·경로",
+      "source": "en",
+      "target": "ko",
+      "text": "Call `cancel()` before the next request.\nKeep `requestID` unchanged until completion.\nUse `/api/v1/jobs` and never send `API_KEY` in a URL.",
+      "literals": [
+        "cancel()",
+        "requestID",
+        "/api/v1/jobs",
+        "API_KEY"
+      ],
+      "codeLines": [],
+      "minLinks": 0,
+      "minChips": 4,
+      "minBlocks": 0,
+      "expectedURLs": []
+    },
+    {
+      "id": "html-links-code",
+      "label": "HTML 링크·인라인 코드",
+      "source": "en",
+      "target": "ko",
+      "text": "Read the docs before calling cancel().",
+      "html": "<p>Read <a href=\"https://example.com/docs\">the docs</a> before calling <code>cancel()</code>.</p>",
+      "literals": [
+        "cancel()"
+      ],
+      "codeLines": [],
+      "minLinks": 1,
+      "minChips": 1,
+      "minBlocks": 0,
+      "expectedURLs": [
+        "https://example.com/docs"
+      ]
+    },
+    {
+      "id": "fenced-code",
+      "label": "펜스 코드 블록",
+      "source": "en",
+      "target": "ko",
+      "text": "Keep the request identifier stable:\n\n```typescript\nconst requestID = \"job-2048\";\nconst delayMs = 1500;\nawait apiClient.get(\"/jobs\", { requestID });\n```\n\nDo not change the endpoint.",
+      "literals": [
+        "job-2048",
+        "1500",
+        "/jobs"
+      ],
+      "codeLines": [
+        "const requestID = \"job-2048\";",
+        "const delayMs = 1500;",
+        "await apiClient.get(\"/jobs\", { requestID });"
+      ],
+      "minLinks": 0,
+      "minChips": 0,
+      "minBlocks": 1,
+      "expectedURLs": []
+    },
+    {
+      "id": "shell-command",
+      "label": "펜스 없는 셸 명령",
+      "source": "en",
+      "target": "ko",
+      "text": "Install the package first.\n\nnpm install express --save\n\nThen restart the server. Do not remove package-lock.json.",
+      "literals": [
+        "npm install express --save",
+        "package-lock.json"
+      ],
+      "codeLines": [
+        "npm install express --save"
+      ],
+      "minLinks": 0,
+      "minChips": 0,
+      "minBlocks": 1,
+      "expectedURLs": []
+    },
+    {
+      "id": "error-log",
+      "label": "오류 로그",
+      "source": "en",
+      "target": "ko",
+      "text": "Error: Cannot find module 'express'\nRequire stack:\n- /app/index.js\n\nCheck node_modules before restarting. Do not delete the source file.",
+      "literals": [
+        "express",
+        "/app/index.js",
+        "node_modules"
+      ],
+      "codeLines": [],
+      "minLinks": 0,
+      "minChips": 0,
+      "minBlocks": 0,
+      "expectedURLs": []
+    },
+    {
+      "id": "markdown-table",
+      "label": "Markdown 표",
+      "source": "en",
+      "target": "ko",
+      "text": "Keep both rows and their values.\n\n| Item | Count | Status |\n| --- | ---: | --- |\n| Report INV-2048 | 120 | Pending |\n| Backup BK-0045 | 45 | Complete |\n\nDo not swap the counts.",
+      "literals": [
+        "INV-2048",
+        "120",
+        "BK-0045",
+        "45",
+        "|"
+      ],
+      "numericTokens": ["2048", "120", "0045", "45"],
+      "tableValues": [
+        { "identifier": "INV-2048", "column": 1, "value": "120" },
+        { "identifier": "BK-0045", "column": 1, "value": "45" }
+      ],
+      "codeLines": [],
+      "minLinks": 0,
+      "minChips": 0,
+      "minBlocks": 0,
+      "expectedURLs": []
+    },
+    {
+      "id": "math",
+      "label": "수식·유니코드",
+      "source": "en",
+      "target": "ko",
+      "text": "The energy is E = mc², and the triangle satisfies x² + y² = z².\nKeep Δt = 0.5 s and the unit μm unchanged.\nDo not treat the equation as executable code.",
+      "literals": [
+        "E = mc²",
+        "x² + y² = z²",
+        "Δt",
+        "0.5",
+        "μm"
+      ],
+      "codeLines": [],
+      "minLinks": 0,
+      "minChips": 0,
+      "minBlocks": 0,
+      "expectedURLs": []
+    },
+    {
+      "id": "mixed-html",
+      "label": "HTML 링크·코드 블록 혼합",
+      "source": "en",
+      "target": "ko",
+      "text": "Connection\nRead the guide and keep requestID stable.\nconst timeoutMs = 1500;\nawait apiClient.get(\"/jobs\");\nDo not close the original window.",
+      "html": "<h2>Connection</h2><p>Read <a href=\"https://example.com/guide\">the guide</a> and keep <code>requestID</code> stable.</p><pre><code class=\"language-typescript\">const timeoutMs = 1500;\nawait apiClient.get(\"/jobs\");</code></pre><p>Do not close the original window.</p>",
+      "literals": [
+        "requestID",
+        "1500",
+        "/jobs"
+      ],
+      "codeLines": [
+        "const timeoutMs = 1500;",
+        "await apiClient.get(\"/jobs\");"
+      ],
+      "minLinks": 1,
+      "minChips": 1,
+      "minBlocks": 1,
+      "expectedURLs": [
+        "https://example.com/guide"
+      ]
+    },
+    {
+      "id": "partial-fence",
+      "label": "선택 중간에서 잘린 코드",
+      "source": "en",
+      "target": "ko",
+      "text": "The selected part starts here:\n\n```javascript\nconst fileName = \"report-2048.pdf\";\nawait loadFile(fileName);",
+      "literals": [
+        "report-2048.pdf"
+      ],
+      "codeLines": [
+        "const fileName = \"report-2048.pdf\";",
+        "await loadFile(fileName);"
+      ],
+      "minLinks": 0,
+      "minChips": 0,
+      "minBlocks": 1,
+      "expectedURLs": []
+    }
+  ]
+}

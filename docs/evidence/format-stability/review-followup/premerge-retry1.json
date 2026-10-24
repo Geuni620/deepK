@@ -1,0 +1,21 @@
+{
+  "base": "f1203d4996f9af427ad693453c152709e9c47c7c",
+  "head": "deaab3f5201b499e41cabd8692482be010a58b27",
+  "mergedTree": "cd3df77a9d96bc42b7a069492928feb98013dac9",
+  "mergeAndStagedDiffCheckExitCode": 0,
+  "fullSuite": {
+    "command": "./scripts/test.sh",
+    "exitCode": 133,
+    "elapsedSecondsIncludingCompilation": 438.09,
+    "configuredPrograms": 25,
+    "testSourceFiles": 29,
+    "completedProgramsBeforeFailure": 4,
+    "failedProgram": "CodexTransport",
+    "assertion": "the client did not send cancellation interrupt",
+    "remainingProgramsNotExecuted": 20,
+    "format": { "pass": 36, "xfail": 0, "fail": 0, "xpass": 0 }
+  },
+  "build": { "executed": false, "reason": "Sequential build gate was not reached because the test script failed." },
+  "conditions": { "concurrentAppBuild": false, "liveProviderCalls": 0 },
+  "interpretation": "This is a second integration failure, not a full pass. The cancellation contract, fake-server turn-start response ordering, and product cleanup must be checked before classifying it as a test-wait problem. Original local logs are retained without overwriting."
+}

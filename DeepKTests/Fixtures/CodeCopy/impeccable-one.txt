@@ -1,0 +1,5 @@
+Most Agents
+Codex
+Copy
+/impeccable document
+It scans the code and writes the colors, type scale, spacing rules and components it finds to DESIGN.md, and keeps extra generated details in .impeccable/design.json. Read the record and fix anything that captures an accident instead of a decision.

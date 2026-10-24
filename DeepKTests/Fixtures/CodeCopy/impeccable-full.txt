@@ -1,0 +1,12 @@
+Before you ask for new screens, tell Impeccable about the design you already ship. The running app, its components and its stylesheets all count as evidence of the current system.
+
+Start from what exists
+Ask Impeccable to write down the design you have:
+
+Most Agents
+Codex
+Copy
+/impeccable document
+It scans the code and writes the colors, type scale, spacing rules and components it finds to DESIGN.md, and keeps extra generated details in .impeccable/design.json. Read the record and fix anything that captures an accident instead of a decision.
+
+When DESIGN.md is already there, ask for a refresh after the code changes. Product goals, audience and constraints live in PRODUCT.md, which init creates. Context files describes what each record holds.

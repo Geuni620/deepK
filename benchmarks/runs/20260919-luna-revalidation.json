@@ -1,0 +1,156 @@
+{
+  "accountPlanType" : "prolite",
+  "accountTypeGuard" : "chatgpt",
+  "attemptedRequests" : 3,
+  "executableVersion" : "codex-cli 0.154.0",
+  "finishedAt" : "2026-09-19T13:10:33Z",
+  "lunaCatalogMatches" : [
+    {
+      "defaultReasoningEffort" : "medium",
+      "displayName" : "GPT-5.6-Luna",
+      "hidden" : false,
+      "id" : "gpt-5.6-luna",
+      "isDefault" : false,
+      "model" : "gpt-5.6-luna",
+      "supportedReasoningEfforts" : [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ]
+    }
+  ],
+  "maxRequests" : 3,
+  "minimumSupportedReasoningEffort" : "low",
+  "modelCatalog" : [
+    {
+      "defaultReasoningEffort" : "low",
+      "displayName" : "GPT-5.6-Sol",
+      "hidden" : false,
+      "id" : "gpt-5.6-sol",
+      "isDefault" : true,
+      "model" : "gpt-5.6-sol",
+      "supportedReasoningEfforts" : [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max",
+        "ultra"
+      ]
+    },
+    {
+      "defaultReasoningEffort" : "medium",
+      "displayName" : "GPT-6-Astra",
+      "hidden" : false,
+      "id" : "gpt-6-astra",
+      "isDefault" : false,
+      "model" : "gpt-6-astra",
+      "supportedReasoningEfforts" : [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max",
+        "ultra"
+      ]
+    },
+    {
+      "defaultReasoningEffort" : "medium",
+      "displayName" : "GPT-5.6-Terra",
+      "hidden" : false,
+      "id" : "gpt-5.6-terra",
+      "isDefault" : false,
+      "model" : "gpt-5.6-terra",
+      "supportedReasoningEfforts" : [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max",
+        "ultra"
+      ]
+    },
+    {
+      "defaultReasoningEffort" : "medium",
+      "displayName" : "GPT-5.6-Luna",
+      "hidden" : false,
+      "id" : "gpt-5.6-luna",
+      "isDefault" : false,
+      "model" : "gpt-5.6-luna",
+      "supportedReasoningEfforts" : [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ]
+    },
+    {
+      "defaultReasoningEffort" : "medium",
+      "displayName" : "GPT-5.5",
+      "hidden" : false,
+      "id" : "gpt-5.5",
+      "isDefault" : false,
+      "model" : "gpt-5.5",
+      "supportedReasoningEfforts" : [
+        "low",
+        "medium",
+        "high",
+        "xhigh"
+      ]
+    }
+  ],
+  "reasoningPolicy" : "CodexTranslationClient selects the lowest model/list supported effort; service tier is default (no Fast/priority).",
+  "requestedModel" : "gpt-5.6-luna",
+  "qualityAssessment" : {
+    "overall" : "usable",
+    "notes" : [
+      "All three outputs are in the requested target language and contain translation text only.",
+      "The first output preserves the instruction to keep the original window open.",
+      "The second output preserves the save-then-retry instruction.",
+      "The third output preserves the maximum retry count and request ID placeholder semantics; no number or identifier was changed.",
+      "No obvious meaning reversal, omission, added explanation, or numeric change was found in this three-sample spot check."
+    ],
+    "reviewedSamples" : 3
+  },
+  "results" : [
+    {
+      "input" : "Keep the original window open.",
+      "output" : "원래 창을 열어 둔 상태로 유지하세요.",
+      "preparationMs" : 151.109584,
+      "sequence" : 1,
+      "source" : "en",
+      "status" : "success",
+      "target" : "ko",
+      "totalMs" : 4847.740584,
+      "turnMs" : 4696.631
+    },
+    {
+      "input" : "변경 사항을 저장한 뒤 다시 시도하세요.",
+      "output" : "Save your changes and try again.",
+      "preparationMs" : 515.844958,
+      "sequence" : 2,
+      "source" : "ko",
+      "status" : "success",
+      "target" : "en",
+      "totalMs" : 4013.178083,
+      "turnMs" : 3497.333125
+    },
+    {
+      "input" : "Retry at most 2 times and preserve the request ID.",
+      "output" : "최대 2회까지 재시도하고 요청 ID를 유지합니다.",
+      "preparationMs" : 121.230542,
+      "sequence" : 3,
+      "source" : "en",
+      "status" : "success",
+      "target" : "ko",
+      "totalMs" : 3618.346417,
+      "turnMs" : 3497.115875
+    }
+  ],
+  "serviceTier" : "default",
+  "startedAt" : "2026-09-19T13:10:20Z",
+  "status" : "completed"
+}

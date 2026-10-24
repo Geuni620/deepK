@@ -1,0 +1,156 @@
+{
+  "scope": "Three independent product-path disabling mutations; no live model or general clipboard access.",
+  "matchingSourceCommit": "492a9b1542a578010f0ec519d3aa1749cc6f8a2c",
+  "sourceSHA256": {
+    "DeepK/Translation/TranslationStore.swift": "7705e904cadff3cfd0f79fef966ab017c61552c7c647691557706536b75977ab",
+    "DeepK/Translation/TranslationDocument.swift": "126b8b28f813e62b0bd8e05f726b2a9a51ecda1f02e42ed94573355f65d177e3",
+    "DeepK/Translation/IncrementalTranslationPlanner.swift": "fc44bd3ea95124d933258df7d87c7bf1216626ce02d81bdfae3a67fd08054bdf",
+    "DeepK/Translation/TranslationMarkup.swift": "9c9d5ee50e7a1c59e82a1ea6adad9d3ef64cab770cb4322247df11dbb5ae2a7d",
+    "DeepK/Translation/TranslationLists.swift": "2c7e6157610a5d1641657d36c31da6b5e7547664c1a1e33e270bdf72c4df35c5",
+    "DeepK/Translation/TranslationOutputLint.swift": "c823c033fecc5a1f9fc8aa2fd0a0a09ec7098a0a5b4078c7afdb4c04c2ed9b99",
+    "DeepK/Translation/TranslationOutputCheck.swift": "fa0ba3c696a930340af085a710b3838366c893adea0f1dcfcca25b305412061e",
+    "DeepK/Translation/HanjaRepair.swift": "72e3339c241ed3a32dd421fb0b7b79e6feb122ac57cacc53dfbeaeb1d6878462",
+    "DeepK/Translation/HanjaReading.swift": "7b7cf7fc49a65a71684743e768451afd0ca5600634a104cc6c7574aa523ce828",
+    "DeepK/Translation/HanjaReadingData.swift": "83e9e9999afc21d908e604f71905f4ff1cd3f3bd81700cf08086f2df84b83378",
+    "DeepK/Translation/CodeBlockGuard.swift": "44071ef458aed04c4de66d0134ab7dac1391fd2436568fbd46404e864eb961f5",
+    "DeepK/Translation/CopiedMathNormalizer.swift": "eba5ac6de330ec2c013971add8fc7669619404ec98182d0fe25f8f0ae281dc0f",
+    "DeepK/Translation/RichSourceImporter.swift": "052f68548f6ef9a428e0c50df2bcd9c6055ad8f49fd069e6700019c9acb5f8aa",
+    "DeepKTests/FormatRegressionTests.swift": "1275b762ccd45ee0da89ae710a1cb9b8fef745e1ce1e9825152878f1e57b43df",
+    "DeepKTests/Fixtures/Formatting/desired-list-responses.json": "02629ef4ca51f58222e7397561eaf454414369dc3ca802ee57bddd9e6df7b79b",
+    "DeepKTests/Fixtures/Formatting/inputs.json": "4987e5054dbb654bf0e55866e4744b598003a9f42a6bfa72bef2bfb389b37786",
+    "DeepKTests/Fixtures/Formatting/known-failures.json": "f2a5735efc9109dc62dffc6053bad187072835cf172053c0f046afa20bc5d97b",
+    "DeepKTests/Fixtures/Formatting/list-inputs.json": "4898be938dc71ff75e7dac0d0a0c8f78e53f9a2b359c8323764f754f2fc7e4f7",
+    "DeepKTests/Fixtures/Formatting/recorded-responses.json": "0335b022ad6964e0c9285e84d8a1a2ab1ac20769347fb4112c1257a13253464a"
+  },
+  "liveProviderRequests": 0,
+  "variants": [
+    {
+      "name": "baseline",
+      "strictExitCode": 0,
+      "scenarioCount": 36,
+      "outcomes": {
+        "pass": 36
+      },
+      "expectedOriginalFailures": [],
+      "actualOriginalFailures": []
+    },
+    {
+      "name": "language-fallback-disabled",
+      "strictExitCode": 1,
+      "scenarioCount": 36,
+      "outcomes": {
+        "pass": 34,
+        "failure": 2
+      },
+      "expectedOriginalFailures": [
+        "language/short-english",
+        "language/markdown-table"
+      ],
+      "actualOriginalFailures": [
+        "language/short-english",
+        "language/markdown-table"
+      ]
+    },
+    {
+      "name": "copied-prefix-preservation-disabled",
+      "strictExitCode": 1,
+      "scenarioCount": 36,
+      "outcomes": {
+        "pass": 34,
+        "failure": 2
+      },
+      "expectedOriginalFailures": [
+        "document/plain-append",
+        "document/plain-whole-retranslation"
+      ],
+      "actualOriginalFailures": [
+        "document/plain-append",
+        "document/plain-whole-retranslation"
+      ]
+    },
+    {
+      "name": "html-list-prefixes-disabled",
+      "strictExitCode": 1,
+      "scenarioCount": 36,
+      "outcomes": {
+        "pass": 30,
+        "failure": 6
+      },
+      "expectedOriginalFailures": [
+        "list/bullets-without-plain-markers",
+        "list/ordered-start-and-value",
+        "list/nested-bullets"
+      ],
+      "actualOriginalFailures": [
+        "list/bullets-without-plain-markers",
+        "list/ordered-start-and-value",
+        "list/nested-bullets"
+      ]
+    }
+  ],
+  "originalSeven": [
+    {
+      "id": "language/short-english",
+      "fixedOutcome": "pass",
+      "disabledProductPath": "language-fallback-disabled",
+      "mutationOutcome": "failure",
+      "failureEvidence": "language.direction: expected English -> Korean reaches the translator; actual requests=0, status=error(FormatRegressions.TranslationStoreError.unsupportedLanguage), detected=nb",
+      "report": "language-fallback-disabled/strict-report.json",
+      "mutationDiff": "language-fallback-disabled/product-mutation.diff"
+    },
+    {
+      "id": "language/markdown-table",
+      "fixedOutcome": "pass",
+      "disabledProductPath": "language-fallback-disabled",
+      "mutationOutcome": "failure",
+      "failureEvidence": "language.direction: expected English -> Korean reaches the translator; actual requests=0, status=error(FormatRegressions.TranslationStoreError.unsupportedLanguage), detected=id",
+      "report": "language-fallback-disabled/strict-report.json",
+      "mutationDiff": "language-fallback-disabled/product-mutation.diff"
+    },
+    {
+      "id": "document/plain-append",
+      "fixedOutcome": "pass",
+      "disabledProductPath": "copied-prefix-preservation-disabled",
+      "mutationOutcome": "failure",
+      "failureEvidence": "structure.forwarding: expected preserved link URL and cancel() code metadata; actual links=0, chips=0 | result.links: expected at least 1; actual 0 | result.chips: expected at least 1; actual 0",
+      "report": "copied-prefix-preservation-disabled/strict-report.json",
+      "mutationDiff": "copied-prefix-preservation-disabled/product-mutation.diff"
+    },
+    {
+      "id": "document/plain-whole-retranslation",
+      "fixedOutcome": "pass",
+      "disabledProductPath": "copied-prefix-preservation-disabled",
+      "mutationOutcome": "failure",
+      "failureEvidence": "structure.forwarding: expected preserved link URL and cancel() code metadata; actual links=0, chips=0 | result.links: expected at least 1; actual 0 | result.chips: expected at least 1; actual 0",
+      "report": "copied-prefix-preservation-disabled/strict-report.json",
+      "mutationDiff": "copied-prefix-preservation-disabled/product-mutation.diff"
+    },
+    {
+      "id": "list/bullets-without-plain-markers",
+      "fixedOutcome": "pass",
+      "disabledProductPath": "html-list-prefixes-disabled",
+      "mutationOutcome": "failure",
+      "failureEvidence": "list.markers: expected source pane: 4 bullet items; actual 0; source=Describe the outcome: ordinary language is enough.\nAsk for a review: critique recommends where to start.\nCompare alternatives: choose the version to keep.\nPoint at the page: select the elements yourself. | list.itemOrder: expected source pane: [\"Describe the outcome: ordinary language is enough.\", \"Ask for a review: critique recommends where to start.\", \"Compare alternatives: choose the version to keep.\", \"Point at the page: select the elements yourself.\"]; actual [] | list.markers: expected model source: 4 bullet items; actual 0; source=Describe the outcome: ordinary language is enough.\nAsk for a review: critique recommends where to start.\nCompare alternatives: choose the version to keep.\nPoint at the page: select the elements yourself. | list.itemOrder: expected model source: [\"Describe the outcome: ordinary language is enough.\", \"Ask for a review: critique recommends where to start.\", \"Compare alternatives: choose the version to keep.\", \"Point at the page: select the elements yourself.\"]; actual []",
+      "report": "html-list-prefixes-disabled/strict-report.json",
+      "mutationDiff": "html-list-prefixes-disabled/product-mutation.diff"
+    },
+    {
+      "id": "list/ordered-start-and-value",
+      "fixedOutcome": "pass",
+      "disabledProductPath": "html-list-prefixes-disabled",
+      "mutationOutcome": "failure",
+      "failureEvidence": "list.numbering: expected source pane: [3, 7]; actual []; source=Keep the original window.\nRetry the request. | list.itemOrder: expected source pane: [\"Keep the original window.\", \"Retry the request.\"]; actual [] | list.numbering: expected model source: [3, 7]; actual []; source=Keep the original window.\nRetry the request. | list.itemOrder: expected model source: [\"Keep the original window.\", \"Retry the request.\"]; actual []",
+      "report": "html-list-prefixes-disabled/strict-report.json",
+      "mutationDiff": "html-list-prefixes-disabled/product-mutation.diff"
+    },
+    {
+      "id": "list/nested-bullets",
+      "fixedOutcome": "pass",
+      "disabledProductPath": "html-list-prefixes-disabled",
+      "mutationOutcome": "failure",
+      "failureEvidence": "list.depth: expected source pane: two spaces for each depth [0, 1, 1, 0]; actual []; source=Keep the source.\nPreserve the links.\nPreserve the code.\nCopy the result. | list.itemOrder: expected source pane: [\"Keep the source.\", \"Preserve the links.\", \"Preserve the code.\", \"Copy the result.\"]; actual [] | list.depth: expected model source: two spaces for each depth [0, 1, 1, 0]; actual []; source=Keep the source.\nPreserve the links.\nPreserve the code.\nCopy the result. | list.itemOrder: expected model source: [\"Keep the source.\", \"Preserve the links.\", \"Preserve the code.\", \"Copy the result.\"]; actual []",
+      "report": "html-list-prefixes-disabled/strict-report.json",
+      "mutationDiff": "html-list-prefixes-disabled/product-mutation.diff"
+    }
+  ]
+}

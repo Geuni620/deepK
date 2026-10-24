@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "status": "synthetic code block samples for the result-pane fences; run with BENCHMARK_SAMPLES_PATH",
+  "samples": [
+    {"id":"en-codeblock-1","source":"en","target":"ko","size":"paragraph","text":"Context handoff works across providers:\n\nimport { getModel, complete } from '@mariozechner/pi-ai';\n\n// Start with Claude\nconst claude = getModel('anthropic', 'claude-sonnet-4-5');\nconst reply = await complete(claude, context);\n\nThe reply keeps the previous messages.","checks":["Fence the code lines with a typescript or javascript tag.","Code lines byte-identical except the translated comment.","Do not fence the prose sentences.","Every fence is closed."]},
+    {"id":"ko-codeblock-1","source":"ko","target":"en","size":"paragraph","text":"다음 명령으로 설치하세요.\n\n```bash\nnpm install express --save\n```\n\n설치가 끝나면 서버를 다시 시작합니다.","checks":["Keep the existing bash fence and command verbatim.","Do not fence the prose sentences."]},
+    {"id":"en-codeblock-stray-1","source":"en","target":"ko","size":"paragraph","text":"Serialize the context before saving it:\n\nconst serialized = JSON.stringify(context);\nconst restored = JSON.parse(serialized);","checks":["The answer ends with a closing fence, not an extra opening fence.","Code lines byte-identical."]},
+    {"id":"en-command-plain-1","source":"en","target":"ko","size":"paragraph","text":"Install the package first.\n\nnpm install express\n\nThen restart the server.","checks":["The lone command may be fenced as bash; prose is never fenced.","Keep the command verbatim."]},
+    {"id":"en-log-1","source":"en","target":"ko","size":"paragraph","text":"Error: Cannot find module 'express'\nRequire stack:\n- /app/index.js","checks":["Translate the natural-language error text.","Keep the module name and path verbatim.","Do not return the log unchanged inside one fence."]},
+    {"id":"en-prose-tilde-1","source":"en","target":"ko","size":"paragraph","text":"Notice\n~~~~~~~~~~\nTomorrow's meeting starts at 3.","checks":["Prose with a tilde divider is not fenced."]}
+  ]
+}

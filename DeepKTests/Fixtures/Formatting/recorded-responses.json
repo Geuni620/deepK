@@ -1,0 +1,190 @@
+{
+  "schemaVersion": 1,
+  "capturedOn": "2026-10-17",
+  "sourceRevision": "f1203d4996f9af427ad693453c152709e9c47c7c",
+  "provider": "codex",
+  "model": "gpt-5.6-luna",
+  "provenance": "Actual responses from the synthetic 13-format / 20-request audit; replay is offline. Request UUIDs, timings and account information are omitted.",
+  "requests": [
+    {
+      "phase": "short-english.initial",
+      "input": "I smell fear",
+      "modelInput": "I smell fear",
+      "links": 0,
+      "chips": 0,
+      "attempt": 1,
+      "rawOutput": "공포의 냄새가 나"
+    },
+    {
+      "phase": "plain-numbers.initial",
+      "input": "Do not close the original window. Retry after 1.5 seconds, at most 2 times. Keep invoice INV-2048 and version v2.4.1 unchanged.",
+      "modelInput": "Do not close the original window. Retry after 1.5 seconds, at most 2 times. Keep invoice INV-2048 and version v2.4.1 unchanged.",
+      "links": 0,
+      "chips": 0,
+      "attempt": 1,
+      "rawOutput": "원본 창을 닫지 마세요. 1.5초 후 최대 2회까지 재시도하세요. 청구서 INV-2048과 버전 v2.4.1은 변경하지 마세요."
+    },
+    {
+      "phase": "korean-english.initial",
+      "input": "원래 창을 닫지 마세요. 보고서 12부를 가져오세요. 파일 이름 report-2048.pdf는 바꾸지 마세요.",
+      "modelInput": "원래 창을 닫지 마세요. 보고서 12부를 가져오세요. 파일 이름 report-2048.pdf는 바꾸지 마세요.",
+      "links": 0,
+      "chips": 0,
+      "attempt": 1,
+      "rawOutput": "Do not close the original window. Bring 12 copies of the report. Do not change the filename report-2048.pdf."
+    },
+    {
+      "phase": "markdown-list.initial",
+      "input": "# Release checklist\n\n- Keep **10** original files.\n- Do not delete the backup.\n- Retry only after confirmation.\n\n> This operation cannot be undone.\n\n1. Open Settings.\n2. Select the original window.",
+      "modelInput": "# Release checklist\n\n- Keep **10** original files.\n- Do not delete the backup.\n- Retry only after confirmation.\n\n> This operation cannot be undone.\n\n1. Open Settings.\n2. Select the original window.",
+      "links": 0,
+      "chips": 0,
+      "attempt": 1,
+      "rawOutput": "# 릴리스 체크리스트\n\n- 원본 파일 **10개**를 유지합니다.\n- 백업을 삭제하지 마세요.\n- 확인 후에만 다시 시도하세요.\n\n> 이 작업은 실행 취소할 수 없습니다.\n\n1. 설정을 엽니다.\n2. 원본 창을 선택합니다."
+    },
+    {
+      "phase": "inline-code.initial",
+      "input": "Call `cancel()` before the next request.\nKeep `requestID` unchanged until completion.\nUse `/api/v1/jobs` and never send `API_KEY` in a URL.",
+      "modelInput": "Call `cancel()` before the next request.\nKeep `requestID` unchanged until completion.\nUse `/api/v1/jobs` and never send `API_KEY` in a URL.",
+      "links": 0,
+      "chips": 0,
+      "attempt": 1,
+      "rawOutput": "다음 요청 전에 `cancel()`을 호출하세요.\n완료될 때까지 `requestID`를 변경하지 마세요.\n`/api/v1/jobs`를 사용하고 URL에 `API_KEY`를 절대 전송하지 마세요."
+    },
+    {
+      "phase": "html-links-code.initial",
+      "input": "Read the docs before calling cancel().",
+      "modelInput": "Read <a1>the docs</a1> before calling `cancel()`.",
+      "links": 1,
+      "chips": 1,
+      "attempt": 1,
+      "rawOutput": "`cancel()`을 호출하기 전에 <a1>문서</a1>를 읽으세요."
+    },
+    {
+      "phase": "fenced-code.initial",
+      "input": "Keep the request identifier stable:\n\n```typescript\nconst requestID = \"job-2048\";\nconst delayMs = 1500;\nawait apiClient.get(\"/jobs\", { requestID });\n```\n\nDo not change the endpoint.",
+      "modelInput": "Keep the request identifier stable:\n\n```typescript\nconst requestID = \"job-2048\";\nconst delayMs = 1500;\nawait apiClient.get(\"/jobs\", { requestID });\n```\n\nDo not change the endpoint.",
+      "links": 0,
+      "chips": 0,
+      "attempt": 1,
+      "rawOutput": "요청 식별자를 안정적으로 유지하세요.\n\n```typescript\nconst requestID = \"job-2048\";\nconst delayMs = 1500;\nawait apiClient.get(\"/jobs\", { requestID });\n```\n\n엔드포인트를 변경하지 마세요."
+    },
+    {
+      "phase": "shell-command.initial",
+      "input": "Install the package first.\n\nnpm install express --save\n\nThen restart the server. Do not remove package-lock.json.",
+      "modelInput": "Install the package first.\n\nnpm install express --save\n\nThen restart the server. Do not remove package-lock.json.",
+      "links": 0,
+      "chips": 0,
+      "attempt": 1,
+      "rawOutput": "먼저 패키지를 설치하세요.\n\n```shell\nnpm install express --save\n```\n\n그런 다음 서버를 다시 시작하세요. package-lock.json을 삭제하지 마세요."
+    },
+    {
+      "phase": "error-log.initial",
+      "input": "Error: Cannot find module 'express'\nRequire stack:\n- /app/index.js\n\nCheck node_modules before restarting. Do not delete the source file.",
+      "modelInput": "Error: Cannot find module 'express'\nRequire stack:\n- /app/index.js\n\nCheck node_modules before restarting. Do not delete the source file.",
+      "links": 0,
+      "chips": 0,
+      "attempt": 1,
+      "rawOutput": "오류: 'express' 모듈을 찾을 수 없습니다\n요구 스택:\n- /app/index.js\n\n다시 시작하기 전에 node_modules를 확인하세요. 소스 파일을 삭제하지 마세요."
+    },
+    {
+      "phase": "markdown-table.initial",
+      "input": "Keep both rows and their values.\n\n| Item | Count | Status |\n| --- | ---: | --- |\n| Report INV-2048 | 120 | Pending |\n| Backup BK-0045 | 45 | Complete |\n\nDo not swap the counts.",
+      "modelInput": "Keep both rows and their values.\n\n| Item | Count | Status |\n| --- | ---: | --- |\n| Report INV-2048 | 120 | Pending |\n| Backup BK-0045 | 45 | Complete |\n\nDo not swap the counts.",
+      "links": 0,
+      "chips": 0,
+      "attempt": 1,
+      "rawOutput": "두 행과 해당 값을 모두 유지하세요.\n\n| 항목 | 수량 | 상태 |\n| --- | ---: | --- |\n| 보고서 INV-2048 | 120 | 보류 중 |\n| 백업 BK-0045 | 45 | 완료 |\n\n수량을 서로 바꾸지 마세요."
+    },
+    {
+      "phase": "math.initial",
+      "input": "The energy is E = mc², and the triangle satisfies x² + y² = z².\nKeep Δt = 0.5 s and the unit μm unchanged.\nDo not treat the equation as executable code.",
+      "modelInput": "The energy is E = mc², and the triangle satisfies x² + y² = z².\nKeep Δt = 0.5 s and the unit μm unchanged.\nDo not treat the equation as executable code.",
+      "links": 0,
+      "chips": 0,
+      "attempt": 1,
+      "rawOutput": "에너지는 E = mc²이고, 삼각형은 x² + y² = z²를 만족합니다.\nΔt = 0.5 s를 유지하고 단위 μm도 변경하지 마세요.\n방정식을 실행 가능한 코드로 취급하지 마세요."
+    },
+    {
+      "phase": "mixed-html.initial",
+      "input": "Connection\nRead the guide and keep requestID stable.\nconst timeoutMs = 1500;\nawait apiClient.get(\"/jobs\");\nDo not close the original window.",
+      "modelInput": "Connection\nRead <a1>the guide</a1> and keep `requestID` stable.\n```typescript\nconst timeoutMs = 1500;\nawait apiClient.get(\"/jobs\");\n```\nDo not close the original window.",
+      "links": 1,
+      "chips": 1,
+      "attempt": 1,
+      "rawOutput": "연결  \n<a1>가이드</a1>를 읽고 `requestID`를 안정적으로 유지하세요.\n```typescript\nconst timeoutMs = 1500;\nawait apiClient.get(\"/jobs\");\n```\n원래 창을 닫지 마세요."
+    },
+    {
+      "phase": "partial-fence.initial",
+      "input": "The selected part starts here:\n\n```javascript\nconst fileName = \"report-2048.pdf\";\nawait loadFile(fileName);",
+      "modelInput": "The selected part starts here:\n\n```javascript\nconst fileName = \"report-2048.pdf\";\nawait loadFile(fileName);",
+      "links": 0,
+      "chips": 0,
+      "attempt": 1,
+      "rawOutput": "선택한 부분은 여기에서 시작됩니다:\n\n```javascript\nconst fileName = \"report-2048.pdf\";\nawait loadFile(fileName);\n```"
+    },
+    {
+      "phase": "plain-append.seed",
+      "input": "Read the docs before calling cancel().",
+      "modelInput": "Read <a1>the docs</a1> before calling `cancel()`.",
+      "links": 1,
+      "chips": 1,
+      "attempt": 1,
+      "rawOutput": "`cancel()` 호출 전에 <a1>문서</a1>를 읽으세요."
+    },
+    {
+      "phase": "plain-append.append",
+      "input": "Read the docs before calling cancel().\n\nPlease bring 12 printed copies.",
+      "modelInput": "Read the docs before calling cancel().\n\nPlease bring 12 printed copies.",
+      "links": 0,
+      "chips": 0,
+      "attempt": 1,
+      "rawOutput": "cancel()을 호출하기 전에 문서를 읽으세요.\n\n인쇄본 12부를 가져와 주세요."
+    },
+    {
+      "phase": "plain-append.whole-retranslation",
+      "input": "Read the docs before calling cancel().\n\nPlease bring 12 printed copies.",
+      "modelInput": "Read the docs before calling cancel().\n\nPlease bring 12 printed copies.",
+      "links": 0,
+      "chips": 0,
+      "attempt": 1,
+      "rawOutput": "cancel()을 호출하기 전에 문서를 읽으세요.\n\n인쇄본 12부를 가져와 주세요."
+    },
+    {
+      "phase": "explicit-boundary.seed",
+      "input": "Read the docs before calling cancel().",
+      "modelInput": "Read <a1>the docs</a1> before calling `cancel()`.",
+      "links": 1,
+      "chips": 1,
+      "attempt": 1,
+      "rawOutput": "`cancel()`을 호출하기 전에 <a1>문서</a1>를 읽으세요."
+    },
+    {
+      "phase": "explicit-boundary.append",
+      "input": "Please bring 12 printed copies.",
+      "modelInput": "Please bring 12 printed copies.",
+      "links": 0,
+      "chips": 0,
+      "attempt": 1,
+      "rawOutput": "인쇄본 12부를 가져와 주세요."
+    },
+    {
+      "phase": "explicit-boundary.whole-retranslation",
+      "input": "Read the docs before calling cancel().",
+      "modelInput": "Read <a1>the docs</a1> before calling `cancel()`.",
+      "links": 1,
+      "chips": 1,
+      "attempt": 1,
+      "rawOutput": "`cancel()`을 호출하기 전에 <a1>문서를</a1> 읽으세요."
+    },
+    {
+      "phase": "explicit-boundary.whole-retranslation",
+      "input": "Please bring 12 printed copies.",
+      "modelInput": "Please bring 12 printed copies.",
+      "links": 0,
+      "chips": 0,
+      "attempt": 1,
+      "rawOutput": "인쇄본 12부를 가져와 주세요."
+    }
+  ]
+}

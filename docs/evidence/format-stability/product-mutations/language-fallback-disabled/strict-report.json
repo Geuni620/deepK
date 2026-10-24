@@ -1,0 +1,229 @@
+{
+  "elapsedMilliseconds" : 209,
+  "liveProviderRequests" : 0,
+  "replayModel" : "gpt-5.6-luna",
+  "replayProvider" : "codex",
+  "replaySourceRevision" : "f1203d4996f9af427ad693453c152709e9c47c7c",
+  "results" : [
+    {
+      "id" : "replay/short-english",
+      "label" : "짧은 영어",
+      "outcome" : "pass",
+      "scope" : "recorded_response"
+    },
+    {
+      "id" : "replay/plain-numbers",
+      "label" : "일반 문장·숫자·부정",
+      "outcome" : "pass",
+      "scope" : "recorded_response"
+    },
+    {
+      "id" : "replay/korean-english",
+      "label" : "한국어→영어",
+      "outcome" : "pass",
+      "scope" : "recorded_response"
+    },
+    {
+      "id" : "replay/markdown-list",
+      "label" : "Markdown 제목·목록·인용",
+      "outcome" : "pass",
+      "scope" : "recorded_response"
+    },
+    {
+      "id" : "replay/inline-code",
+      "label" : "인라인 코드·경로",
+      "outcome" : "pass",
+      "scope" : "recorded_response"
+    },
+    {
+      "id" : "replay/html-links-code",
+      "label" : "HTML 링크·인라인 코드",
+      "outcome" : "pass",
+      "scope" : "recorded_response"
+    },
+    {
+      "id" : "replay/fenced-code",
+      "label" : "펜스 코드 블록",
+      "outcome" : "pass",
+      "scope" : "recorded_response"
+    },
+    {
+      "id" : "replay/shell-command",
+      "label" : "펜스 없는 셸 명령",
+      "outcome" : "pass",
+      "scope" : "recorded_response"
+    },
+    {
+      "id" : "replay/error-log",
+      "label" : "오류 로그",
+      "outcome" : "pass",
+      "scope" : "recorded_response"
+    },
+    {
+      "id" : "replay/markdown-table",
+      "label" : "Markdown 표",
+      "outcome" : "pass",
+      "scope" : "recorded_response"
+    },
+    {
+      "id" : "replay/math",
+      "label" : "수식·유니코드",
+      "outcome" : "pass",
+      "scope" : "recorded_response"
+    },
+    {
+      "id" : "replay/mixed-html",
+      "label" : "HTML 링크·코드 블록 혼합",
+      "outcome" : "pass",
+      "scope" : "recorded_response"
+    },
+    {
+      "id" : "replay/partial-fence",
+      "label" : "선택 중간에서 잘린 코드",
+      "outcome" : "pass",
+      "scope" : "recorded_response"
+    },
+    {
+      "id" : "archive/13-plain-append.seed",
+      "label" : "과거 응답 보존: plain-append.seed",
+      "outcome" : "pass",
+      "scope" : "recorded_response"
+    },
+    {
+      "id" : "archive/14-plain-append.append",
+      "label" : "과거 응답 보존: plain-append.append",
+      "outcome" : "pass",
+      "scope" : "recorded_response"
+    },
+    {
+      "id" : "archive/15-plain-append.whole-retranslation",
+      "label" : "과거 응답 보존: plain-append.whole-retranslation",
+      "outcome" : "pass",
+      "scope" : "recorded_response"
+    },
+    {
+      "id" : "archive/16-explicit-boundary.seed",
+      "label" : "과거 응답 보존: explicit-boundary.seed",
+      "outcome" : "pass",
+      "scope" : "recorded_response"
+    },
+    {
+      "id" : "archive/17-explicit-boundary.append",
+      "label" : "과거 응답 보존: explicit-boundary.append",
+      "outcome" : "pass",
+      "scope" : "recorded_response"
+    },
+    {
+      "id" : "archive/18-explicit-boundary.whole-retranslation",
+      "label" : "과거 응답 보존: explicit-boundary.whole-retranslation",
+      "outcome" : "pass",
+      "scope" : "recorded_response"
+    },
+    {
+      "id" : "archive/19-explicit-boundary.whole-retranslation",
+      "label" : "과거 응답 보존: explicit-boundary.whole-retranslation",
+      "outcome" : "pass",
+      "scope" : "recorded_response"
+    },
+    {
+      "id" : "oracle/numeric-count",
+      "label" : "다른 식별자에 있는 숫자가 잘못된 횟수를 가리지 않음",
+      "outcome" : "pass",
+      "scope" : "test_oracle"
+    },
+    {
+      "id" : "oracle/table-row-values",
+      "label" : "표의 행 사이에 뒤바뀐 값을 거절",
+      "outcome" : "pass",
+      "scope" : "test_oracle"
+    },
+    {
+      "id" : "runner/known-failure-isolation",
+      "label" : "알려진 실패 뒤의 새 실패와 XPASS를 구분",
+      "outcome" : "pass",
+      "scope" : "test_oracle"
+    },
+    {
+      "detail" : "language.direction: expected English -> Korean reaches the translator; actual requests=0, status=error(FormatRegressions.TranslationStoreError.unsupportedLanguage), detected=nb",
+      "id" : "language/short-english",
+      "label" : "자동 감지: short-english",
+      "outcome" : "failure",
+      "scope" : "desired_behavior"
+    },
+    {
+      "detail" : "language.direction: expected English -> Korean reaches the translator; actual requests=0, status=error(FormatRegressions.TranslationStoreError.unsupportedLanguage), detected=id",
+      "id" : "language/markdown-table",
+      "label" : "자동 감지: markdown-table",
+      "outcome" : "failure",
+      "scope" : "desired_behavior"
+    },
+    {
+      "id" : "document/plain-append",
+      "label" : "경계 없음 · 문단 추가",
+      "outcome" : "pass",
+      "scope" : "desired_behavior"
+    },
+    {
+      "id" : "document/plain-whole-retranslation",
+      "label" : "경계 없음 · 전체 재번역",
+      "outcome" : "pass",
+      "scope" : "desired_behavior"
+    },
+    {
+      "id" : "document/explicit-append",
+      "label" : "경계 있음 · 문단 추가",
+      "outcome" : "pass",
+      "scope" : "desired_behavior"
+    },
+    {
+      "id" : "document/explicit-whole-retranslation",
+      "label" : "경계 있음 · 전체 재번역",
+      "outcome" : "pass",
+      "scope" : "desired_behavior"
+    },
+    {
+      "id" : "list/bullets-without-plain-markers",
+      "label" : "화면의 네 항목: 평문에 기호가 없는 HTML 목록",
+      "outcome" : "pass",
+      "scope" : "desired_behavior"
+    },
+    {
+      "id" : "list/ordered-start-and-value",
+      "label" : "번호 목록의 시작 번호와 중간 번호 변경",
+      "outcome" : "pass",
+      "scope" : "desired_behavior"
+    },
+    {
+      "id" : "list/nested-bullets",
+      "label" : "부모와 자식 항목의 중첩 깊이",
+      "outcome" : "pass",
+      "scope" : "desired_behavior"
+    },
+    {
+      "id" : "list-lifecycle/bullets-without-plain-markers",
+      "label" : "목록 입력·편집·재번역·삽입·내보내기: 화면의 네 항목: 평문에 기호가 없는 HTML 목록",
+      "outcome" : "pass",
+      "scope" : "desired_behavior"
+    },
+    {
+      "id" : "list-lifecycle/ordered-start-and-value",
+      "label" : "목록 입력·편집·재번역·삽입·내보내기: 번호 목록의 시작 번호와 중간 번호 변경",
+      "outcome" : "pass",
+      "scope" : "desired_behavior"
+    },
+    {
+      "id" : "list-lifecycle/nested-bullets",
+      "label" : "목록 입력·편집·재번역·삽입·내보내기: 부모와 자식 항목의 중첩 깊이",
+      "outcome" : "pass",
+      "scope" : "desired_behavior"
+    },
+    {
+      "id" : "list/plain-prose",
+      "label" : "일반 문장을 목록으로 만들지 않음",
+      "outcome" : "pass",
+      "scope" : "desired_behavior"
+    }
+  ],
+  "schemaVersion" : 1,
+  "strict" : true
+}

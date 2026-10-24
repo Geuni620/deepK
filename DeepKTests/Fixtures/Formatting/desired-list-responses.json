@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "provenance": "Independently specified Korean model stubs and expected item bodies for the desired list lifecycle. These are synthetic test responses, not archived provider responses.",
+  "cases": [
+    {
+      "id": "bullets-without-plain-markers",
+      "text": "- 결과 설명: 평범한 말이면 충분합니다.\n- 검토 요청: 비평은 시작할 곳을 권합니다.\n- 대안 비교: 유지할 버전을 고르세요.\n- 페이지 가리키기: 직접 요소를 선택하세요.",
+      "items": [
+        "결과 설명: 평범한 말이면 충분합니다.",
+        "검토 요청: 비평은 시작할 곳을 권합니다.",
+        "대안 비교: 유지할 버전을 고르세요.",
+        "페이지 가리키기: 직접 요소를 선택하세요."
+      ]
+    },
+    {
+      "id": "ordered-start-and-value",
+      "text": "3. 원래 창을 유지하세요.\n7. 요청을 다시 시도하세요.",
+      "items": [
+        "원래 창을 유지하세요.",
+        "요청을 다시 시도하세요."
+      ]
+    },
+    {
+      "id": "nested-bullets",
+      "text": "- 원문을 유지하세요.\n  - 링크를 보존하세요.\n  - 코드를 보존하세요.\n- 결과를 복사하세요.",
+      "items": [
+        "원문을 유지하세요.",
+        "링크를 보존하세요.",
+        "코드를 보존하세요.",
+        "결과를 복사하세요."
+      ]
+    }
+  ]
+}

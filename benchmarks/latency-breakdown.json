@@ -1,0 +1,61 @@
+{
+  "kind": "diagnostic single sample per model and tier; not ranking benchmark",
+  "source": "Please keep the original window open.",
+  "sourceLanguage": "en",
+  "targetLanguage": "ko",
+  "clientSHA256": "e75337ad185c48e99c01f4265e8120190132f77264be0588ef2cc9da3d4a85e0",
+  "standard": [
+    {
+      "model": "gpt-5.6-luna",
+      "preparationMs": 573.626334,
+      "totalMs": 4414.356459,
+      "turnMs": 3840.730125
+    },
+    {
+      "model": "gpt-5.6-terra",
+      "preparationMs": 489.633334,
+      "totalMs": 4153.485042,
+      "turnMs": 3663.851708
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "preparationMs": 111.72325,
+      "totalMs": 4715.375125,
+      "turnMs": 4603.651875
+    },
+    {
+      "model": "gpt-5.5",
+      "preparationMs": 598.58925,
+      "totalMs": 5705.394291,
+      "turnMs": 5106.805041
+    },
+    {
+      "model": "gpt-6-astra",
+      "preparationMs": 162.716583,
+      "totalMs": 4998.682083,
+      "turnMs": 4835.9655
+    }
+  ],
+  "priority": [
+    {
+      "model": "gpt-5.6-luna",
+      "preparationMs": 566.536958,
+      "totalMs": 4716.490792,
+      "turnMs": 4149.953834
+    },
+    {
+      "model": "gpt-5.6-terra",
+      "preparationMs": 2841.551916,
+      "totalMs": 7326.075666,
+      "turnMs": 4484.52375
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "preparationMs": 1655.551667,
+      "totalMs": 7895.680042,
+      "turnMs": 6240.128375
+    }
+  ],
+  "priorityClientSHA256": "6ab60758851d68865ba0aa209867c8f3093ec8cbd13ee9a1147cf91779d6c933",
+  "priorityChange": "thread/start serviceTier=priority; temporary experiment, app default unchanged"
+}

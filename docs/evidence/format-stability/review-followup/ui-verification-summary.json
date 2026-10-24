@@ -1,0 +1,66 @@
+{
+  "sourceEquivalentEdits": {
+    "beforeExit": 133,
+    "afterExit": 0,
+    "dirtyInvalidationDisabledExit": 133,
+    "cases": [
+      "same-text insertText",
+      "same-text named paste",
+      "same-text IME composition commit",
+      "marker deletion cleanup",
+      "selection and scroll after cached show",
+      "TextKit 2 and wrapped-line alignment"
+    ]
+  },
+  "inlineCodeNativeCopy": {
+    "beforeExit": 133,
+    "afterExit": 0,
+    "cases": [
+      "- literal item inline code",
+      "1. literal item inline code",
+      "normal list with git inline-code body"
+    ],
+    "clipboard": "isolated named pasteboard only"
+  },
+  "rangeSweep": {
+    "afterExit": 0,
+    "cases": [
+      "unsorted and overlapping code exclusions",
+      "out-of-document exclusions",
+      "inline marker exclusion",
+      "normal list-body inline code",
+      "8000 excluded blocks"
+    ],
+    "inlineMarkerMaskDisabledExit": 133
+  },
+  "snapshotDirectory": "<tmp>/list-followup",
+  "performance": "helper-performance-diagnostic.json; helper-only diagnostic, not final PR head performance",
+  "hashes": {
+    "base/CodeBlockChrome.swift": "05e22f6b683a13302faedea0d29121ebdf19f89e9d9ffe0ec2d1279917cc5616",
+    "base/CodeBlockGuard.swift": "44071ef458aed04c4de66d0134ab7dac1391fd2436568fbd46404e864eb961f5",
+    "base/CodeFoldLayout.swift": "6f666e7c0d677722e417a5a9f69351b28b6729d49ed580580191b161fcbc4c78",
+    "base/HanjaReading.swift": "7b7cf7fc49a65a71684743e768451afd0ca5600634a104cc6c7574aa523ce828",
+    "base/HanjaReadingData.swift": "83e9e9999afc21d908e604f71905f4ff1cd3f3bd81700cf08086f2df84b83378",
+    "base/HanjaRepair.swift": "72e3339c241ed3a32dd421fb0b7b79e6feb122ac57cacc53dfbeaeb1d6878462",
+    "base/IncrementalTranslationPlanner.swift": "fc44bd3ea95124d933258df7d87c7bf1216626ce02d81bdfae3a67fd08054bdf",
+    "base/ResultClipboard.swift": "60a97f0ea07af13795d76871f20790e68a1315414a4cc7d1d5accdbcecdac7e3",
+    "base/ResultDisplaySettings.swift": "a4d2dfb33b2c408212be109fdf6eb13f42317acc82e21e3b674fbefe985a9e29",
+    "base/ResultStyle.swift": "2175c0e598febf5b581dc8cff552dc5d238d9577d0d03c672f82a7d8460311ae",
+    "base/ResultStyleFixtures.swift": "0545f8e728362640a570f545e613a68ab08027f4d8de945bcc66929eb82e65f7",
+    "base/SourceEditor.swift": "425437654313c35d1f65bf1aa4a5806a3edba28519eb6131e4d611cb9dc623aa",
+    "base/SyntaxHighlighter.swift": "68dc866099cff417c8607475b68ac38c4626e5a282ffa042d0e2988cce1181be",
+    "base/SyntaxLanguages.swift": "6c613353a540cabdd0ed81b8b3213ceed188a779027de59fe3e7e0880c6e6668",
+    "base/TranslationDocument.swift": "126b8b28f813e62b0bd8e05f726b2a9a51ecda1f02e42ed94573355f65d177e3",
+    "base/TranslationLists.swift": "2c7e6157610a5d1641657d36c31da6b5e7547664c1a1e33e270bdf72c4df35c5",
+    "base/TranslationMarkup.swift": "9c9d5ee50e7a1c59e82a1ea6adad9d3ef64cab770cb4322247df11dbb5ae2a7d",
+    "base/TranslationOutputCheck.swift": "fa0ba3c696a930340af085a710b3838366c893adea0f1dcfcca25b305412061e",
+    "base/TranslationOutputLint.swift": "c823c033fecc5a1f9fc8aa2fd0a0a09ec7098a0a5b4078c7afdb4c04c2ed9b99",
+    "base/TranslationResultTextView.swift": "be3add33eef310a131fa6256683ceff506a41e27c224812f22ead9076e97d634",
+    "base/TranslationStore.swift": "7705e904cadff3cfd0f79fef966ab017c61552c7c647691557706536b75977ab",
+    "after/SourceEditor.swift": "80a505116f28888f79203ec32c8d7ca0298e09dd34df9931f37820b9f02fd969",
+    "after/TranslationLists.swift": "5ec8e21bbe7b7c91f4035dc6e633ee898c658bcf170cf20c8cc7b03b7d18d177",
+    "after/TranslationMarkup.swift": "a6590911edd1e021750386a08085a71b77e3ca2e9be56693be8b053e87dc489e",
+    "mutated/SourceEditor.swift": "a0ef0baeda9ab422339cf37330dcb487bd2ccefe07acc9a7b75340732df06577",
+    "mutated/TranslationLists.swift": "85839841962cd08df4efd8e4c2bb24e99a4525259597c577c1e861c96ed9c5f2"
+  }
+}

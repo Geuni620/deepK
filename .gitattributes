@@ -1,0 +1,2 @@
+# Browser clipboard fixtures preserve captured spaces and line endings verbatim.
+DeepKTests/Fixtures/MathCopy/* -whitespace

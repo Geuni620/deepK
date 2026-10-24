@@ -1,0 +1,7 @@
+--- a/DeepK/Translation/CodexTranslationClient.swift
++++ b/DeepK/Translation/CodexTranslationClient.swift
+@@ -409,0 +410,2 @@
++    private var turnResponseTestHook: (@Sendable () -> Void)?
++    func setTurnResponseTestHook(_ hook: @escaping @Sendable () -> Void) { turnResponseTestHook = hook }
+@@ -2505,0 +2508 @@
++            if case let .success(value) = response, turnID(from: value) != nil { turnResponseTestHook?() }

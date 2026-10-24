@@ -1,0 +1,354 @@
+{
+  "scope": "fake JSONL CLI cancellation only; no hosted model, clipboard, or app UI",
+  "beforeCommit": "deaab3f5201b499e41cabd8692482be010a58b27",
+  "beforeClientSHA256": "26f612dc8d8eaa7083a897088a7dd5ba3a75307647c4fec97204689fa8aa514c",
+  "finalSourceSHA256": {
+    "DeepK/Translation/CodexTranslationClient.swift": "35d038bbd0222dcd4bea3700d99155344294ff3cb7432d9dfd4798417fa6385e",
+    "DeepKTests/CodexTransportTests.swift": "e1af204b4159ce9d24610d1c86904168caa201c9adfe8c62c0fd9b82c22a1374",
+    "DeepKTests/Fixtures/codex-fake-server.py": "19b794c076989005ab56508fea0e70729e752223d493704900011c668f6b3682"
+  },
+  "initialFixture": {
+    "reconstructedSHA256": "f33b051395f755863cb8f0fb7f467553d00bd71231ad466b33bc750485a62f5f",
+    "provenance": "reconstructed exactly by reversing the final two narrow gate-hardening edits; not hashed at first run",
+    "usedForFinalProof": false
+  },
+  "focusedChecks": [
+    {
+      "commandFile": "before-focused",
+      "logFile": "before-focused.log",
+      "exitCode": 133,
+      "fixture": "initial"
+    },
+    {
+      "commandFile": "after-focused",
+      "logFile": "after-focused.log",
+      "exitCode": 0,
+      "fixture": "initial"
+    },
+    {
+      "commandFile": "before-focused",
+      "logFile": "final-fixture-before-focused.log",
+      "exitCode": 133,
+      "fixture": "final",
+      "role": "product-fix-OFF proof"
+    },
+    {
+      "commandFile": "after-focused",
+      "logFile": "final-fixture-after-focused.log",
+      "exitCode": 0,
+      "fixture": "final",
+      "rounds": 3
+    },
+    {
+      "commandFile": "CodexTransport",
+      "logFile": "CodexTransport-full.log",
+      "exitCode": 0,
+      "fixture": "final",
+      "role": "entire CodexTransport plus ExecutableResolver program, executed once"
+    }
+  ],
+  "finalBoundaryObservations": {
+    "pending": {
+      "before": [
+        {
+          "callerReturnMilliseconds": 0.151083,
+          "cancellationError": true,
+          "case": "pending",
+          "interruptObserved": false,
+          "observationWindowMilliseconds": 3787.199542,
+          "releaseToInterruptObservedMilliseconds": null,
+          "run": 1,
+          "rpcCounts": {
+            "turn/start": 1,
+            "turn/interrupt": 0,
+            "thread/unsubscribe": 1
+          }
+        },
+        {
+          "callerReturnMilliseconds": 0.911708,
+          "cancellationError": true,
+          "case": "pending",
+          "interruptObserved": false,
+          "observationWindowMilliseconds": 3268.233875,
+          "releaseToInterruptObservedMilliseconds": null,
+          "run": 2,
+          "rpcCounts": {
+            "turn/start": 1,
+            "turn/interrupt": 0,
+            "thread/unsubscribe": 1
+          }
+        },
+        {
+          "callerReturnMilliseconds": 0.517209,
+          "cancellationError": true,
+          "case": "pending",
+          "interruptObserved": false,
+          "observationWindowMilliseconds": 3404.769,
+          "releaseToInterruptObservedMilliseconds": null,
+          "run": 3,
+          "rpcCounts": {
+            "turn/start": 1,
+            "turn/interrupt": 0,
+            "thread/unsubscribe": 1
+          }
+        }
+      ],
+      "after": [
+        {
+          "callerReturnMilliseconds": 0.160292,
+          "cancellationError": true,
+          "case": "pending",
+          "interruptObserved": true,
+          "observationWindowMilliseconds": 8.25925,
+          "releaseToInterruptObservedMilliseconds": 8.25925,
+          "run": 1,
+          "rpcCounts": {
+            "turn/start": 1,
+            "turn/interrupt": 1,
+            "thread/unsubscribe": 1
+          }
+        },
+        {
+          "callerReturnMilliseconds": 0.144417,
+          "cancellationError": true,
+          "case": "pending",
+          "interruptObserved": true,
+          "observationWindowMilliseconds": 7.259,
+          "releaseToInterruptObservedMilliseconds": 7.259,
+          "run": 2,
+          "rpcCounts": {
+            "turn/start": 1,
+            "turn/interrupt": 1,
+            "thread/unsubscribe": 1
+          }
+        },
+        {
+          "callerReturnMilliseconds": 0.129917,
+          "cancellationError": true,
+          "case": "pending",
+          "interruptObserved": true,
+          "observationWindowMilliseconds": 12.394875,
+          "releaseToInterruptObservedMilliseconds": 12.394875,
+          "run": 3,
+          "rpcCounts": {
+            "turn/start": 1,
+            "turn/interrupt": 1,
+            "thread/unsubscribe": 1
+          }
+        }
+      ]
+    },
+    "handoff": {
+      "before": [
+        {
+          "callerReturnMilliseconds": 0.4835,
+          "cancellationError": true,
+          "case": "handoff",
+          "interruptObserved": false,
+          "observationWindowMilliseconds": 3527.980375,
+          "releaseToInterruptObservedMilliseconds": null,
+          "run": 1,
+          "rpcCounts": {
+            "turn/start": 1,
+            "turn/interrupt": 0,
+            "thread/unsubscribe": 1
+          }
+        },
+        {
+          "callerReturnMilliseconds": 0.282084,
+          "cancellationError": true,
+          "case": "handoff",
+          "interruptObserved": false,
+          "observationWindowMilliseconds": 3418.717041,
+          "releaseToInterruptObservedMilliseconds": null,
+          "run": 2,
+          "rpcCounts": {
+            "turn/start": 1,
+            "turn/interrupt": 0,
+            "thread/unsubscribe": 1
+          }
+        },
+        {
+          "callerReturnMilliseconds": 0.229625,
+          "cancellationError": true,
+          "case": "handoff",
+          "interruptObserved": false,
+          "observationWindowMilliseconds": 3196.448541,
+          "releaseToInterruptObservedMilliseconds": null,
+          "run": 3,
+          "rpcCounts": {
+            "turn/start": 1,
+            "turn/interrupt": 0,
+            "thread/unsubscribe": 1
+          }
+        }
+      ],
+      "after": [
+        {
+          "callerReturnMilliseconds": 0.273709,
+          "cancellationError": true,
+          "case": "handoff",
+          "interruptObserved": true,
+          "observationWindowMilliseconds": 3.263041,
+          "releaseToInterruptObservedMilliseconds": 3.263041,
+          "run": 1,
+          "rpcCounts": {
+            "turn/start": 1,
+            "turn/interrupt": 1,
+            "thread/unsubscribe": 1
+          }
+        },
+        {
+          "callerReturnMilliseconds": 0.360458,
+          "cancellationError": true,
+          "case": "handoff",
+          "interruptObserved": true,
+          "observationWindowMilliseconds": 3.259,
+          "releaseToInterruptObservedMilliseconds": 3.259,
+          "run": 2,
+          "rpcCounts": {
+            "turn/start": 1,
+            "turn/interrupt": 1,
+            "thread/unsubscribe": 1
+          }
+        },
+        {
+          "callerReturnMilliseconds": 0.346583,
+          "cancellationError": true,
+          "case": "handoff",
+          "interruptObserved": true,
+          "observationWindowMilliseconds": 3.206708,
+          "releaseToInterruptObservedMilliseconds": 3.206708,
+          "run": 3,
+          "rpcCounts": {
+            "turn/start": 1,
+            "turn/interrupt": 1,
+            "thread/unsubscribe": 1
+          }
+        }
+      ]
+    }
+  },
+  "handoffInjectionDescription": "temporary source snapshots only; identical callback at receive after parsing turn id, before resuming response continuation; callback cancels caller task",
+  "sequentialObservations": {
+    "conditions": "same final fixture and pending gate; three before runs finish before three after runs; no concurrent subtask compiler/test run; nominal 2ms marker polling with scheduler jitter; observations only, not an app or model latency claim",
+    "beforeCallerMedianMilliseconds": 7.587,
+    "afterCallerMedianMilliseconds": 0.226167,
+    "beforeInterruptObservations": 0,
+    "afterInterruptObservations": 3,
+    "before": [
+      {
+        "callerReturnMilliseconds": 7.587,
+        "cancellationError": true,
+        "case": "pending",
+        "interruptObserved": false,
+        "observationWindowMilliseconds": 4089.270666,
+        "releaseToInterruptObservedMilliseconds": null,
+        "run": 1,
+        "rpcCounts": {
+          "turn/start": 1,
+          "turn/interrupt": 0,
+          "thread/unsubscribe": 1
+        }
+      },
+      {
+        "callerReturnMilliseconds": 8.699542,
+        "cancellationError": true,
+        "case": "pending",
+        "interruptObserved": false,
+        "observationWindowMilliseconds": 4090.112333,
+        "releaseToInterruptObservedMilliseconds": null,
+        "run": 2,
+        "rpcCounts": {
+          "turn/start": 1,
+          "turn/interrupt": 0,
+          "thread/unsubscribe": 1
+        }
+      },
+      {
+        "callerReturnMilliseconds": 0.123666,
+        "cancellationError": true,
+        "case": "pending",
+        "interruptObserved": false,
+        "observationWindowMilliseconds": 4117.177125,
+        "releaseToInterruptObservedMilliseconds": null,
+        "run": 3,
+        "rpcCounts": {
+          "turn/start": 1,
+          "turn/interrupt": 0,
+          "thread/unsubscribe": 1
+        }
+      }
+    ],
+    "after": [
+      {
+        "callerReturnMilliseconds": 0.155417,
+        "cancellationError": true,
+        "case": "pending",
+        "interruptObserved": true,
+        "observationWindowMilliseconds": 16.416333,
+        "releaseToInterruptObservedMilliseconds": 16.416333,
+        "run": 1,
+        "rpcCounts": {
+          "turn/start": 1,
+          "turn/interrupt": 1,
+          "thread/unsubscribe": 1
+        }
+      },
+      {
+        "callerReturnMilliseconds": 0.226167,
+        "cancellationError": true,
+        "case": "pending",
+        "interruptObserved": true,
+        "observationWindowMilliseconds": 7.418291,
+        "releaseToInterruptObservedMilliseconds": 7.418291,
+        "run": 2,
+        "rpcCounts": {
+          "turn/start": 1,
+          "turn/interrupt": 1,
+          "thread/unsubscribe": 1
+        }
+      },
+      {
+        "callerReturnMilliseconds": 0.24975,
+        "cancellationError": true,
+        "case": "pending",
+        "interruptObserved": true,
+        "observationWindowMilliseconds": 59.42375,
+        "releaseToInterruptObservedMilliseconds": 59.42375,
+        "run": 3,
+        "rpcCounts": {
+          "turn/start": 1,
+          "turn/interrupt": 1,
+          "thread/unsubscribe": 1
+        }
+      }
+    ]
+  },
+  "fullProgramChecks": {
+    "program": "CodexTransport including CodexExecutableResolverTests",
+    "workerRuns": 1,
+    "workerExitCode": 0,
+    "mainSessionRuns": 1,
+    "mainSessionExitCode": 0,
+    "mainSessionElapsedSeconds": 43.23,
+    "full25ProgramScript": false
+  },
+  "independentCounterReview": {
+    "blockingFindings": 0,
+    "sourceAndOriginalSHAAndBoundaryJSONInspected": true,
+    "recompiledOrReran": false,
+    "fixtureIssuesFixed": [
+      "gate expiry exits without replying",
+      "record response before publishing it"
+    ]
+  },
+  "limits": [
+    "The original integration failure did not log its exact scheduler interleaving. The same missing-cleanup boundary is reproduced deterministically.",
+    "Boundary observations collected during compilation are correctness evidence only. Sequential observations are separate; three samples and nominal 2ms polling with scheduling jitter do not establish a speedup.",
+    "This is fake IPC and temporary diagnostic instrumentation, not a hosted model or complete app latency measurement."
+  ],
+  "liveProviderCalls": 0,
+  "generalClipboardAccesses": 0,
+  "userAppLaunchesOrTerminations": 0
+}

@@ -1,0 +1,5 @@
+--- a/DeepK/Translation/RichSourceImporter.swift
++++ b/DeepK/Translation/RichSourceImporter.swift
+@@ -1165 +1165 @@
+-        let prefixes = listPrefixes(copy, alignment: alignment, cleaning: &cleaning, accepted: accepted)
++        let prefixes = listPrefixes(copy, alignment: alignment, cleaning: &cleaning, accepted: accepted).mapValues { _ in "" }

@@ -1,0 +1,242 @@
+{
+  "version": 2,
+  "status": "synthetic validation samples v2: v1 samples plus harder tone, idiom, UI, technical, and ambiguity cases; measured results are recorded in benchmarks/runs",
+  "samples": [
+    {
+      "id": "en-short-1",
+      "source": "en",
+      "target": "ko",
+      "size": "short",
+      "text": "Please keep the original window open.",
+      "checks": [
+        "Keep, not close, the original window."
+      ]
+    },
+    {
+      "id": "ko-short-1",
+      "source": "ko",
+      "target": "en",
+      "size": "short",
+      "text": "원래 창을 닫지 말아 주세요.",
+      "checks": [
+        "Preserve the negative instruction not to close."
+      ]
+    },
+    {
+      "id": "en-paragraph-1",
+      "source": "en",
+      "target": "ko",
+      "size": "paragraph",
+      "text": "The request was canceled, but the server may still return a response. Only display the result if its request ID matches the latest input. Do not copy an outdated translation.",
+      "checks": [
+        "Cancellation does not guarantee no response.",
+        "Request ID must match latest input.",
+        "Do not copy stale output."
+      ]
+    },
+    {
+      "id": "ko-paragraph-1",
+      "source": "ko",
+      "target": "en",
+      "size": "paragraph",
+      "text": "요청을 취소해도 서버 응답이 나중에 도착할 수 있습니다. 요청 ID가 최신 입력과 일치할 때만 결과를 표시하세요. 이전 번역문을 복사하지 마세요.",
+      "checks": [
+        "Preserve all three instructions and causal distinction."
+      ]
+    },
+    {
+      "id": "en-numbers-1",
+      "source": "en",
+      "target": "ko",
+      "size": "short",
+      "text": "Retry after 1.5 seconds, at most 2 times. The limit is 4,000 characters, not 4,000 bytes.",
+      "checks": [
+        "1.5 seconds",
+        "at most 2 retries",
+        "4,000 characters versus bytes"
+      ]
+    },
+    {
+      "id": "ko-numbers-1",
+      "source": "ko",
+      "target": "en",
+      "size": "short",
+      "text": "1.5초 뒤에 최대 2번 재시도하세요. 제한은 4,000바이트가 아니라 4,000자입니다.",
+      "checks": [
+        "1.5 seconds",
+        "at most 2 retries",
+        "4,000 characters versus bytes"
+      ]
+    },
+    {
+      "id": "en-code-1",
+      "source": "en",
+      "target": "ko",
+      "size": "paragraph",
+      "text": "Call `cancel()` before starting the next request.\nKeep `requestID` unchanged until completion.\nA timeout does not mean the translation succeeded.",
+      "checks": [
+        "Keep cancel() and requestID verbatim.",
+        "Keep line breaks.",
+        "Timeout is not success."
+      ]
+    },
+    {
+      "id": "ko-code-1",
+      "source": "ko",
+      "target": "en",
+      "size": "paragraph",
+      "text": "다음 요청을 시작하기 전에 `cancel()`을 호출하세요.\n완료될 때까지 `requestID`를 바꾸지 마세요.\n시간 초과는 번역 성공을 뜻하지 않습니다.",
+      "checks": [
+        "Keep cancel() and requestID verbatim.",
+        "Keep line breaks and negative meaning."
+      ]
+    },
+    {
+      "id": "en-long-1",
+      "source": "en",
+      "target": "ko",
+      "size": "long",
+      "text": "When a user copies a paragraph twice, the application should show the copied text and start translating without another click. The first copy must still work normally in the original application.\n\nThe clipboard may update after the keyboard event arrives. Wait briefly for the current copy, but do not send old clipboard content if the copy failed. If another paragraph is copied while translation is running, ignore the previous response even if cancellation was unsuccessful.\n\nMeasure completion when the entire translated paragraph is visible, not when the first word appears. Report errors and timeouts separately, and include them when calculating the proportion of attempts that finish within one second.",
+      "checks": [
+        "Preserve three paragraphs.",
+        "Normal first copy is retained.",
+        "Never send old text on failed copy.",
+        "Late result ignored even if cancellation fails.",
+        "Full completion not first token.",
+        "Failures included in success-rate denominator."
+      ]
+    },
+    {
+      "id": "ko-long-1",
+      "source": "ko",
+      "target": "en",
+      "size": "long",
+      "text": "사용자가 문단을 두 번 복사하면 앱은 복사한 원문을 보여주고 추가 클릭 없이 번역을 시작해야 합니다. 첫 번째 복사는 원래 앱에서 평소대로 동작해야 합니다.\n\n키 입력 이벤트가 도착한 뒤에 클립보드가 갱신될 수 있습니다. 이번 복사를 잠시 기다리되 복사에 실패하면 이전 클립보드 내용을 전송하지 마세요. 번역 중 다른 문단을 복사하면 취소에 실패했더라도 이전 응답은 무시하세요.\n\n첫 단어가 나타나는 시점이 아니라 번역된 문단 전체가 보이는 시점에 완료 시간을 측정하세요. 오류와 시간 초과를 별도로 기록하고, 1초 이내에 끝난 시도의 비율을 계산할 때도 포함하세요.",
+      "checks": [
+        "Preserve three paragraphs and all conditions.",
+        "Do not confuse first-token latency with completion.",
+        "Include failed attempts in success-rate denominator."
+      ]
+    },
+    {
+      "id": "en-tone-1",
+      "source": "en",
+      "target": "ko",
+      "size": "paragraph",
+      "text": "We sincerely apologize for the inconvenience. Your refund has been processed and should appear in your account within 3–5 business days. If you have any further questions, please don't hesitate to reach out.",
+      "checks": [
+        "Use a polite customer-service register (합니다/하십시오 or 해요 체 consistently).",
+        "Preserve the 3–5 business days range.",
+        "Keep the invitation to contact support without adding promises."
+      ]
+    },
+    {
+      "id": "ko-tone-1",
+      "source": "ko",
+      "target": "en",
+      "size": "short",
+      "text": "야 오늘 회의 또 미뤄졌대ㅋㅋ 그냥 내일 아침에 다시 얘기하자",
+      "checks": [
+        "Keep the casual, friendly tone (not formal business English).",
+        "The meeting was postponed again (preserve 'again').",
+        "Suggest talking again tomorrow morning."
+      ]
+    },
+    {
+      "id": "en-idiom-1",
+      "source": "en",
+      "target": "ko",
+      "size": "paragraph",
+      "text": "The new hire hit the ground running, but the rollout plan is still up in the air, so let's not jump the gun on the announcement.",
+      "checks": [
+        "Render idioms by meaning, not literally (no '땅을 치다', '공중에').",
+        "The plan is undecided/uncertain.",
+        "Do not announce prematurely."
+      ]
+    },
+    {
+      "id": "ko-idiom-1",
+      "source": "ko",
+      "target": "en",
+      "size": "short",
+      "text": "이번 주는 눈코 뜰 새 없이 바빠서 답장이 늦었어요. 발등에 불이 떨어진 일부터 처리할게요.",
+      "checks": [
+        "Translate idioms by meaning (extremely busy; urgent matters), not literally.",
+        "Preserve the apology/explanation for the late reply.",
+        "Keep a polite but natural tone."
+      ]
+    },
+    {
+      "id": "en-ui-1",
+      "source": "en",
+      "target": "ko",
+      "size": "short",
+      "text": "Delete {count} items? This can't be undone.",
+      "checks": [
+        "Preserve the {count} placeholder exactly.",
+        "Keep it concise like a UI dialog.",
+        "Preserve that the action is irreversible."
+      ]
+    },
+    {
+      "id": "ko-ui-1",
+      "source": "ko",
+      "target": "en",
+      "size": "short",
+      "text": "저장되지 않은 변경 사항이 있습니다. 나가기 전에 저장할까요?",
+      "checks": [
+        "Concise UI-style English.",
+        "Ask whether to save before leaving.",
+        "Mention unsaved changes."
+      ]
+    },
+    {
+      "id": "en-techdoc-1",
+      "source": "en",
+      "target": "ko",
+      "size": "long",
+      "text": "Run `npm ci --omit=dev` inside `./packages/server`, then set `NODE_ENV=production` before starting the process.\n\nIf `config.yaml` is missing, the server falls back to defaults but logs a warning; it does not exit. Do not pass `--watch` in production.",
+      "checks": [
+        "Keep `npm ci --omit=dev`, `./packages/server`, `NODE_ENV=production`, `config.yaml`, `--watch` unchanged.",
+        "Missing config logs a warning and does not exit.",
+        "Preserve the prohibition on --watch in production and two paragraphs."
+      ]
+    },
+    {
+      "id": "ko-techdoc-1",
+      "source": "ko",
+      "target": "en",
+      "size": "paragraph",
+      "text": "`fetchUser(id)`는 캐시에 값이 있으면 네트워크를 호출하지 않습니다. 단, `force: true`를 넘기면 캐시를 무시하고 항상 요청하며 결과로 캐시를 갱신합니다.",
+      "checks": [
+        "Keep `fetchUser(id)` and `force: true` unchanged.",
+        "Cache hit skips the network.",
+        "force: true always requests and refreshes the cache."
+      ]
+    },
+    {
+      "id": "en-ambiguity-1",
+      "source": "en",
+      "target": "ko",
+      "size": "short",
+      "text": "All tests didn't pass, so we only shipped the fixes that were reviewed by two engineers.",
+      "checks": [
+        "Interpret 'all tests didn't pass' as not all tests passed (some failed), not that every test failed.",
+        "Only fixes reviewed by two engineers were shipped (restrictive 'only').",
+        "Do not drop the causal 'so'."
+      ]
+    },
+    {
+      "id": "ko-ambiguity-1",
+      "source": "ko",
+      "target": "en",
+      "size": "short",
+      "text": "모든 사용자가 알림을 받지 못한 것은 아닙니다. 일부는 정상적으로 받았습니다.",
+      "checks": [
+        "Partial negation: not every user missed the notification (some received it).",
+        "Do not translate as 'no user received the notification'.",
+        "Keep the second sentence consistent with the first."
+      ]
+    }
+  ]
+}

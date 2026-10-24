@@ -1,0 +1,11 @@
+{
+  "portableHarnessSHA256": "587a3e44ebbc3777ba680968c28ddb6da9d259e7f0c644e3d3565fbded5badce",
+  "adaptation": "Only the marker-root line uses FileManager.default.temporaryDirectory instead of the original fixed temporary directory. Production logic and original raw measurements were not changed.",
+  "portableHarnessRemeasured": false,
+  "preservedMeasuredHarnessSHA256ComputedAfterRun": "c93f59ac803846c0c64f5a6cbf3d0c4817c9029e685df8c69ce0ce54edd54e66",
+  "instrumentedSnapshotsSHA256ComputedAfterRun": {
+    "before": "ec241a17703a30f1eee477cce34c96ac34afb60b2000d1ba2cf5fff70227be71",
+    "after": "3fde67922603c2758b6ba03cf119de93868c7cf9ecf456f2b656cfa34cd97a44"
+  },
+  "hashProvenance": "The preserved probe and instrumented files were hashed after execution; no at-execution hash was captured for these diagnostic files. Product and final-fixture snapshot hashes are recorded separately."
+}

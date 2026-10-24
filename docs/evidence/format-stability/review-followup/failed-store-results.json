@@ -1,0 +1,7 @@
+{
+  "exitCode": 133,
+  "output": "Incremental test: explicit boundary planner\nIncremental test: explicit boundary document\nIncremental test: append and queue\nIncremental test: remove completed leading units\nIncremental test: edit and retry\nIncremental test: cache alignment\nIncremental test: composition and limits\nIncremental test: selection and replacement\nIncremental test: reconnect\nIncremental test: whole retranslation\nIncremental test: pinned prefix and direction\nIncremental test: byte limits\nIncremental test: expired cache purge\nIncremental test: debounce and language\nIncremental test: prose with punctuation appends\nIncremental test: streaming prefix invariant\nIncremental test: trailing coverage\nIncremental test: superseded display\nIncremental test: coverage edge cases\nIncremental test: first request continuity\nIncremental test: review follow-ups\nIncremental test: explicit boundary\nIncremental test: explicit boundary races\nIncremental test: explicit boundary language\nIncremental test: explicit boundary simulation\nTranslationStoreTests/TranslationStoreTests.swift:1465: Fatal error: TranslationStoreTests failed: same-line code extension is plain; a later paragraph keeps the captured block\n",
+  "compiler": "Swift 6 -warnings-as-errors",
+  "snapshot": "<tmp>/structure-followup/current",
+  "binary": "<tmp>/structure-followup/TranslationStoreTests"
+}

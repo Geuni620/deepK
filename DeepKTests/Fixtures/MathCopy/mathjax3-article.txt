@@ -1,0 +1,50 @@
+1. Recipes Scale by 
+, Pans by 
+A loaf needs 
+ of flour and 
+ of salt. To bake for a crowd you multiply every line by the same factor (
+), so 
+ gives 
+ and 
+.
+
+Bakers keep the dough ratio 
+ 
+ fixed, where 
+ is water and 
+ is flour. A ratio of 
+ 
+ is a soft dough; anything above 
+ 
+ is closer to batter.
+
+A round pan of radius 
+ holds 
+ of batter per centimetre of depth, so a pan twice as wide needs four times the dough. Its diameter is 
+, and going the other way, the radius for a target area 
+ is
+
+ 
+With several pans 
+ the total area is 
+, and the scale factor is that sum divided by the area of the original pan:
+
+ 
+If batch 
+ uses 
+ cups, the first 
+ batches use 
+ 
+ cups in total.
+
+Two flours can be tracked per batch as a grid  
+ 
+ with one row per batch, and scaling only the second batch is the matrix
+
+ 
+ marks the starting weight in this paragraph, and 
+ keeps its label as text, and a pan tilted by 
+ fills to a depth of 
+ along its wall.
+
+Proofing time does not scale with the batch size, which is the one rule that surprises most home bakers.

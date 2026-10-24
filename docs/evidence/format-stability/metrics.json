@@ -1,0 +1,386 @@
+{
+  "createdAtUTC": "2026-10-17T09:25:42.819457+00:00",
+  "baselineCommit": "f0de4d1d2aa3b710ad1f2a0f5127ed2ca31765c8",
+  "scope": "CPU-only RichSourceImporter.capture; no model/provider/network/GUI latency measured",
+  "isolation": "Identical harness and fixtures; before uses frozen baseline capture-path sources, after uses worktree capture-path source snapshots",
+  "unit": "microseconds per capture, measured as batch mean; report median and range of seven batch means",
+  "compileOptions": [
+    "-O",
+    "-swift-version",
+    "6",
+    "-warnings-as-errors"
+  ],
+  "os": "26.6.2",
+  "architecture": "arm64",
+  "hardwareModel": "MacBookAir10,1",
+  "swiftVersion": "Apple Swift version 6.2.1 (swiftlang-6.2.1.4.8 clang-1700.4.4.1)\nTarget: arm64-apple-macosx26.0",
+  "sourceSHA256": {
+    "before/DeepK/Translation/TranslationMarkup.swift": "cad60341056863dcb62e41bd2bd8d42c30a6ae14a6ee1d3a509ee62521b332f0",
+    "before/DeepK/Translation/CopiedMathNormalizer.swift": "eba5ac6de330ec2c013971add8fc7669619404ec98182d0fe25f8f0ae281dc0f",
+    "before/DeepK/Translation/RichSourceImporter.swift": "cab8066a6669eed96c10332de2f843ba65af1140f1ec0d539c117ed444734cdf",
+    "after/DeepK/Translation/TranslationLists.swift": "2c7e6157610a5d1641657d36c31da6b5e7547664c1a1e33e270bdf72c4df35c5",
+    "after/DeepK/Translation/TranslationMarkup.swift": "9c9d5ee50e7a1c59e82a1ea6adad9d3ef64cab770cb4322247df11dbb5ae2a7d",
+    "after/DeepK/Translation/CopiedMathNormalizer.swift": "eba5ac6de330ec2c013971add8fc7669619404ec98182d0fe25f8f0ae281dc0f",
+    "after/DeepK/Translation/RichSourceImporter.swift": "052f68548f6ef9a428e0c50df2bcd9c6055ad8f49fd069e6700019c9acb5f8aa"
+  },
+  "fixtureSHA256": "4898be938dc71ff75e7dac0d0a0c8f78e53f9a2b359c8323764f754f2fc7e4f7",
+  "harnessSHA256": "49b8889f7da93ca904ee5af95cbce0c748a3ebea3aca8e76a5eaaa3d1a5efed3",
+  "liveModelRequests": 0,
+  "rounds": [
+    {
+      "round": 1,
+      "executionOrder": [
+        "before",
+        "after"
+      ],
+      "before": {
+        "checksum": 844800,
+        "results": [
+          {
+            "batches": 7,
+            "maximumBatchMicroseconds": 556.2129166666666,
+            "medianMicroseconds": 330.54694333333333,
+            "minimumBatchMicroseconds": 318.11014,
+            "quality": {
+              "bullets": 0,
+              "chips": 0,
+              "depths": [],
+              "items": 0,
+              "links": 0,
+              "numbers": [],
+              "rawPreserved": true
+            },
+            "sample": "bullets-without-plain-markers",
+            "samplesPerBatch": 300,
+            "warmupCaptures": 100
+          },
+          {
+            "batches": 7,
+            "maximumBatchMicroseconds": 406.23194333333333,
+            "medianMicroseconds": 204.70791666666665,
+            "minimumBatchMicroseconds": 116.75458333333333,
+            "quality": {
+              "bullets": 0,
+              "chips": 0,
+              "depths": [],
+              "items": 0,
+              "links": 0,
+              "numbers": [],
+              "rawPreserved": true
+            },
+            "sample": "ordered-start-and-value",
+            "samplesPerBatch": 300,
+            "warmupCaptures": 100
+          },
+          {
+            "batches": 7,
+            "maximumBatchMicroseconds": 215.57083333333335,
+            "medianMicroseconds": 169.12735999999998,
+            "minimumBatchMicroseconds": 135.44986333333335,
+            "quality": {
+              "bullets": 0,
+              "chips": 0,
+              "depths": [],
+              "items": 0,
+              "links": 0,
+              "numbers": [],
+              "rawPreserved": true
+            },
+            "sample": "nested-bullets",
+            "samplesPerBatch": 300,
+            "warmupCaptures": 100
+          },
+          {
+            "batches": 7,
+            "maximumBatchMicroseconds": 285.82611333333335,
+            "medianMicroseconds": 219.06527666666668,
+            "minimumBatchMicroseconds": 192.04819333333333,
+            "quality": {
+              "bullets": 0,
+              "chips": 1,
+              "depths": [],
+              "items": 0,
+              "links": 1,
+              "numbers": [],
+              "rawPreserved": true
+            },
+            "sample": "plain-links-code-control",
+            "samplesPerBatch": 300,
+            "warmupCaptures": 100
+          }
+        ]
+      },
+      "after": {
+        "checksum": 902000,
+        "results": [
+          {
+            "batches": 7,
+            "maximumBatchMicroseconds": 1536.9186133333333,
+            "medianMicroseconds": 861.1077766666666,
+            "minimumBatchMicroseconds": 481.70625,
+            "quality": {
+              "bullets": 4,
+              "chips": 0,
+              "depths": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "items": 4,
+              "links": 0,
+              "numbers": [],
+              "rawPreserved": true
+            },
+            "sample": "bullets-without-plain-markers",
+            "samplesPerBatch": 300,
+            "warmupCaptures": 100
+          },
+          {
+            "batches": 7,
+            "maximumBatchMicroseconds": 146.5075,
+            "medianMicroseconds": 132.51110999999997,
+            "minimumBatchMicroseconds": 124.88583333333332,
+            "quality": {
+              "bullets": 0,
+              "chips": 0,
+              "depths": [
+                0,
+                0
+              ],
+              "items": 2,
+              "links": 0,
+              "numbers": [
+                3,
+                7
+              ],
+              "rawPreserved": true
+            },
+            "sample": "ordered-start-and-value",
+            "samplesPerBatch": 300,
+            "warmupCaptures": 100
+          },
+          {
+            "batches": 7,
+            "maximumBatchMicroseconds": 465.46055333333334,
+            "medianMicroseconds": 229.64389000000003,
+            "minimumBatchMicroseconds": 195.68375,
+            "quality": {
+              "bullets": 4,
+              "chips": 0,
+              "depths": [
+                0,
+                1,
+                1,
+                0
+              ],
+              "items": 4,
+              "links": 0,
+              "numbers": [],
+              "rawPreserved": true
+            },
+            "sample": "nested-bullets",
+            "samplesPerBatch": 300,
+            "warmupCaptures": 100
+          },
+          {
+            "batches": 7,
+            "maximumBatchMicroseconds": 317.11985999999996,
+            "medianMicroseconds": 231.98444666666666,
+            "minimumBatchMicroseconds": 191.74888666666666,
+            "quality": {
+              "bullets": 0,
+              "chips": 1,
+              "depths": [],
+              "items": 0,
+              "links": 1,
+              "numbers": [],
+              "rawPreserved": true
+            },
+            "sample": "plain-links-code-control",
+            "samplesPerBatch": 300,
+            "warmupCaptures": 100
+          }
+        ]
+      }
+    },
+    {
+      "round": 2,
+      "executionOrder": [
+        "after",
+        "before"
+      ],
+      "after": {
+        "checksum": 902000,
+        "results": [
+          {
+            "batches": 7,
+            "maximumBatchMicroseconds": 687.5501366666667,
+            "medianMicroseconds": 511.8308333333333,
+            "minimumBatchMicroseconds": 468.25319333333334,
+            "quality": {
+              "bullets": 4,
+              "chips": 0,
+              "depths": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "items": 4,
+              "links": 0,
+              "numbers": [],
+              "rawPreserved": true
+            },
+            "sample": "bullets-without-plain-markers",
+            "samplesPerBatch": 300,
+            "warmupCaptures": 100
+          },
+          {
+            "batches": 7,
+            "maximumBatchMicroseconds": 248.42472,
+            "medianMicroseconds": 170.54375,
+            "minimumBatchMicroseconds": 148.37930666666668,
+            "quality": {
+              "bullets": 0,
+              "chips": 0,
+              "depths": [
+                0,
+                0
+              ],
+              "items": 2,
+              "links": 0,
+              "numbers": [
+                3,
+                7
+              ],
+              "rawPreserved": true
+            },
+            "sample": "ordered-start-and-value",
+            "samplesPerBatch": 300,
+            "warmupCaptures": 100
+          },
+          {
+            "batches": 7,
+            "maximumBatchMicroseconds": 243.10125,
+            "medianMicroseconds": 232.49083333333334,
+            "minimumBatchMicroseconds": 226.44319333333334,
+            "quality": {
+              "bullets": 4,
+              "chips": 0,
+              "depths": [
+                0,
+                1,
+                1,
+                0
+              ],
+              "items": 4,
+              "links": 0,
+              "numbers": [],
+              "rawPreserved": true
+            },
+            "sample": "nested-bullets",
+            "samplesPerBatch": 300,
+            "warmupCaptures": 100
+          },
+          {
+            "batches": 7,
+            "maximumBatchMicroseconds": 258.05777666666665,
+            "medianMicroseconds": 196.00541666666666,
+            "minimumBatchMicroseconds": 183.86333333333334,
+            "quality": {
+              "bullets": 0,
+              "chips": 1,
+              "depths": [],
+              "items": 0,
+              "links": 1,
+              "numbers": [],
+              "rawPreserved": true
+            },
+            "sample": "plain-links-code-control",
+            "samplesPerBatch": 300,
+            "warmupCaptures": 100
+          }
+        ]
+      },
+      "before": {
+        "checksum": 844800,
+        "results": [
+          {
+            "batches": 7,
+            "maximumBatchMicroseconds": 464.66388666666666,
+            "medianMicroseconds": 357.98,
+            "minimumBatchMicroseconds": 323.9741666666667,
+            "quality": {
+              "bullets": 0,
+              "chips": 0,
+              "depths": [],
+              "items": 0,
+              "links": 0,
+              "numbers": [],
+              "rawPreserved": true
+            },
+            "sample": "bullets-without-plain-markers",
+            "samplesPerBatch": 300,
+            "warmupCaptures": 100
+          },
+          {
+            "batches": 7,
+            "maximumBatchMicroseconds": 87.69014,
+            "medianMicroseconds": 79.03527666666668,
+            "minimumBatchMicroseconds": 77.46166666666667,
+            "quality": {
+              "bullets": 0,
+              "chips": 0,
+              "depths": [],
+              "items": 0,
+              "links": 0,
+              "numbers": [],
+              "rawPreserved": true
+            },
+            "sample": "ordered-start-and-value",
+            "samplesPerBatch": 300,
+            "warmupCaptures": 100
+          },
+          {
+            "batches": 7,
+            "maximumBatchMicroseconds": 135.52861333333334,
+            "medianMicroseconds": 130.66361,
+            "minimumBatchMicroseconds": 115.33791666666667,
+            "quality": {
+              "bullets": 0,
+              "chips": 0,
+              "depths": [],
+              "items": 0,
+              "links": 0,
+              "numbers": [],
+              "rawPreserved": true
+            },
+            "sample": "nested-bullets",
+            "samplesPerBatch": 300,
+            "warmupCaptures": 100
+          },
+          {
+            "batches": 7,
+            "maximumBatchMicroseconds": 339.3475,
+            "medianMicroseconds": 192.94152666666668,
+            "minimumBatchMicroseconds": 180.36305333333334,
+            "quality": {
+              "bullets": 0,
+              "chips": 1,
+              "depths": [],
+              "items": 0,
+              "links": 1,
+              "numbers": [],
+              "rawPreserved": true
+            },
+            "sample": "plain-links-code-control",
+            "samplesPerBatch": 300,
+            "warmupCaptures": 100
+          }
+        ]
+      }
+    }
+  ],
+  "environmentNote": "Other task compiles ran concurrently; round-to-round variance is visible. CPU-only measurements support reporting absolute observed overhead and quality, not a stable percentage speedup or provider/model latency."
+}

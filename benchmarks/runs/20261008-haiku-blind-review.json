@@ -1,0 +1,2902 @@
+{
+  "date": "2026-10-08",
+  "method": "blind A/B, per-item random assignment (scripts/blind-quality-sheet.py, seed in key)",
+  "runs": [
+    "benchmarks/runs/20261008-haiku45-quality-v2.json",
+    "benchmarks/runs/20261008-haiku55-quality-v2.json"
+  ],
+  "samples": "benchmarks/translation-samples-v2.json",
+  "sheet": [
+    {
+      "item": "en-short-1#1",
+      "direction": "en->ko",
+      "size": "short",
+      "source": "Please keep the original window open.",
+      "checks": [
+        "Keep, not close, the original window."
+      ],
+      "A": "원본 창을 열어 두세요.",
+      "B": "원래 창을 계속 열어 두세요."
+    },
+    {
+      "item": "en-short-1#2",
+      "direction": "en->ko",
+      "size": "short",
+      "source": "Please keep the original window open.",
+      "checks": [
+        "Keep, not close, the original window."
+      ],
+      "A": "원래 창을 열어 두세요.",
+      "B": "원래 창을 열린 상태로 유지해 주세요."
+    },
+    {
+      "item": "en-short-1#3",
+      "direction": "en->ko",
+      "size": "short",
+      "source": "Please keep the original window open.",
+      "checks": [
+        "Keep, not close, the original window."
+      ],
+      "A": "원본 창을 열어 두시기 바랍니다.",
+      "B": "원래 창을 열어 두세요."
+    },
+    {
+      "item": "ko-short-1#1",
+      "direction": "ko->en",
+      "size": "short",
+      "source": "원래 창을 닫지 말아 주세요.",
+      "checks": [
+        "Preserve the negative instruction not to close."
+      ],
+      "A": "Please do not close the original window.",
+      "B": "Please do not close the original window."
+    },
+    {
+      "item": "ko-short-1#2",
+      "direction": "ko->en",
+      "size": "short",
+      "source": "원래 창을 닫지 말아 주세요.",
+      "checks": [
+        "Preserve the negative instruction not to close."
+      ],
+      "A": "Please do not close the original window.",
+      "B": "Please do not close the original window."
+    },
+    {
+      "item": "ko-short-1#3",
+      "direction": "ko->en",
+      "size": "short",
+      "source": "원래 창을 닫지 말아 주세요.",
+      "checks": [
+        "Preserve the negative instruction not to close."
+      ],
+      "A": "Please do not close the original window.",
+      "B": "Please do not close the original window."
+    },
+    {
+      "item": "en-paragraph-1#1",
+      "direction": "en->ko",
+      "size": "paragraph",
+      "source": "The request was canceled, but the server may still return a response. Only display the result if its request ID matches the latest input. Do not copy an outdated translation.",
+      "checks": [
+        "Cancellation does not guarantee no response.",
+        "Request ID must match latest input.",
+        "Do not copy stale output."
+      ],
+      "A": "요청이 취소되었지만 서버가 여전히 응답을 반환할 수 있습니다. 결과는 요청 ID가 최신 입력과 일치하는 경우에만 표시하십시오. 오래된 번역을 복사하지 마십시오.",
+      "B": "요청이 취소되었지만 서버는 여전히 응답을 반환할 수 있습니다. 요청 ID가 최신 입력과 일치하는 경우에만 결과를 표시하십시오. 오래된 번역을 복사하지 마십시오."
+    },
+    {
+      "item": "en-paragraph-1#2",
+      "direction": "en->ko",
+      "size": "paragraph",
+      "source": "The request was canceled, but the server may still return a response. Only display the result if its request ID matches the latest input. Do not copy an outdated translation.",
+      "checks": [
+        "Cancellation does not guarantee no response.",
+        "Request ID must match latest input.",
+        "Do not copy stale output."
+      ],
+      "A": "요청이 취소되었지만 서버는 여전히 응답을 반환할 수 있습니다. 응답의 요청 ID가 최신 입력과 일치하는 경우에만 결과를 표시하십시오. 오래된 번역을 복사하지 마십시오.",
+      "B": "요청이 취소되었지만 서버가 여전히 응답을 반환할 수 있습니다. 요청 ID가 최신 입력과 일치하는 경우에만 결과를 표시하세요. 오래된 번역을 복사하지 마세요."
+    },
+    {
+      "item": "en-paragraph-1#3",
+      "direction": "en->ko",
+      "size": "paragraph",
+      "source": "The request was canceled, but the server may still return a response. Only display the result if its request ID matches the latest input. Do not copy an outdated translation.",
+      "checks": [
+        "Cancellation does not guarantee no response.",
+        "Request ID must match latest input.",
+        "Do not copy stale output."
+      ],
+      "A": "요청이 취소되었지만 서버가 여전히 응답을 반환할 수 있습니다. 요청 ID가 최신 입력과 일치하는 경우에만 결과를 표시하십시오. 오래된 번역을 복사하지 마십시오.",
+      "B": "요청이 취소되었지만 서버는 여전히 응답을 반환할 수 있습니다. 응답의 요청 ID가 최신 입력과 일치하는 경우에만 결과를 표시하세요. 오래된 번역을 복사하지 마세요."
+    },
+    {
+      "item": "ko-paragraph-1#1",
+      "direction": "ko->en",
+      "size": "paragraph",
+      "source": "요청을 취소해도 서버 응답이 나중에 도착할 수 있습니다. 요청 ID가 최신 입력과 일치할 때만 결과를 표시하세요. 이전 번역문을 복사하지 마세요.",
+      "checks": [
+        "Preserve all three instructions and causal distinction."
+      ],
+      "A": "Even if the request is cancelled, the server response may still arrive later. Display results only when the request ID matches the latest input. Do not copy the previous translation.",
+      "B": "Even if you cancel the request, the server response may arrive later. Display the result only when the request ID matches the latest input. Do not copy previous translations."
+    },
+    {
+      "item": "ko-paragraph-1#2",
+      "direction": "ko->en",
+      "size": "paragraph",
+      "source": "요청을 취소해도 서버 응답이 나중에 도착할 수 있습니다. 요청 ID가 최신 입력과 일치할 때만 결과를 표시하세요. 이전 번역문을 복사하지 마세요.",
+      "checks": [
+        "Preserve all three instructions and causal distinction."
+      ],
+      "A": "Even if you cancel the request, the server response may arrive later. Display the result only when the request ID matches the latest input. Do not copy previous translations.",
+      "B": "Even if the request is canceled, the server response may still arrive later. Display results only when the request ID matches the latest input. Do not copy the previous translation."
+    },
+    {
+      "item": "ko-paragraph-1#3",
+      "direction": "ko->en",
+      "size": "paragraph",
+      "source": "요청을 취소해도 서버 응답이 나중에 도착할 수 있습니다. 요청 ID가 최신 입력과 일치할 때만 결과를 표시하세요. 이전 번역문을 복사하지 마세요.",
+      "checks": [
+        "Preserve all three instructions and causal distinction."
+      ],
+      "A": "Even if the request is cancelled, the server response may still arrive later. Display results only when the request ID matches the latest input. Do not copy the previous translation.",
+      "B": "The request may be canceled, but the server response can still arrive later. Only display results when the request ID matches the latest input. Do not copy previous translations."
+    },
+    {
+      "item": "en-numbers-1#1",
+      "direction": "en->ko",
+      "size": "short",
+      "source": "Retry after 1.5 seconds, at most 2 times. The limit is 4,000 characters, not 4,000 bytes.",
+      "checks": [
+        "1.5 seconds",
+        "at most 2 retries",
+        "4,000 characters versus bytes"
+      ],
+      "A": "1.5초 후 재시도하며, 최대 2회까지 시도합니다. 제한은 4,000바이트가 아닌 4,000자입니다.",
+      "B": "1.5초 후에 재시도하며, 최대 2회까지 재시도합니다. 제한은 4,000바이트가 아니라 4,000자입니다."
+    },
+    {
+      "item": "en-numbers-1#2",
+      "direction": "en->ko",
+      "size": "short",
+      "source": "Retry after 1.5 seconds, at most 2 times. The limit is 4,000 characters, not 4,000 bytes.",
+      "checks": [
+        "1.5 seconds",
+        "at most 2 retries",
+        "4,000 characters versus bytes"
+      ],
+      "A": "1.5초 후에 재시도하며, 최대 2회까지 재시도합니다. 제한은 4,000바이트가 아니라 4,000자입니다.",
+      "B": "1.5초 후 재시도하며, 최대 2회까지 시도합니다. 제한은 4,000바이트가 아닌 4,000자입니다."
+    },
+    {
+      "item": "en-numbers-1#3",
+      "direction": "en->ko",
+      "size": "short",
+      "source": "Retry after 1.5 seconds, at most 2 times. The limit is 4,000 characters, not 4,000 bytes.",
+      "checks": [
+        "1.5 seconds",
+        "at most 2 retries",
+        "4,000 characters versus bytes"
+      ],
+      "A": "1.5초 후 재시도하며, 최대 2회까지 시도합니다. 제한은 4,000바이트가 아닌 4,000자입니다.",
+      "B": "1.5초 후에 재시도하며, 최대 2회까지 가능합니다. 제한은 4,000바이트가 아니라 4,000자입니다."
+    },
+    {
+      "item": "ko-numbers-1#1",
+      "direction": "ko->en",
+      "size": "short",
+      "source": "1.5초 뒤에 최대 2번 재시도하세요. 제한은 4,000바이트가 아니라 4,000자입니다.",
+      "checks": [
+        "1.5 seconds",
+        "at most 2 retries",
+        "4,000 characters versus bytes"
+      ],
+      "A": "Retry up to 2 times after 1.5 seconds. The limit is 4,000 characters, not 4,000 bytes.",
+      "B": "Retry up to 2 more times, waiting 1.5 seconds before each attempt. The limit is 4,000 characters, not 4,000 bytes."
+    },
+    {
+      "item": "ko-numbers-1#2",
+      "direction": "ko->en",
+      "size": "short",
+      "source": "1.5초 뒤에 최대 2번 재시도하세요. 제한은 4,000바이트가 아니라 4,000자입니다.",
+      "checks": [
+        "1.5 seconds",
+        "at most 2 retries",
+        "4,000 characters versus bytes"
+      ],
+      "A": "Retry up to 2 times after 1.5 seconds. The limit is 4,000 characters, not 4,000 bytes.",
+      "B": "Retry up to 2 times after 1.5 seconds. The limit is 4,000 characters, not 4,000 bytes."
+    },
+    {
+      "item": "ko-numbers-1#3",
+      "direction": "ko->en",
+      "size": "short",
+      "source": "1.5초 뒤에 최대 2번 재시도하세요. 제한은 4,000바이트가 아니라 4,000자입니다.",
+      "checks": [
+        "1.5 seconds",
+        "at most 2 retries",
+        "4,000 characters versus bytes"
+      ],
+      "A": "Retry up to 2 more times, 1.5 seconds apart. The limit is 4,000 characters, not 4,000 bytes.",
+      "B": "Retry up to 2 times after 1.5 seconds. The limit is 4,000 characters, not 4,000 bytes."
+    },
+    {
+      "item": "en-code-1#1",
+      "direction": "en->ko",
+      "size": "paragraph",
+      "source": "Call `cancel()` before starting the next request.\nKeep `requestID` unchanged until completion.\nA timeout does not mean the translation succeeded.",
+      "checks": [
+        "Keep cancel() and requestID verbatim.",
+        "Keep line breaks.",
+        "Timeout is not success."
+      ],
+      "A": "다음 요청을 시작하기 전에 `cancel()`을 호출하세요.\n완료될 때까지 `requestID`를 변경하지 마세요.\n타임아웃이 발생해도 번역이 성공했다는 의미는 아닙니다.",
+      "B": "`cancel()`을 호출한 후 다음 요청을 시작하세요.\n완료될 때까지 `requestID`를 변경하지 마세요.\n시간 초과가 발생했다고 해서 번역이 성공한 것은 아닙니다."
+    },
+    {
+      "item": "en-code-1#2",
+      "direction": "en->ko",
+      "size": "paragraph",
+      "source": "Call `cancel()` before starting the next request.\nKeep `requestID` unchanged until completion.\nA timeout does not mean the translation succeeded.",
+      "checks": [
+        "Keep cancel() and requestID verbatim.",
+        "Keep line breaks.",
+        "Timeout is not success."
+      ],
+      "A": "다음 요청을 시작하기 전에 `cancel()`을 호출하세요.\n`requestID`는 완료될 때까지 변경하지 않은 상태로 유지하세요.\n타임아웃은 번역이 성공했다는 의미가 아닙니다.",
+      "B": "`cancel()`을 다음 요청을 시작하기 전에 호출하세요.\n완료될 때까지 `requestID`를 변경하지 마세요.\n시간 초과가 발생했다고 해서 번역이 성공한 것은 아닙니다."
+    },
+    {
+      "item": "en-code-1#3",
+      "direction": "en->ko",
+      "size": "paragraph",
+      "source": "Call `cancel()` before starting the next request.\nKeep `requestID` unchanged until completion.\nA timeout does not mean the translation succeeded.",
+      "checks": [
+        "Keep cancel() and requestID verbatim.",
+        "Keep line breaks.",
+        "Timeout is not success."
+      ],
+      "A": "`cancel()`를 다음 요청을 시작하기 전에 호출하세요.\n완료될 때까지 `requestID`를 변경하지 마세요.\n시간 초과가 번역이 성공했다는 의미는 아닙니다.",
+      "B": "다음 요청을 시작하기 전에 `cancel()`을 호출하세요.\n`requestID`를 완료될 때까지 변경하지 않은 상태로 유지하세요.\n타임아웃은 번역이 성공했다는 의미가 아닙니다."
+    },
+    {
+      "item": "ko-code-1#1",
+      "direction": "ko->en",
+      "size": "paragraph",
+      "source": "다음 요청을 시작하기 전에 `cancel()`을 호출하세요.\n완료될 때까지 `requestID`를 바꾸지 마세요.\n시간 초과는 번역 성공을 뜻하지 않습니다.",
+      "checks": [
+        "Keep cancel() and requestID verbatim.",
+        "Keep line breaks and negative meaning."
+      ],
+      "A": "Call `cancel()` before starting the next request.\nDo not change the `requestID` until it completes.\nA timeout does not mean the translation succeeded.",
+      "B": "Call `cancel()` before starting the next request.\nDo not change the `requestID` until it is completed.\nA timeout does not indicate successful translation."
+    },
+    {
+      "item": "ko-code-1#2",
+      "direction": "ko->en",
+      "size": "paragraph",
+      "source": "다음 요청을 시작하기 전에 `cancel()`을 호출하세요.\n완료될 때까지 `requestID`를 바꾸지 마세요.\n시간 초과는 번역 성공을 뜻하지 않습니다.",
+      "checks": [
+        "Keep cancel() and requestID verbatim.",
+        "Keep line breaks and negative meaning."
+      ],
+      "A": "Call `cancel()` before starting the next request.\nDo not change the `requestID` until it completes.\nA timeout does not mean the translation succeeded.",
+      "B": "Call `cancel()` before starting the next request.\nDo not change `requestID` until completion.\nTimeout does not mean translation success."
+    },
+    {
+      "item": "ko-code-1#3",
+      "direction": "ko->en",
+      "size": "paragraph",
+      "source": "다음 요청을 시작하기 전에 `cancel()`을 호출하세요.\n완료될 때까지 `requestID`를 바꾸지 마세요.\n시간 초과는 번역 성공을 뜻하지 않습니다.",
+      "checks": [
+        "Keep cancel() and requestID verbatim.",
+        "Keep line breaks and negative meaning."
+      ],
+      "A": "Call `cancel()` before starting the next request.\nDo not change the `requestID` until completion.\nTimeout does not indicate successful translation.",
+      "B": "Call `cancel()` before starting the next request.\nDo not change the `requestID` until it completes.\nA timeout does not mean the translation succeeded."
+    },
+    {
+      "item": "en-long-1#1",
+      "direction": "en->ko",
+      "size": "long",
+      "source": "When a user copies a paragraph twice, the application should show the copied text and start translating without another click. The first copy must still work normally in the original application.\n\nThe clipboard may update after the keyboard event arrives. Wait briefly for the current copy, but do not send old clipboard content if the copy failed. If another paragraph is copied while translation is running, ignore the previous response even if cancellation was unsuccessful.\n\nMeasure completion when the entire translated paragraph is visible, not when the first word appears. Report errors and timeouts separately, and include them when calculating the proportion of attempts that finish within one second.",
+      "checks": [
+        "Preserve three paragraphs.",
+        "Normal first copy is retained.",
+        "Never send old text on failed copy.",
+        "Late result ignored even if cancellation fails.",
+        "Full completion not first token.",
+        "Failures included in success-rate denominator."
+      ],
+      "A": "사용자가 단락을 두 번 복사할 때, 응용프로그램은 복사된 텍스트를 표시하고 다른 클릭 없이 번역을 시작해야 한다. 첫 번째 복사는 원래 응용프로그램에서 여전히 정상적으로 작동해야 한다.\n\n클립보드는 키보드 이벤트가 도착한 후 업데이트될 수 있다. 현재 복사를 위해 잠시 기다리되, 복사가 실패한 경우 이전 클립보드 내용을 전송하지 않는다. 번역이 실행 중인 동안 다른 단락이 복사되면, 취소가 성공하지 않은 경우에도 이전 응답을 무시한다.\n\n번역된 단락 전체가 보일 때 완료를 측정하고, 첫 번째 단어가 나타날 때가 아니다. 오류와 시간 초과는 별도로 보고하고, 1초 이내에 완료되는 시도의 비율을 계산할 때 이들을 포함한다.",
+      "B": "When a user copies a paragraph twice, the application should show the copied text and start translating without another click. The first copy must still work normally in the original application.\n\n사용자가 단락을 두 번 복사하면, 애플리케이션은 복사된 텍스트를 표시하고 추가 클릭 없이 번역을 시작해야 합니다. 첫 번째 복사는 원래 애플리케이션에서 여전히 정상적으로 작동해야 합니다.\n\nThe clipboard may update after the keyboard event arrives. Wait briefly for the current copy, but do not send old clipboard content if the copy failed. If another paragraph is copied while translation is running, ignore the previous response even if cancellation was unsuccessful.\n\n클립보드는 키보드 이벤트가 도착한 후에 업데이트될 수 있습니다. 현재 복사를 잠시 기다리되, 복사가 실패한 경우에는 이전 클립보드 내용을 보내지 마십시오. 번역이 진행 중일 때 다른 단락이 복사되면, 취소가 성공하지 못했더라도 이전 응답은 무시하십시오.\n\nMeasure completion when the entire translated paragraph is visible, not when the first word appears. Report errors and timeouts separately, and include them when calculating the proportion of attempts that finish within one second.\n\n단어가 처음 나타날 때가 아니라 번역된 단락 전체가 표시될 때를 완료 시점으로 측정하십시오. 오류와 시간 초과는 별도로 보고하고, 1초 이내에 완료된 시도의 비율을 계산할 때 이를 포함하십시오."
+    },
+    {
+      "item": "en-long-1#2",
+      "direction": "en->ko",
+      "size": "long",
+      "source": "When a user copies a paragraph twice, the application should show the copied text and start translating without another click. The first copy must still work normally in the original application.\n\nThe clipboard may update after the keyboard event arrives. Wait briefly for the current copy, but do not send old clipboard content if the copy failed. If another paragraph is copied while translation is running, ignore the previous response even if cancellation was unsuccessful.\n\nMeasure completion when the entire translated paragraph is visible, not when the first word appears. Report errors and timeouts separately, and include them when calculating the proportion of attempts that finish within one second.",
+      "checks": [
+        "Preserve three paragraphs.",
+        "Normal first copy is retained.",
+        "Never send old text on failed copy.",
+        "Late result ignored even if cancellation fails.",
+        "Full completion not first token.",
+        "Failures included in success-rate denominator."
+      ],
+      "A": "사용자가 단락을 두 번 복사하면 애플리케이션은 복사된 텍스트를 표시하고 다른 클릭 없이 번역을 시작해야 합니다. 첫 번째 복사는 여전히 원본 애플리케이션에서 정상적으로 작동해야 합니다.\n\n클립보드는 키보드 이벤트가 도착한 후에 업데이트될 수 있습니다. 현재 복사를 잠시 기다리되, 복사가 실패한 경우 이전 클립보드 내용을 보내지 마십시오. 번역이 실행 중인 동안 다른 단락이 복사되면 취소가 성공하지 못한 경우에도 이전 응답을 무시하십시오.\n\n완성도는 번역된 단락 전체가 보일 때를 기준으로 측정하며, 첫 번째 단어가 나타날 때가 아닙니다. 오류와 시간 초과를 별도로 보고하고, 1초 이내에 완료되는 시도의 비율을 계산할 때 이를 포함하십시오.",
+      "B": "When a user copies a paragraph twice, the application should show the copied text and start translating without another click. The first copy must still work normally in the original application.\n\n사용자가 단락을 두 번 복사하면, 애플리케이션은 복사된 텍스트를 표시하고 추가 클릭 없이 번역을 시작해야 합니다. 첫 번째 복사는 원래 애플리케이션에서 여전히 정상적으로 작동해야 합니다.\n\nThe clipboard may update after the keyboard event arrives. Wait briefly for the current copy, but do not send old clipboard content if the copy failed. If another paragraph is copied while translation is running, ignore the previous response even if cancellation was unsuccessful.\n\n키보드 이벤트가 도착한 후에 클립보드가 업데이트될 수 있습니다. 현재 복사를 잠시 기다리되, 복사가 실패했다면 이전 클립보드 내용을 전송하지 마십시오. 번역이 진행 중일 때 다른 단락이 복사되면, 취소가 성공하지 못했더라도 이전 응답은 무시해야 합니다.\n\nMeasure completion when the entire translated paragraph is visible, not when the first word appears. Report errors and timeouts separately, and include them when calculating the proportion of attempts that finish within one second.\n\n완료 시점은 첫 단어가 나타날 때가 아니라 번역된 단락 전체가 표시될 때 측정하십시오. 오류와 시간 초과는 따로 보고하고, 1초 이내에 완료된 시도의 비율을 계산할 때 이를 포함하십시오."
+    },
+    {
+      "item": "en-long-1#3",
+      "direction": "en->ko",
+      "size": "long",
+      "source": "When a user copies a paragraph twice, the application should show the copied text and start translating without another click. The first copy must still work normally in the original application.\n\nThe clipboard may update after the keyboard event arrives. Wait briefly for the current copy, but do not send old clipboard content if the copy failed. If another paragraph is copied while translation is running, ignore the previous response even if cancellation was unsuccessful.\n\nMeasure completion when the entire translated paragraph is visible, not when the first word appears. Report errors and timeouts separately, and include them when calculating the proportion of attempts that finish within one second.",
+      "checks": [
+        "Preserve three paragraphs.",
+        "Normal first copy is retained.",
+        "Never send old text on failed copy.",
+        "Late result ignored even if cancellation fails.",
+        "Full completion not first token.",
+        "Failures included in success-rate denominator."
+      ],
+      "A": "사용자가 단락을 두 번 복사하면 애플리케이션은 복사된 텍스트를 표시하고 다른 클릭 없이 번역을 시작해야 합니다. 첫 번째 복사는 원래 애플리케이션에서 정상적으로 작동해야 합니다.\n\n클립보드는 키보드 이벤트가 도착한 후에 업데이트될 수 있습니다. 현재 복사를 잠시 기다리되, 복사가 실패한 경우 이전 클립보드 내용을 전송하지 마십시오. 번역 실행 중에 다른 단락이 복사되면 취소가 실패한 경우에도 이전 응답을 무시하십시오.\n\n전체 번역된 단락이 표시될 때 완료를 측정하고, 첫 번째 단어가 나타날 때가 아닙니다. 오류와 시간 초과를 별도로 보고하고, 1초 이내에 완료되는 시도의 비율을 계산할 때 이를 포함하십시오.",
+      "B": "사용자가 같은 문단을 두 번 복사하면, 애플리케이션은 복사된 텍스트를 보여 주고 추가 클릭 없이 번역을 시작해야 합니다. 첫 번째 복사는 원래 애플리케이션에서 여전히 정상적으로 작동해야 합니다.\n\n클립보드는 키보드 이벤트가 도착한 뒤에 업데이트될 수 있습니다. 현재 복사를 기다리기 위해 잠시 기다리되, 복사에 실패했다면 이전 클립보드 내용을 보내지 마십시오. 번역이 진행 중일 때 다른 문단이 복사되면, 취소가 성공하지 못했더라도 이전 응답은 무시해야 합니다.\n\n완료 시점은 첫 단어가 나타날 때가 아니라 번역된 문단 전체가 보일 때 측정합니다. 오류와 시간 초과는 따로 보고하고, 1초 이내에 완료된 시도의 비율을 계산할 때 이를 포함하십시오."
+    },
+    {
+      "item": "ko-long-1#1",
+      "direction": "ko->en",
+      "size": "long",
+      "source": "사용자가 문단을 두 번 복사하면 앱은 복사한 원문을 보여주고 추가 클릭 없이 번역을 시작해야 합니다. 첫 번째 복사는 원래 앱에서 평소대로 동작해야 합니다.\n\n키 입력 이벤트가 도착한 뒤에 클립보드가 갱신될 수 있습니다. 이번 복사를 잠시 기다리되 복사에 실패하면 이전 클립보드 내용을 전송하지 마세요. 번역 중 다른 문단을 복사하면 취소에 실패했더라도 이전 응답은 무시하세요.\n\n첫 단어가 나타나는 시점이 아니라 번역된 문단 전체가 보이는 시점에 완료 시간을 측정하세요. 오류와 시간 초과를 별도로 기록하고, 1초 이내에 끝난 시도의 비율을 계산할 때도 포함하세요.",
+      "checks": [
+        "Preserve three paragraphs and all conditions.",
+        "Do not confuse first-token latency with completion.",
+        "Include failed attempts in success-rate denominator."
+      ],
+      "A": "When a user copies a paragraph twice, the app should show the copied source text and start translation without additional clicks. The first copy should work as usual in the original app.\n\nThe clipboard may be updated after a key input event arrives. Wait briefly for this copy, but if the copy fails, do not send the previous clipboard content. If another paragraph is copied during translation, ignore the previous response even if cancellation fails.\n\nMeasure completion time when the entire translated paragraph is visible, not when the first word appears. Record errors and timeouts separately, and include them when calculating the percentage of attempts completed within 1 second.",
+      "B": "If a user copies a paragraph twice, the app should show the copied original text and start the translation without any extra clicks. The first copy should behave normally in the original app.\n\nThe clipboard may update after the keystroke event arrives. Wait briefly for this copy, but if the copy fails, do not send the previous clipboard contents. If the user copies another paragraph during translation, ignore the previous response even if the cancellation fails.\n\nMeasure completion time at the moment the entire translated paragraph is visible, not when the first word appears. Record errors and timeouts separately, and include them when calculating the proportion of attempts that finished within 1 second."
+    },
+    {
+      "item": "ko-long-1#2",
+      "direction": "ko->en",
+      "size": "long",
+      "source": "사용자가 문단을 두 번 복사하면 앱은 복사한 원문을 보여주고 추가 클릭 없이 번역을 시작해야 합니다. 첫 번째 복사는 원래 앱에서 평소대로 동작해야 합니다.\n\n키 입력 이벤트가 도착한 뒤에 클립보드가 갱신될 수 있습니다. 이번 복사를 잠시 기다리되 복사에 실패하면 이전 클립보드 내용을 전송하지 마세요. 번역 중 다른 문단을 복사하면 취소에 실패했더라도 이전 응답은 무시하세요.\n\n첫 단어가 나타나는 시점이 아니라 번역된 문단 전체가 보이는 시점에 완료 시간을 측정하세요. 오류와 시간 초과를 별도로 기록하고, 1초 이내에 끝난 시도의 비율을 계산할 때도 포함하세요.",
+      "checks": [
+        "Preserve three paragraphs and all conditions.",
+        "Do not confuse first-token latency with completion.",
+        "Include failed attempts in success-rate denominator."
+      ],
+      "A": "If a user copies a paragraph twice, the app should show the copied original text and start translation without any extra click. The first copy should behave normally in the original app.\n\nThe clipboard may update after the key input event arrives. Wait briefly for this copy, but if the copy fails, do not send the previous clipboard contents. If another paragraph is copied during translation, ignore the previous response even if cancellation fails.\n\nMeasure completion time at the moment the entire translated paragraph is visible, not when the first word appears. Record errors and timeouts separately, and include them when calculating the percentage of attempts that finished within 1 second.",
+      "B": "When a user copies a paragraph twice, the app should show the original text copied and start translation without additional clicks. The first copy should work as usual in the original app.\n\nThe clipboard may be updated after a key input event arrives. Wait briefly for this copy, but if the copy fails, do not send the previous clipboard content. If another paragraph is copied during translation, ignore the previous response even if cancellation failed.\n\nMeasure completion time when the entire translated paragraph is visible, not when the first word appears. Record errors and timeouts separately, and include them when calculating the percentage of attempts completed within 1 second."
+    },
+    {
+      "item": "ko-long-1#3",
+      "direction": "ko->en",
+      "size": "long",
+      "source": "사용자가 문단을 두 번 복사하면 앱은 복사한 원문을 보여주고 추가 클릭 없이 번역을 시작해야 합니다. 첫 번째 복사는 원래 앱에서 평소대로 동작해야 합니다.\n\n키 입력 이벤트가 도착한 뒤에 클립보드가 갱신될 수 있습니다. 이번 복사를 잠시 기다리되 복사에 실패하면 이전 클립보드 내용을 전송하지 마세요. 번역 중 다른 문단을 복사하면 취소에 실패했더라도 이전 응답은 무시하세요.\n\n첫 단어가 나타나는 시점이 아니라 번역된 문단 전체가 보이는 시점에 완료 시간을 측정하세요. 오류와 시간 초과를 별도로 기록하고, 1초 이내에 끝난 시도의 비율을 계산할 때도 포함하세요.",
+      "checks": [
+        "Preserve three paragraphs and all conditions.",
+        "Do not confuse first-token latency with completion.",
+        "Include failed attempts in success-rate denominator."
+      ],
+      "A": "If a user copies a paragraph twice, the app should show the copied original text and start translation without any extra click. The first copy should behave normally in the original app.\n\nThe clipboard may update after the key input event arrives. Wait briefly for this copy, but if copying fails, do not send the previous clipboard contents. If another paragraph is copied during translation, ignore the previous response even if cancellation failed.\n\nMeasure completion time at the moment the entire translated paragraph is visible, not when the first word appears. Record errors and timeouts separately, and include them when calculating the proportion of attempts that finished within 1 second.",
+      "B": "When a user copies a paragraph twice, the app should show the copied source text and start translation without additional clicks. The first copy should work as usual in the original app.\n\nThe clipboard may be updated after a key input event arrives. Wait briefly for this copy, but if the copy fails, do not send the previous clipboard content. If another paragraph is copied during translation, ignore the previous response even if cancellation fails.\n\nMeasure completion time when the entire translated paragraph is visible, not when the first word appears. Record errors and timeouts separately, and include them when calculating the percentage of attempts completed within 1 second."
+    },
+    {
+      "item": "en-tone-1#1",
+      "direction": "en->ko",
+      "size": "paragraph",
+      "source": "We sincerely apologize for the inconvenience. Your refund has been processed and should appear in your account within 3–5 business days. If you have any further questions, please don't hesitate to reach out.",
+      "checks": [
+        "Use a polite customer-service register (합니다/하십시오 or 해요 체 consistently).",
+        "Preserve the 3–5 business days range.",
+        "Keep the invitation to contact support without adding promises."
+      ],
+      "A": "불편을 끼쳐드려 진심으로 사과드립니다. 환불이 처리되었으며 3–5 영업일 이내에 계정에 표시될 것입니다. 추가 질문이 있으시면 주저하지 마시고 연락 주시기 바랍니다.",
+      "B": "죄송합니다. 불편을 드려 진심으로 사과드립니다. 환불이 처리되었으며, 영업일 기준 3~5일 이내에 고객님의 계정에 반영될 예정입니다. 추가로 궁금한 점이 있으시면 언제든지 편하게 문의해 주십시오."
+    },
+    {
+      "item": "en-tone-1#2",
+      "direction": "en->ko",
+      "size": "paragraph",
+      "source": "We sincerely apologize for the inconvenience. Your refund has been processed and should appear in your account within 3–5 business days. If you have any further questions, please don't hesitate to reach out.",
+      "checks": [
+        "Use a polite customer-service register (합니다/하십시오 or 해요 체 consistently).",
+        "Preserve the 3–5 business days range.",
+        "Keep the invitation to contact support without adding promises."
+      ],
+      "A": "죄송합니다. 불편을 드려 진심으로 사과드립니다. 환불이 처리되었으며, 영업일 기준 3~5일 이내에 고객님의 계정에 반영될 예정입니다. 추가로 궁금한 점이 있으시면 언제든지 편하게 문의해 주시기 바랍니다.",
+      "B": "불편을 드려 진심으로 사과드립니다. 환불이 처리되었으며 3–5 영업일 내에 계정에 표시될 것입니다. 추가 질문이 있으시면 언제든지 문의해 주십시오."
+    },
+    {
+      "item": "en-tone-1#3",
+      "direction": "en->ko",
+      "size": "paragraph",
+      "source": "We sincerely apologize for the inconvenience. Your refund has been processed and should appear in your account within 3–5 business days. If you have any further questions, please don't hesitate to reach out.",
+      "checks": [
+        "Use a polite customer-service register (합니다/하십시오 or 해요 체 consistently).",
+        "Preserve the 3–5 business days range.",
+        "Keep the invitation to contact support without adding promises."
+      ],
+      "A": "불편을 드려 진심으로 사과드립니다. 환불이 처리되었으며 3–5 영업일 이내에 계정에 나타날 것입니다. 추가 질문이 있으신 경우 언제든지 연락 주시기 바랍니다.",
+      "B": "We sincerely apologize for the inconvenience. Your refund has been processed and should appear in your account within 3–5 business days. If you have any further questions, please don't hesitate to reach out.\n\nWait. Let me correct that. Here is the translation:\n\n불편을 드린 점 진심으로 사과드립니다. 환불이 처리되었으며, 영업일 기준 3~5일 이내에 고객님의 계정에 반영될 것입니다. 추가로 궁금하신 점이 있으시면 언제든지 편하게 문의해 주십시오."
+    },
+    {
+      "item": "ko-tone-1#1",
+      "direction": "ko->en",
+      "size": "short",
+      "source": "야 오늘 회의 또 미뤄졌대ㅋㅋ 그냥 내일 아침에 다시 얘기하자",
+      "checks": [
+        "Keep the casual, friendly tone (not formal business English).",
+        "The meeting was postponed again (preserve 'again').",
+        "Suggest talking again tomorrow morning."
+      ],
+      "A": "Hey, they postponed today's meeting again lol. Let's just talk about it again tomorrow morning.",
+      "B": "Hey, the meeting got postponed again todayㅋㅋ Let's just talk about it again tomorrow morning."
+    },
+    {
+      "item": "ko-tone-1#2",
+      "direction": "ko->en",
+      "size": "short",
+      "source": "야 오늘 회의 또 미뤄졌대ㅋㅋ 그냥 내일 아침에 다시 얘기하자",
+      "checks": [
+        "Keep the casual, friendly tone (not formal business English).",
+        "The meeting was postponed again (preserve 'again').",
+        "Suggest talking again tomorrow morning."
+      ],
+      "A": "Hey, the meeting got postponed again todayㅋㅋ Let's just talk about it again tomorrow morning",
+      "B": "Hey, today's meeting got postponed again lol. Let's just talk about it again tomorrow morning."
+    },
+    {
+      "item": "ko-tone-1#3",
+      "direction": "ko->en",
+      "size": "short",
+      "source": "야 오늘 회의 또 미뤄졌대ㅋㅋ 그냥 내일 아침에 다시 얘기하자",
+      "checks": [
+        "Keep the casual, friendly tone (not formal business English).",
+        "The meeting was postponed again (preserve 'again').",
+        "Suggest talking again tomorrow morning."
+      ],
+      "A": "Hey, today's meeting got postponed again lol. Let's just talk about it again tomorrow morning.",
+      "B": "Hey, the meeting got postponed again todayㅋㅋ Let's just talk about it again tomorrow morning."
+    },
+    {
+      "item": "en-idiom-1#1",
+      "direction": "en->ko",
+      "size": "paragraph",
+      "source": "The new hire hit the ground running, but the rollout plan is still up in the air, so let's not jump the gun on the announcement.",
+      "checks": [
+        "Render idioms by meaning, not literally (no '땅을 치다', '공중에').",
+        "The plan is undecided/uncertain.",
+        "Do not announce prematurely."
+      ],
+      "A": "새 직원이 빠르게 적응했지만, 출시 계획이 아직 미정이므로 발표를 서두르지 말자.",
+      "B": "새로 온 직원은 바로 제 몫을 해내고 있지만, 출시 계획은 아직 확정되지 않았으니 발표를 서두르지 맙시다."
+    },
+    {
+      "item": "en-idiom-1#2",
+      "direction": "en->ko",
+      "size": "paragraph",
+      "source": "The new hire hit the ground running, but the rollout plan is still up in the air, so let's not jump the gun on the announcement.",
+      "checks": [
+        "Render idioms by meaning, not literally (no '땅을 치다', '공중에').",
+        "The plan is undecided/uncertain.",
+        "Do not announce prematurely."
+      ],
+      "A": "새로 온 직원은 바로 제 역할을 해내고 있지만, 출시 계획은 아직 확정되지 않았으니 발표를 서두르지 맙시다.",
+      "B": "새로운 직원은 즉시 업무에 착수했지만, 롤아웃 계획이 아직 미정이므로 발표를 서두르지 말자."
+    },
+    {
+      "item": "en-idiom-1#3",
+      "direction": "en->ko",
+      "size": "paragraph",
+      "source": "The new hire hit the ground running, but the rollout plan is still up in the air, so let's not jump the gun on the announcement.",
+      "checks": [
+        "Render idioms by meaning, not literally (no '땅을 치다', '공중에').",
+        "The plan is undecided/uncertain.",
+        "Do not announce prematurely."
+      ],
+      "A": "새로운 직원이 빠르게 업무를 시작했지만, 출시 계획이 아직 확정되지 않았으므로 공지를 서두르지 맙시다.",
+      "B": "신입 사원이 바로 제 몫을 해내고 있지만, 롤아웃 계획은 아직 확정되지 않았으니 발표를 서두르지 맙시다."
+    },
+    {
+      "item": "ko-idiom-1#1",
+      "direction": "ko->en",
+      "size": "short",
+      "source": "이번 주는 눈코 뜰 새 없이 바빠서 답장이 늦었어요. 발등에 불이 떨어진 일부터 처리할게요.",
+      "checks": [
+        "Translate idioms by meaning (extremely busy; urgent matters), not literally.",
+        "Preserve the apology/explanation for the late reply.",
+        "Keep a polite but natural tone."
+      ],
+      "A": "I've been swamped this week, which is why my reply was late. I'll start with the matter that's most urgent.",
+      "B": "I've been so busy this week that I'm late in replying. Let me take care of the urgent matters first."
+    },
+    {
+      "item": "ko-idiom-1#2",
+      "direction": "ko->en",
+      "size": "short",
+      "source": "이번 주는 눈코 뜰 새 없이 바빠서 답장이 늦었어요. 발등에 불이 떨어진 일부터 처리할게요.",
+      "checks": [
+        "Translate idioms by meaning (extremely busy; urgent matters), not literally.",
+        "Preserve the apology/explanation for the late reply.",
+        "Keep a polite but natural tone."
+      ],
+      "A": "This week has been so busy that I didn't get to reply right away. I'll take care of the most urgent matters first.",
+      "B": "I've been so busy this week that I couldn't find time to reply. I'll take care of the urgent matters first."
+    },
+    {
+      "item": "ko-idiom-1#3",
+      "direction": "ko->en",
+      "size": "short",
+      "source": "이번 주는 눈코 뜰 새 없이 바빠서 답장이 늦었어요. 발등에 불이 떨어진 일부터 처리할게요.",
+      "checks": [
+        "Translate idioms by meaning (extremely busy; urgent matters), not literally.",
+        "Preserve the apology/explanation for the late reply.",
+        "Keep a polite but natural tone."
+      ],
+      "A": "This week has been so busy that I've been slow to reply. I'll start with the matters that are most urgent.",
+      "B": "I've been so busy this week that I'm late in replying. I'll handle the urgent matters first."
+    },
+    {
+      "item": "en-ui-1#1",
+      "direction": "en->ko",
+      "size": "short",
+      "source": "Delete {count} items? This can't be undone.",
+      "checks": [
+        "Preserve the {count} placeholder exactly.",
+        "Keep it concise like a UI dialog.",
+        "Preserve that the action is irreversible."
+      ],
+      "A": "{count}개 항목을 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.",
+      "B": "{count}개의 항목을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다."
+    },
+    {
+      "item": "en-ui-1#2",
+      "direction": "en->ko",
+      "size": "short",
+      "source": "Delete {count} items? This can't be undone.",
+      "checks": [
+        "Preserve the {count} placeholder exactly.",
+        "Keep it concise like a UI dialog.",
+        "Preserve that the action is irreversible."
+      ],
+      "A": "{count}개 항목을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
+      "B": "{count}개 항목을 삭제하시겠습니까? 이 작업은 취소할 수 없습니다."
+    },
+    {
+      "item": "en-ui-1#3",
+      "direction": "en->ko",
+      "size": "short",
+      "source": "Delete {count} items? This can't be undone.",
+      "checks": [
+        "Preserve the {count} placeholder exactly.",
+        "Keep it concise like a UI dialog.",
+        "Preserve that the action is irreversible."
+      ],
+      "A": "{count}개 항목을 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.",
+      "B": "{count}개의 항목을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다."
+    },
+    {
+      "item": "ko-ui-1#1",
+      "direction": "ko->en",
+      "size": "short",
+      "source": "저장되지 않은 변경 사항이 있습니다. 나가기 전에 저장할까요?",
+      "checks": [
+        "Concise UI-style English.",
+        "Ask whether to save before leaving.",
+        "Mention unsaved changes."
+      ],
+      "A": "You have unsaved changes. Would you like to save before leaving?",
+      "B": "You have unsaved changes. Would you like to save before leaving?"
+    },
+    {
+      "item": "ko-ui-1#2",
+      "direction": "ko->en",
+      "size": "short",
+      "source": "저장되지 않은 변경 사항이 있습니다. 나가기 전에 저장할까요?",
+      "checks": [
+        "Concise UI-style English.",
+        "Ask whether to save before leaving.",
+        "Mention unsaved changes."
+      ],
+      "A": "You have unsaved changes. Do you want to save before leaving?",
+      "B": "You have unsaved changes. Would you like to save before leaving?"
+    },
+    {
+      "item": "ko-ui-1#3",
+      "direction": "ko->en",
+      "size": "short",
+      "source": "저장되지 않은 변경 사항이 있습니다. 나가기 전에 저장할까요?",
+      "checks": [
+        "Concise UI-style English.",
+        "Ask whether to save before leaving.",
+        "Mention unsaved changes."
+      ],
+      "A": "You have unsaved changes. Would you like to save before leaving?",
+      "B": "There are unsaved changes. Would you like to save before leaving?"
+    },
+    {
+      "item": "en-techdoc-1#1",
+      "direction": "en->ko",
+      "size": "long",
+      "source": "Run `npm ci --omit=dev` inside `./packages/server`, then set `NODE_ENV=production` before starting the process.\n\nIf `config.yaml` is missing, the server falls back to defaults but logs a warning; it does not exit. Do not pass `--watch` in production.",
+      "checks": [
+        "Keep `npm ci --omit=dev`, `./packages/server`, `NODE_ENV=production`, `config.yaml`, `--watch` unchanged.",
+        "Missing config logs a warning and does not exit.",
+        "Preserve the prohibition on --watch in production and two paragraphs."
+      ],
+      "A": "`./packages/server` 디렉터리 안에서 `npm ci --omit=dev`를 실행한 다음, 프로세스를 시작하기 전에 `NODE_ENV=production`을 설정하세요.\n\n`config.yaml` 파일이 없으면 서버는 기본값으로 대체하여 실행되며, 경고를 기록합니다. 종료되지는 않습니다. 프로덕션에서는 `--watch`를 전달하지 마세요.",
+      "B": "`./packages/server` 내에서 `npm ci --omit=dev`를 실행한 후, 프로세스를 시작하기 전에 `NODE_ENV=production`을 설정하세요.\n\n`config.yaml`이 없으면 서버는 기본값으로 폴백되지만 경고를 기록합니다. 종료되지 않습니다. 프로덕션에서는 `--watch`를 전달하지 마세요."
+    },
+    {
+      "item": "en-techdoc-1#2",
+      "direction": "en->ko",
+      "size": "long",
+      "source": "Run `npm ci --omit=dev` inside `./packages/server`, then set `NODE_ENV=production` before starting the process.\n\nIf `config.yaml` is missing, the server falls back to defaults but logs a warning; it does not exit. Do not pass `--watch` in production.",
+      "checks": [
+        "Keep `npm ci --omit=dev`, `./packages/server`, `NODE_ENV=production`, `config.yaml`, `--watch` unchanged.",
+        "Missing config logs a warning and does not exit.",
+        "Preserve the prohibition on --watch in production and two paragraphs."
+      ],
+      "A": "`./packages/server` 디렉터리 안에서 `npm ci --omit=dev`를 실행한 다음, 프로세스를 시작하기 전에 `NODE_ENV=production`을 설정하십시오.\n\n`config.yaml`이 없으면 서버는 기본값으로 동작하지만 경고를 기록합니다. 종료하지는 않습니다. 프로덕션에서는 `--watch`를 전달하지 마십시오.",
+      "B": "`./packages/server` 내에서 `npm ci --omit=dev`를 실행한 후, 프로세스를 시작하기 전에 `NODE_ENV=production`을 설정하세요.\n\n`config.yaml`이 없으면 서버는 기본값으로 폴백되지만 경고를 기록합니다. 종료되지는 않습니다. 프로덕션에서는 `--watch`를 전달하지 마세요."
+    },
+    {
+      "item": "en-techdoc-1#3",
+      "direction": "en->ko",
+      "size": "long",
+      "source": "Run `npm ci --omit=dev` inside `./packages/server`, then set `NODE_ENV=production` before starting the process.\n\nIf `config.yaml` is missing, the server falls back to defaults but logs a warning; it does not exit. Do not pass `--watch` in production.",
+      "checks": [
+        "Keep `npm ci --omit=dev`, `./packages/server`, `NODE_ENV=production`, `config.yaml`, `--watch` unchanged.",
+        "Missing config logs a warning and does not exit.",
+        "Preserve the prohibition on --watch in production and two paragraphs."
+      ],
+      "A": "`./packages/server` 디렉터리 안에서 `npm ci --omit=dev`를 실행한 다음, 프로세스를 시작하기 전에 `NODE_ENV=production`을 설정하십시오.\n\n`config.yaml`이 없으면 서버는 기본값으로 대체하여 실행되며 경고를 기록합니다. 종료하지는 않습니다. 프로덕션 환경에서는 `--watch`를 전달하지 마십시오.",
+      "B": "`./packages/server` 내에서 `npm ci --omit=dev`를 실행한 후, 프로세스를 시작하기 전에 `NODE_ENV=production`을 설정하세요.\n\n`config.yaml`이 없으면 서버는 기본값으로 폴백되지만 경고를 기록합니다. 종료되지 않습니다. 프로덕션에서는 `--watch`를 전달하지 마세요."
+    },
+    {
+      "item": "ko-techdoc-1#1",
+      "direction": "ko->en",
+      "size": "paragraph",
+      "source": "`fetchUser(id)`는 캐시에 값이 있으면 네트워크를 호출하지 않습니다. 단, `force: true`를 넘기면 캐시를 무시하고 항상 요청하며 결과로 캐시를 갱신합니다.",
+      "checks": [
+        "Keep `fetchUser(id)` and `force: true` unchanged.",
+        "Cache hit skips the network.",
+        "force: true always requests and refreshes the cache."
+      ],
+      "A": "`fetchUser(id)` does not call the network if a value exists in the cache. However, if you pass `force: true`, it ignores the cache, always makes the request, and updates the cache with the result.",
+      "B": "`fetchUser(id)` does not make a network call if there is a value in the cache. However, if you pass `force: true`, it ignores the cache and always makes a request, updating the cache with the result."
+    },
+    {
+      "item": "ko-techdoc-1#2",
+      "direction": "ko->en",
+      "size": "paragraph",
+      "source": "`fetchUser(id)`는 캐시에 값이 있으면 네트워크를 호출하지 않습니다. 단, `force: true`를 넘기면 캐시를 무시하고 항상 요청하며 결과로 캐시를 갱신합니다.",
+      "checks": [
+        "Keep `fetchUser(id)` and `force: true` unchanged.",
+        "Cache hit skips the network.",
+        "force: true always requests and refreshes the cache."
+      ],
+      "A": "`fetchUser(id)` does not call the network if the value exists in the cache. However, if `force: true` is passed, it ignores the cache and always makes a request, updating the cache with the result.",
+      "B": "`fetchUser(id)` does not call the network if a value exists in the cache. However, if you pass `force: true`, it ignores the cache, always makes the request, and updates the cache with the result."
+    },
+    {
+      "item": "ko-techdoc-1#3",
+      "direction": "ko->en",
+      "size": "paragraph",
+      "source": "`fetchUser(id)`는 캐시에 값이 있으면 네트워크를 호출하지 않습니다. 단, `force: true`를 넘기면 캐시를 무시하고 항상 요청하며 결과로 캐시를 갱신합니다.",
+      "checks": [
+        "Keep `fetchUser(id)` and `force: true` unchanged.",
+        "Cache hit skips the network.",
+        "force: true always requests and refreshes the cache."
+      ],
+      "A": "`fetchUser(id)` does not call the network if a value exists in the cache. However, if you pass `force: true`, it ignores the cache, always makes the request, and updates the cache with the result.",
+      "B": "`fetchUser(id)` does not make a network call if the value exists in the cache. However, if you pass `force: true`, it ignores the cache and always makes a request, updating the cache with the result."
+    },
+    {
+      "item": "en-ambiguity-1#1",
+      "direction": "en->ko",
+      "size": "short",
+      "source": "All tests didn't pass, so we only shipped the fixes that were reviewed by two engineers.",
+      "checks": [
+        "Interpret 'all tests didn't pass' as not all tests passed (some failed), not that every test failed.",
+        "Only fixes reviewed by two engineers were shipped (restrictive 'only').",
+        "Do not drop the causal 'so'."
+      ],
+      "A": "모든 테스트가 통과하지 않아서, 두 명의 엔지니어가 검토한 수정 사항만 배포했습니다.",
+      "B": "모든 테스트를 통과하지 못했으므로 두 명의 엔지니어가 검토한 수정 사항만 배포했습니다."
+    },
+    {
+      "item": "en-ambiguity-1#2",
+      "direction": "en->ko",
+      "size": "short",
+      "source": "All tests didn't pass, so we only shipped the fixes that were reviewed by two engineers.",
+      "checks": [
+        "Interpret 'all tests didn't pass' as not all tests passed (some failed), not that every test failed.",
+        "Only fixes reviewed by two engineers were shipped (restrictive 'only').",
+        "Do not drop the causal 'so'."
+      ],
+      "A": "모든 테스트가 통과하지 않아서, 두 명의 엔지니어가 검토한 수정 사항만 배포했습니다.",
+      "B": "모든 테스트가 통과하지 않았으므로 두 명의 엔지니어가 검토한 수정 사항만 배포했습니다."
+    },
+    {
+      "item": "en-ambiguity-1#3",
+      "direction": "en->ko",
+      "size": "short",
+      "source": "All tests didn't pass, so we only shipped the fixes that were reviewed by two engineers.",
+      "checks": [
+        "Interpret 'all tests didn't pass' as not all tests passed (some failed), not that every test failed.",
+        "Only fixes reviewed by two engineers were shipped (restrictive 'only').",
+        "Do not drop the causal 'so'."
+      ],
+      "A": "모든 테스트가 통과하지 않았으므로, 두 명의 엔지니어가 검토한 수정 사항만 배포했습니다.",
+      "B": "모든 테스트가 통과하지 않았기 때문에, 두 명의 엔지니어가 검토한 수정 사항만 배포했습니다."
+    },
+    {
+      "item": "ko-ambiguity-1#1",
+      "direction": "ko->en",
+      "size": "short",
+      "source": "모든 사용자가 알림을 받지 못한 것은 아닙니다. 일부는 정상적으로 받았습니다.",
+      "checks": [
+        "Partial negation: not every user missed the notification (some received it).",
+        "Do not translate as 'no user received the notification'.",
+        "Keep the second sentence consistent with the first."
+      ],
+      "A": "Not every user did not receive the notification. Some received it normally.",
+      "B": "Not all users failed to receive notifications. Some received them normally."
+    },
+    {
+      "item": "ko-ambiguity-1#2",
+      "direction": "ko->en",
+      "size": "short",
+      "source": "모든 사용자가 알림을 받지 못한 것은 아닙니다. 일부는 정상적으로 받았습니다.",
+      "checks": [
+        "Partial negation: not every user missed the notification (some received it).",
+        "Do not translate as 'no user received the notification'.",
+        "Keep the second sentence consistent with the first."
+      ],
+      "A": "Not every user failed to receive the notification. Some received it normally.",
+      "B": "Not all users failed to receive notifications. Some received them normally."
+    },
+    {
+      "item": "ko-ambiguity-1#3",
+      "direction": "ko->en",
+      "size": "short",
+      "source": "모든 사용자가 알림을 받지 못한 것은 아닙니다. 일부는 정상적으로 받았습니다.",
+      "checks": [
+        "Partial negation: not every user missed the notification (some received it).",
+        "Do not translate as 'no user received the notification'.",
+        "Keep the second sentence consistent with the first."
+      ],
+      "A": "Not all users failed to receive notifications. Some received them normally.",
+      "B": "Not every user failed to receive the notification. Some received it normally."
+    }
+  ],
+  "key": {
+    "seed": 20261008,
+    "runs": [
+      "benchmarks/runs/20261008-haiku45-quality-v2.json",
+      "benchmarks/runs/20261008-haiku55-quality-v2.json"
+    ],
+    "missing": [],
+    "items": {
+      "en-short-1#1": {
+        "A": "claude-haiku-4-5-20251001",
+        "B": "claude-haiku-5-5"
+      },
+      "en-short-1#2": {
+        "A": "claude-haiku-5-5",
+        "B": "claude-haiku-4-5-20251001"
+      },
+      "en-short-1#3": {
+        "A": "claude-haiku-4-5-20251001",
+        "B": "claude-haiku-5-5"
+      },
+      "ko-short-1#1": {
+        "A": "claude-haiku-5-5",
+        "B": "claude-haiku-4-5-20251001"
+      },
+      "ko-short-1#2": {
+        "A": "claude-haiku-5-5",
+        "B": "claude-haiku-4-5-20251001"
+      },
+      "ko-short-1#3": {
+        "A": "claude-haiku-4-5-20251001",
+        "B": "claude-haiku-5-5"
+      },
+      "en-paragraph-1#1": {
+        "A": "claude-haiku-5-5",
+        "B": "claude-haiku-4-5-20251001"
+      },
+      "en-paragraph-1#2": {
+        "A": "claude-haiku-5-5",
+        "B": "claude-haiku-4-5-20251001"
+      },
+      "en-paragraph-1#3": {
+        "A": "claude-haiku-4-5-20251001",
+        "B": "claude-haiku-5-5"
+      },
+      "ko-paragraph-1#1": {
+        "A": "claude-haiku-5-5",
+        "B": "claude-haiku-4-5-20251001"
+      },
+      "ko-paragraph-1#2": {
+        "A": "claude-haiku-4-5-20251001",
+        "B": "claude-haiku-5-5"
+      },
+      "ko-paragraph-1#3": {
+        "A": "claude-haiku-5-5",
+        "B": "claude-haiku-4-5-20251001"
+      },
+      "en-numbers-1#1": {
+        "A": "claude-haiku-4-5-20251001",
+        "B": "claude-haiku-5-5"
+      },
+      "en-numbers-1#2": {
+        "A": "claude-haiku-5-5",
+        "B": "claude-haiku-4-5-20251001"
+      },
+      "en-numbers-1#3": {
+        "A": "claude-haiku-4-5-20251001",
+        "B": "claude-haiku-5-5"
+      },
+      "ko-numbers-1#1": {
+        "A": "claude-haiku-4-5-20251001",
+        "B": "claude-haiku-5-5"
+      },
+      "ko-numbers-1#2": {
+        "A": "claude-haiku-5-5",
+        "B": "claude-haiku-4-5-20251001"
+      },
+      "ko-numbers-1#3": {
+        "A": "claude-haiku-5-5",
+        "B": "claude-haiku-4-5-20251001"
+      },
+      "en-code-1#1": {
+        "A": "claude-haiku-4-5-20251001",
+        "B": "claude-haiku-5-5"
+      },
+      "en-code-1#2": {
+        "A": "claude-haiku-4-5-20251001",
+        "B": "claude-haiku-5-5"
+      },
+      "en-code-1#3": {
+        "A": "claude-haiku-5-5",
+        "B": "claude-haiku-4-5-20251001"
+      },
+      "ko-code-1#1": {
+        "A": "claude-haiku-5-5",
+        "B": "claude-haiku-4-5-20251001"
+      },
+      "ko-code-1#2": {
+        "A": "claude-haiku-5-5",
+        "B": "claude-haiku-4-5-20251001"
+      },
+      "ko-code-1#3": {
+        "A": "claude-haiku-4-5-20251001",
+        "B": "claude-haiku-5-5"
+      },
+      "en-long-1#1": {
+        "A": "claude-haiku-4-5-20251001",
+        "B": "claude-haiku-5-5"
+      },
+      "en-long-1#2": {
+        "A": "claude-haiku-4-5-20251001",
+        "B": "claude-haiku-5-5"
+      },
+      "en-long-1#3": {
+        "A": "claude-haiku-4-5-20251001",
+        "B": "claude-haiku-5-5"
+      },
+      "ko-long-1#1": {
+        "A": "claude-haiku-4-5-20251001",
+        "B": "claude-haiku-5-5"
+      },
+      "ko-long-1#2": {
+        "A": "claude-haiku-5-5",
+        "B": "claude-haiku-4-5-20251001"
+      },
+      "ko-long-1#3": {
+        "A": "claude-haiku-5-5",
+        "B": "claude-haiku-4-5-20251001"
+      },
+      "en-tone-1#1": {
+        "A": "claude-haiku-4-5-20251001",
+        "B": "claude-haiku-5-5"
+      },
+      "en-tone-1#2": {
+        "A": "claude-haiku-5-5",
+        "B": "claude-haiku-4-5-20251001"
+      },
+      "en-tone-1#3": {
+        "A": "claude-haiku-4-5-20251001",
+        "B": "claude-haiku-5-5"
+      },
+      "ko-tone-1#1": {
+        "A": "claude-haiku-5-5",
+        "B": "claude-haiku-4-5-20251001"
+      },
+      "ko-tone-1#2": {
+        "A": "claude-haiku-4-5-20251001",
+        "B": "claude-haiku-5-5"
+      },
+      "ko-tone-1#3": {
+        "A": "claude-haiku-5-5",
+        "B": "claude-haiku-4-5-20251001"
+      },
+      "en-idiom-1#1": {
+        "A": "claude-haiku-4-5-20251001",
+        "B": "claude-haiku-5-5"
+      },
+      "en-idiom-1#2": {
+        "A": "claude-haiku-5-5",
+        "B": "claude-haiku-4-5-20251001"
+      },
+      "en-idiom-1#3": {
+        "A": "claude-haiku-4-5-20251001",
+        "B": "claude-haiku-5-5"
+      },
+      "ko-idiom-1#1": {
+        "A": "claude-haiku-5-5",
+        "B": "claude-haiku-4-5-20251001"
+      },
+      "ko-idiom-1#2": {
+        "A": "claude-haiku-5-5",
+        "B": "claude-haiku-4-5-20251001"
+      },
+      "ko-idiom-1#3": {
+        "A": "claude-haiku-5-5",
+        "B": "claude-haiku-4-5-20251001"
+      },
+      "en-ui-1#1": {
+        "A": "claude-haiku-4-5-20251001",
+        "B": "claude-haiku-5-5"
+      },
+      "en-ui-1#2": {
+        "A": "claude-haiku-5-5",
+        "B": "claude-haiku-4-5-20251001"
+      },
+      "en-ui-1#3": {
+        "A": "claude-haiku-4-5-20251001",
+        "B": "claude-haiku-5-5"
+      },
+      "ko-ui-1#1": {
+        "A": "claude-haiku-5-5",
+        "B": "claude-haiku-4-5-20251001"
+      },
+      "ko-ui-1#2": {
+        "A": "claude-haiku-5-5",
+        "B": "claude-haiku-4-5-20251001"
+      },
+      "ko-ui-1#3": {
+        "A": "claude-haiku-4-5-20251001",
+        "B": "claude-haiku-5-5"
+      },
+      "en-techdoc-1#1": {
+        "A": "claude-haiku-5-5",
+        "B": "claude-haiku-4-5-20251001"
+      },
+      "en-techdoc-1#2": {
+        "A": "claude-haiku-5-5",
+        "B": "claude-haiku-4-5-20251001"
+      },
+      "en-techdoc-1#3": {
+        "A": "claude-haiku-5-5",
+        "B": "claude-haiku-4-5-20251001"
+      },
+      "ko-techdoc-1#1": {
+        "A": "claude-haiku-5-5",
+        "B": "claude-haiku-4-5-20251001"
+      },
+      "ko-techdoc-1#2": {
+        "A": "claude-haiku-4-5-20251001",
+        "B": "claude-haiku-5-5"
+      },
+      "ko-techdoc-1#3": {
+        "A": "claude-haiku-5-5",
+        "B": "claude-haiku-4-5-20251001"
+      },
+      "en-ambiguity-1#1": {
+        "A": "claude-haiku-5-5",
+        "B": "claude-haiku-4-5-20251001"
+      },
+      "en-ambiguity-1#2": {
+        "A": "claude-haiku-5-5",
+        "B": "claude-haiku-4-5-20251001"
+      },
+      "en-ambiguity-1#3": {
+        "A": "claude-haiku-4-5-20251001",
+        "B": "claude-haiku-5-5"
+      },
+      "ko-ambiguity-1#1": {
+        "A": "claude-haiku-5-5",
+        "B": "claude-haiku-4-5-20251001"
+      },
+      "ko-ambiguity-1#2": {
+        "A": "claude-haiku-5-5",
+        "B": "claude-haiku-4-5-20251001"
+      },
+      "ko-ambiguity-1#3": {
+        "A": "claude-haiku-4-5-20251001",
+        "B": "claude-haiku-5-5"
+      }
+    }
+  },
+  "scores": [
+    {
+      "judge": "main-assistant",
+      "items": [
+        {
+          "item": "en-short-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 1,
+            "fluency": 4
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 1,
+            "fluency": 5
+          },
+          "preference": "B",
+          "note": "A의 '원본 창'은 '원래 창'보다 어색"
+        },
+        {
+          "item": "en-short-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 1,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 1,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "en-short-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 1,
+            "fluency": 4
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 1,
+            "fluency": 5
+          },
+          "preference": "B",
+          "note": "A '원본 창'"
+        },
+        {
+          "item": "ko-short-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 1,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 1,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "ko-short-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 1,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 1,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "ko-short-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 1,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 1,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "en-paragraph-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "en-paragraph-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "en-paragraph-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "ko-paragraph-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 1,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 1,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "ko-paragraph-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 1,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 1,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "ko-paragraph-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 1,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 1,
+            "fluency": 4
+          },
+          "preference": "A",
+          "note": "B는 '취소해도'의 양보 관계가 덜 직접적"
+        },
+        {
+          "item": "en-numbers-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 2,
+            "fluency": 4
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "B",
+          "note": "A '최대 2회까지 시도'는 재시도 횟수가 모호"
+        },
+        {
+          "item": "en-numbers-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 2,
+            "fluency": 4
+          },
+          "preference": "A",
+          "note": "B '최대 2회까지 시도'는 모호"
+        },
+        {
+          "item": "en-numbers-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 2,
+            "fluency": 4
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 2,
+            "fluency": 4
+          },
+          "preference": "tie",
+          "note": "둘 다 재시도 횟수 표현이 모호"
+        },
+        {
+          "item": "ko-numbers-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "ko-numbers-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "ko-numbers-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "en-code-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "en-code-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 4
+          },
+          "preference": "A",
+          "note": "B 어순이 다소 부자연스러움"
+        },
+        {
+          "item": "en-code-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 3
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "B",
+          "note": "A '`cancel()`를' 조사 오류, 마지막 문장 어색"
+        },
+        {
+          "item": "ko-code-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 2,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 2,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "ko-code-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 2,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 2,
+            "fluency": 4
+          },
+          "preference": "A",
+          "note": "B 'Timeout does not mean translation success' 관사 누락"
+        },
+        {
+          "item": "ko-code-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 2,
+            "fluency": 4
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 2,
+            "fluency": 5
+          },
+          "preference": "B"
+        },
+        {
+          "item": "en-long-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 6,
+            "fluency": 3
+          },
+          "B": {
+            "majorError": true,
+            "checksMet": 5,
+            "fluency": 1
+          },
+          "preference": "A",
+          "note": "B가 영어 원문을 문단마다 그대로 섞어 출력함; A는 마지막 문단 어색"
+        },
+        {
+          "item": "en-long-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 6,
+            "fluency": 4
+          },
+          "B": {
+            "majorError": true,
+            "checksMet": 5,
+            "fluency": 1
+          },
+          "preference": "A",
+          "note": "B가 영어 원문을 섞어 출력함; A '완성도'는 오역에 가까운 단어 선택"
+        },
+        {
+          "item": "en-long-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 6,
+            "fluency": 3
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 6,
+            "fluency": 4
+          },
+          "preference": "B",
+          "note": "A 마지막 문단 '완료를 측정하고, 첫 번째 단어가 나타날 때가 아닙니다' 어색"
+        },
+        {
+          "item": "ko-long-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "ko-long-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "ko-long-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "en-tone-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 4
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 4
+          },
+          "preference": "B",
+          "note": "B가 고객 안내 톤에 더 맞음(앞의 '죄송합니다'는 중복)"
+        },
+        {
+          "item": "en-tone-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 4
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 4
+          },
+          "preference": "A",
+          "note": "A가 고객 안내 톤에 더 맞음"
+        },
+        {
+          "item": "en-tone-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 4
+          },
+          "B": {
+            "majorError": true,
+            "checksMet": 3,
+            "fluency": 1
+          },
+          "preference": "A",
+          "note": "B가 원문 반복과 'Wait. Let me correct that.'을 출력함"
+        },
+        {
+          "item": "ko-tone-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 3
+          },
+          "preference": "A",
+          "note": "B는 'ㅋㅋ'를 번역하지 않음"
+        },
+        {
+          "item": "ko-tone-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 3
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "B",
+          "note": "A는 'ㅋㅋ'를 번역하지 않음"
+        },
+        {
+          "item": "ko-tone-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 3
+          },
+          "preference": "A",
+          "note": "B는 'ㅋㅋ'를 번역하지 않음"
+        },
+        {
+          "item": "en-idiom-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 4
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "B",
+          "note": "B의 '제 몫을 해내고'가 관용구 의미를 더 잘 살림"
+        },
+        {
+          "item": "en-idiom-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 4
+          },
+          "preference": "A",
+          "note": "A가 관용구 의미를 더 잘 살림"
+        },
+        {
+          "item": "en-idiom-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 4
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "B"
+        },
+        {
+          "item": "ko-idiom-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "ko-idiom-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 4
+          },
+          "preference": "A",
+          "note": "B 'couldn't find time to reply'는 '답장이 늦었다'와 약간 다름"
+        },
+        {
+          "item": "ko-idiom-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "en-ui-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 4
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "B",
+          "note": "'취소할 수 없습니다'보다 '되돌릴 수 없습니다'가 undo에 맞음"
+        },
+        {
+          "item": "en-ui-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 4
+          },
+          "preference": "A",
+          "note": "'되돌릴 수 없습니다'가 더 정확"
+        },
+        {
+          "item": "en-ui-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 4
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "B",
+          "note": "'되돌릴 수 없습니다'가 더 정확"
+        },
+        {
+          "item": "ko-ui-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "ko-ui-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "ko-ui-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 4
+          },
+          "preference": "A"
+        },
+        {
+          "item": "en-techdoc-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "en-techdoc-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "en-techdoc-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "ko-techdoc-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "ko-techdoc-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "ko-techdoc-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "en-ambiguity-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 2,
+            "fluency": 4
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 4
+          },
+          "preference": "B",
+          "note": "B '모든 테스트를 통과하지 못했으므로'가 부분 부정을 더 잘 살림"
+        },
+        {
+          "item": "en-ambiguity-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 2,
+            "fluency": 4
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 2,
+            "fluency": 4
+          },
+          "preference": "tie",
+          "note": "둘 다 '모든 테스트가 통과하지 않아' 전체 부정으로도 읽힘"
+        },
+        {
+          "item": "en-ambiguity-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 2,
+            "fluency": 4
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 2,
+            "fluency": 4
+          },
+          "preference": "tie",
+          "note": "둘 다 전체 부정으로도 읽힘"
+        },
+        {
+          "item": "ko-ambiguity-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 2,
+            "fluency": 2
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "B",
+          "note": "A 'Not every user did not receive' 이중 부정으로 혼란"
+        },
+        {
+          "item": "ko-ambiguity-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "ko-ambiguity-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        }
+      ]
+    },
+    {
+      "judge": "independent-agent",
+      "items": [
+        {
+          "item": "en-short-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 1,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 1,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "en-short-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 1,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 1,
+            "fluency": 4
+          },
+          "preference": "A",
+          "note": "B \"열린 상태로 유지해 주세요\"가 다소 번역투."
+        },
+        {
+          "item": "en-short-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 1,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 1,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "ko-short-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 1,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 1,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "ko-short-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 1,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 1,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "ko-short-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 1,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 1,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "en-paragraph-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "en-paragraph-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "en-paragraph-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "ko-paragraph-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 1,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 1,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "ko-paragraph-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 1,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 1,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "ko-paragraph-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 1,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 1,
+            "fluency": 4
+          },
+          "preference": "A",
+          "note": "B \"The request may be canceled, but\"가 원문의 양보(취소해도) 관계를 흐림."
+        },
+        {
+          "item": "en-numbers-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 2,
+            "fluency": 4
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "B",
+          "note": "A \"최대 2회까지 시도합니다\"는 재시도 횟수인지 총 시도 횟수인지 모호."
+        },
+        {
+          "item": "en-numbers-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 2,
+            "fluency": 4
+          },
+          "preference": "A",
+          "note": "B \"최대 2회까지 시도합니다\"는 재시도 횟수인지 총 시도 횟수인지 모호."
+        },
+        {
+          "item": "en-numbers-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 2,
+            "fluency": 4
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "B",
+          "note": "A \"최대 2회까지 시도합니다\"는 재시도 횟수인지 총 시도 횟수인지 모호."
+        },
+        {
+          "item": "ko-numbers-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 4
+          },
+          "preference": "A",
+          "note": "B adds \"more\" and \"before each attempt\", slight over-interpretation."
+        },
+        {
+          "item": "ko-numbers-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "ko-numbers-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 4
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "B",
+          "note": "A adds \"more\" and \"1.5 seconds apart\", slight over-interpretation."
+        },
+        {
+          "item": "en-code-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "en-code-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 4
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 4
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "en-code-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 3
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 4
+          },
+          "preference": "B",
+          "note": "A \"`cancel()`를\" 조사 오류, \"시간 초과가 번역이 성공했다는 의미는\" 문법 어색."
+        },
+        {
+          "item": "ko-code-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 2,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 2,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "ko-code-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 2,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 2,
+            "fluency": 4
+          },
+          "preference": "A",
+          "note": "B \"Timeout does not mean translation success.\" is stilted."
+        },
+        {
+          "item": "ko-code-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 2,
+            "fluency": 4
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 2,
+            "fluency": 5
+          },
+          "preference": "B",
+          "note": "A \"Timeout does not indicate successful translation\" slightly stiff."
+        },
+        {
+          "item": "en-long-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 6,
+            "fluency": 3
+          },
+          "B": {
+            "majorError": true,
+            "checksMet": 5,
+            "fluency": 4
+          },
+          "preference": "A",
+          "note": "B는 영어 원문 문단을 번역문 사이에 그대로 섞어 출력(6문단); A는 해라체 혼용·마지막 문장 어색."
+        },
+        {
+          "item": "en-long-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 5,
+            "fluency": 3
+          },
+          "B": {
+            "majorError": true,
+            "checksMet": 5,
+            "fluency": 4
+          },
+          "preference": "A",
+          "note": "B는 영어 원문 문단을 번역문 사이에 그대로 섞어 출력; A \"완성도는 ... 측정\"은 용어 오역."
+        },
+        {
+          "item": "en-long-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 6,
+            "fluency": 3
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 6,
+            "fluency": 4
+          },
+          "preference": "B",
+          "note": "A 마지막 문단 \"…완료를 측정하고, 첫 번째 단어가 나타날 때가 아닙니다\" 비문."
+        },
+        {
+          "item": "ko-long-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "ko-long-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "ko-long-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "en-tone-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 4
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 4
+          },
+          "preference": "tie",
+          "note": "B는 \"죄송합니다.\" 중복 사과 추가, A는 다소 직역투."
+        },
+        {
+          "item": "en-tone-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 4
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "B",
+          "note": "A는 \"죄송합니다.\" 중복 사과 추가."
+        },
+        {
+          "item": "en-tone-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 4
+          },
+          "B": {
+            "majorError": true,
+            "checksMet": 1,
+            "fluency": 2
+          },
+          "preference": "A",
+          "note": "B는 영어 원문 반복과 \"Wait. Let me correct that.\" 메타 문구를 포함."
+        },
+        {
+          "item": "ko-tone-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 4
+          },
+          "preference": "A",
+          "note": "B leaves Korean \"ㅋㅋ\" in English output."
+        },
+        {
+          "item": "ko-tone-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 4
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "B",
+          "note": "A leaves Korean \"ㅋㅋ\" and drops final period."
+        },
+        {
+          "item": "ko-tone-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 4
+          },
+          "preference": "A",
+          "note": "B leaves Korean \"ㅋㅋ\" in English output."
+        },
+        {
+          "item": "en-idiom-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 4
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "B",
+          "note": "B \"바로 제 몫을 해내고\"가 관용구 의미를 더 정확히 살림."
+        },
+        {
+          "item": "en-idiom-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 4
+          },
+          "preference": "A",
+          "note": "A \"바로 제 역할을 해내고\"가 더 자연스러움; B \"롤아웃\" 음차."
+        },
+        {
+          "item": "en-idiom-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "ko-idiom-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 4
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "ko-idiom-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 4
+          },
+          "preference": "A",
+          "note": "B \"couldn't find time to reply\" implies no reply rather than a late one."
+        },
+        {
+          "item": "ko-idiom-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "en-ui-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 4
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "B",
+          "note": "A \"취소할 수 없습니다\"보다 B \"되돌릴 수 없습니다\"가 undo 의미에 정확."
+        },
+        {
+          "item": "en-ui-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 4
+          },
+          "preference": "A",
+          "note": "B \"취소할 수 없습니다\"는 undo 의미가 덜 정확."
+        },
+        {
+          "item": "en-ui-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 4
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "B",
+          "note": "A \"취소할 수 없습니다\"보다 B \"되돌릴 수 없습니다\"가 undo 의미에 정확."
+        },
+        {
+          "item": "ko-ui-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "ko-ui-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "ko-ui-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "en-techdoc-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 4
+          },
+          "preference": "A",
+          "note": "B \"폴백되지만\" 음차가 다소 어색."
+        },
+        {
+          "item": "en-techdoc-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 4
+          },
+          "preference": "A",
+          "note": "B \"폴백되지만\" 음차가 다소 어색."
+        },
+        {
+          "item": "en-techdoc-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 4
+          },
+          "preference": "A",
+          "note": "B \"폴백되지만\" 음차가 다소 어색."
+        },
+        {
+          "item": "ko-techdoc-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "ko-techdoc-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "ko-techdoc-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "en-ambiguity-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 2,
+            "fluency": 4
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "B",
+          "note": "A \"모든 테스트가 통과하지 않아서\"는 전체 부정으로 읽히기 쉬움; B \"통과하지 못했으므로\"가 부분 부정에 가까움."
+        },
+        {
+          "item": "en-ambiguity-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 2,
+            "fluency": 4
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 2,
+            "fluency": 4
+          },
+          "preference": "tie",
+          "note": "둘 다 \"모든 테스트가 통과하지 않았으므로\"로 부분/전체 부정이 모호."
+        },
+        {
+          "item": "en-ambiguity-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 2,
+            "fluency": 4
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 2,
+            "fluency": 4
+          },
+          "preference": "tie",
+          "note": "둘 다 \"모든 테스트가 통과하지 않았…\"로 부분/전체 부정이 모호."
+        },
+        {
+          "item": "ko-ambiguity-1#1",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 2
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "B",
+          "note": "A \"Not every user did not receive\" is an awkward double negative."
+        },
+        {
+          "item": "ko-ambiguity-1#2",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        },
+        {
+          "item": "ko-ambiguity-1#3",
+          "A": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "B": {
+            "majorError": false,
+            "checksMet": 3,
+            "fluency": 5
+          },
+          "preference": "tie"
+        }
+      ]
+    }
+  ],
+  "aggregate": {
+    "perJudge": {
+      "main-assistant": {
+        "claude-haiku-4-5-20251001": {
+          "outputs": 60,
+          "majorErrors": 0,
+          "usable": 60,
+          "checksMet": 163,
+          "checksTotal": 168,
+          "wins": 8,
+          "ties": 32,
+          "byDirection": {
+            "en->ko": {
+              "outputs": 30,
+              "majorErrors": 0,
+              "fluencyMean": 4.27
+            },
+            "ko->en": {
+              "outputs": 30,
+              "majorErrors": 0,
+              "fluencyMean": 4.67
+            }
+          },
+          "fluencyMean": 4.47
+        },
+        "claude-haiku-5-5": {
+          "outputs": 60,
+          "majorErrors": 3,
+          "usable": 56,
+          "checksMet": 161,
+          "checksTotal": 168,
+          "wins": 20,
+          "ties": 32,
+          "byDirection": {
+            "en->ko": {
+              "outputs": 30,
+              "majorErrors": 3,
+              "fluencyMean": 4.27
+            },
+            "ko->en": {
+              "outputs": 30,
+              "majorErrors": 0,
+              "fluencyMean": 4.87
+            }
+          },
+          "fluencyMean": 4.57
+        }
+      },
+      "independent-agent": {
+        "claude-haiku-4-5-20251001": {
+          "outputs": 60,
+          "majorErrors": 0,
+          "usable": 60,
+          "checksMet": 162,
+          "checksTotal": 168,
+          "wins": 9,
+          "ties": 31,
+          "byDirection": {
+            "en->ko": {
+              "outputs": 30,
+              "majorErrors": 0,
+              "fluencyMean": 4.2
+            },
+            "ko->en": {
+              "outputs": 30,
+              "majorErrors": 0,
+              "fluencyMean": 4.73
+            }
+          },
+          "fluencyMean": 4.47
+        },
+        "claude-haiku-5-5": {
+          "outputs": 60,
+          "majorErrors": 3,
+          "usable": 56,
+          "checksMet": 161,
+          "checksTotal": 168,
+          "wins": 20,
+          "ties": 31,
+          "byDirection": {
+            "en->ko": {
+              "outputs": 30,
+              "majorErrors": 3,
+              "fluencyMean": 4.53
+            },
+            "ko->en": {
+              "outputs": 30,
+              "majorErrors": 0,
+              "fluencyMean": 4.83
+            }
+          },
+          "fluencyMean": 4.68
+        }
+      }
+    },
+    "disagreements": [
+      {
+        "item": "en-tone-1#2",
+        "judges": [
+          {
+            "judge": "main-assistant",
+            "winner": "claude-haiku-5-5",
+            "majorError": {
+              "claude-haiku-5-5": false,
+              "claude-haiku-4-5-20251001": false
+            },
+            "note": "A가 고객 안내 톤에 더 맞음"
+          },
+          {
+            "judge": "independent-agent",
+            "winner": "claude-haiku-4-5-20251001",
+            "majorError": {
+              "claude-haiku-5-5": false,
+              "claude-haiku-4-5-20251001": false
+            },
+            "note": "A는 \"죄송합니다.\" 중복 사과 추가."
+          }
+        ]
+      }
+    ]
+  }
+}

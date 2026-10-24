@@ -1,0 +1,5 @@
+--- a/DeepK/Translation/TranslationResultTextView.swift
++++ b/DeepK/Translation/TranslationResultTextView.swift
+@@ -564 +564 @@
+-        Task { @MainActor [weak proxy] in proxy?.publish(current) }
++        Task { @MainActor [weak proxy] in _ = (proxy, current) }

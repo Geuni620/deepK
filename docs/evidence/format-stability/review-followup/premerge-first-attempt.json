@@ -1,0 +1,29 @@
+{
+  "base": "f1203d4996f9af427ad693453c152709e9c47c7c",
+  "head": "e4e00dd5c614398ff8425af525215528cd97bc93",
+  "mergedTree": "5cb1d67bbc8b72ee991a7a7dc9c07e21300de92c",
+  "mergeAndStagedDiffCheckExitCode": 0,
+  "fullSuite": {
+    "command": "./scripts/test.sh",
+    "exitCode": 133,
+    "elapsedSecondsIncludingCompilation": 1285.72,
+    "configuredPrograms": 25,
+    "testSourceFiles": 29,
+    "completedProgramsBeforeFailure": 13,
+    "failedProgram": "TranslationResultTextView",
+    "assertion": "a newly attached proxy receives the current hint",
+    "remainingProgramsNotExecuted": 11,
+    "format": { "pass": 36, "xfail": 0, "fail": 0, "xpass": 0 }
+  },
+  "build": {
+    "command": "./scripts/build.sh",
+    "exitCode": 0,
+    "elapsedSeconds": 325.76
+  },
+  "conditions": {
+    "initiallyConcurrentColdAppBuild": true,
+    "hostMemoryPressureObserved": true,
+    "interruptedOrKilledProcesses": false
+  },
+  "interpretation": "The existing assertion used a fixed 0.05-second RunLoop allowance. This is the first failure record, not a passed merge gate. The affected suite and full integration suite must pass after an independently checked test-wait correction. Original local logs are retained without overwriting. Compile-and-test elapsed times under different host load are not product performance measurements."
+}

@@ -1,0 +1,51 @@
+The program prints the first Fibonacci numbers:
+
+1
+1
+2
+3
+5
+8
+Each term after 
+1
+1 is the sum of the two before it, so the sixth is 
+8
+8.
+
+A
+A short section about sets: the set 
+S
+=
+{
+1
+,
+2
+}
+S={1,2} has size 
+2
+2, and 
+A
+A is any subset.
+
+x
+x-axis label shown below the chart
+The speed is 
+v
+=
+d
+/
+t
+v=d/t and the kinetic energy is 
+1
+2
+m
+v
+2
+2
+1
+​
+ mv 
+2
+ , where 
+x
+x is the position.

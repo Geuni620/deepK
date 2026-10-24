@@ -1,0 +1,17 @@
+[
+  {
+    "mode": "inline",
+    "exitCode": 0,
+    "output": "TYPED_PROVENANCE PASS chips=[\"cancel()\", \"reset()\"] insertion=\"cancel()을 실행한 다음 `reset()`을 실행하세요.\" selection=\"cancel()을 실행한 다음 `reset()`을 실행하세요.\"\n"
+  },
+  {
+    "mode": "closing",
+    "exitCode": 0,
+    "output": "CLOSING_FENCE PASS model=\"print(1) + 1\" insertion=\"print(1) + 1\"\n"
+  },
+  {
+    "mode": "list",
+    "exitCode": 0,
+    "output": "INLINE_MARKER - literal item: PASS html=<meta charset=\"utf-8\"><p><code>- literal item</code></p>\nINLINE_MARKER - literal item: PASS html=<meta charset=\"utf-8\"><p><code>- literal item</code></p>\nINLINE_MARKER 1. literal item: PASS html=<meta charset=\"utf-8\"><p><code>1. literal item</code></p>\nINLINE_MARKER 1. literal item: PASS html=<meta charset=\"utf-8\"><p><code>1. literal item</code></p>\n"
+  }
+]

@@ -1,0 +1,73 @@
+{
+  "classification": "현재 증거는 기존 Swift 컴파일러 매크로 플러그인 진단과 일치한다. 원래 로그 한 줄의 정확한 발생 프로세스는 미확정이다.",
+  "productRuntimeFailureReproduced": false,
+  "intentionalCorruptJSONFixtureInFooterTarget": false,
+  "toolchainVersion": "Apple Swift 6.2.1 (swiftlang-6.2.1.4.8 clang-1700.4.4.1)",
+  "baselineSourceComparison": {
+    "revision": "f1203d4",
+    "unchangedFiles": [
+      "DeepK/Translation/TranslationFooterState.swift",
+      "DeepKTests/TranslationFooterStateTests.swift"
+    ]
+  },
+  "standaloneRuns": [
+    {
+      "binary": "latest-existing",
+      "iteration": 1,
+      "exitCode": 0,
+      "stdout": "TranslationFooterStateTests passed",
+      "stderr": ""
+    },
+    {
+      "binary": "latest-existing",
+      "iteration": 2,
+      "exitCode": 0,
+      "stdout": "TranslationFooterStateTests passed",
+      "stderr": ""
+    },
+    {
+      "binary": "latest-existing",
+      "iteration": 3,
+      "exitCode": 0,
+      "stdout": "TranslationFooterStateTests passed",
+      "stderr": ""
+    },
+    {
+      "binary": "oldest-existing-provenance-unverified",
+      "iteration": 1,
+      "exitCode": 0,
+      "stdout": "TranslationFooterStateTests passed",
+      "stderr": ""
+    },
+    {
+      "binary": "oldest-existing-provenance-unverified",
+      "iteration": 2,
+      "exitCode": 0,
+      "stdout": "TranslationFooterStateTests passed",
+      "stderr": ""
+    },
+    {
+      "binary": "oldest-existing-provenance-unverified",
+      "iteration": 3,
+      "exitCode": 0,
+      "stdout": "TranslationFooterStateTests passed",
+      "stderr": ""
+    }
+  ],
+  "oldBinaryRevisionVerified": false,
+  "localStringEvidence": {
+    "library": "libSwiftCompilerPluginMessageHandling.dylib",
+    "containsInternalErrorPrefix": true,
+    "containsUnexpectedEOF": true,
+    "footerExecutableContainsInternalErrorPrefix": false
+  },
+  "scope": {
+    "newCompilations": 0,
+    "fullSuiteReruns": 0,
+    "projectOrIndexWrites": 0,
+    "providerClipboardOrGUIAppCalls": 0
+  },
+  "officialIssue": "https://github.com/swiftlang/swift/issues/86833",
+  "exactMessageDuplicate": "https://github.com/swiftlang/swift/issues/90663",
+  "limit": "원래 통합 로그는 swiftc와 테스트의 stderr 및 PID를 구분하지 않으므로 특정 컴파일 호출이나 플러그인 프로세스를 소급 확정할 수 없다."
+}

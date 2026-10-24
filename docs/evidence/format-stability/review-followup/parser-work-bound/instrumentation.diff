@@ -1,0 +1,8 @@
+--- a/TranslationLists.swift
++++ b/TranslationLists.swift
+@@ -0,0 +1 @@
++nonisolated(unsafe) var reviewSearchWork = 0
+@@ -148 +149,2 @@
+-            while index < ranges.count, NSMaxRange(ranges[index]) <= range.location { index += 1 }
++            reviewSearchWork += 1
++            while index < ranges.count, NSMaxRange(ranges[index]) <= range.location { reviewSearchWork += 1; index += 1 }

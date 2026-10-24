@@ -1,0 +1,33 @@
+{
+  "sourceCommit": "5e9ffd3e2d4ab3eb456d5690f9182e4a11b80e43",
+  "recordingHead": "b5619a63c6515bf33e276065514bf795f79e027d",
+  "sourceOrTestDiffSinceSourceCommit": [],
+  "fullSuite": {
+    "command": "./scripts/test.sh",
+    "exitCode": 0,
+    "programs": 25,
+    "testSourceFiles": 29,
+    "elapsedSecondsIncludingCompilation": 940.71,
+    "format": {
+      "pass": 36,
+      "xfail": 0,
+      "fail": 0,
+      "xpass": 0
+    }
+  },
+  "strictFormat": {
+    "exitCode": 0,
+    "report": "../final-strict.json"
+  },
+  "build": {
+    "command": "./scripts/build.sh",
+    "exitCode": 0,
+    "elapsedSeconds": 43.15,
+    "signatureVerified": true
+  },
+  "diffCheckExitCode": 0,
+  "nonFatalDiagnosticCount": 1,
+  "nonFatalDiagnosticEvidence": "compiler-log-classification.json",
+  "liveProviderRequests": 0,
+  "note": "Later commits add docs/evidence only. Latest-base integration test/build is a separate merge gate recorded on the PR."
+}

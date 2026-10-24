@@ -1,0 +1,8 @@
+--- a/TranslationLists.swift
++++ b/TranslationLists.swift
+@@ -45 +45 @@
+-        var codeBlocks = RangeSweep(excluded, limit: text.length)
++        _ = RangeSweep(excluded, limit: text.length)
+@@ -56 +56 @@
+-            if codeBlocks.intersects(line) { reset(); continue }
++            if excluded.contains(where: { reviewSearchWork += 1; return NSIntersectionRange($0, line).length > 0 }) { reset(); continue }

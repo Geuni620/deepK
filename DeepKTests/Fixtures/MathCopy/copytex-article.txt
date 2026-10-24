@@ -1,0 +1,13 @@
+
+1. Recipes Scale by $\times k$, Pans by $k^2$
+A loaf needs $500\,\mathrm{g}$ of flour and $10\,\mathrm{g}$ of salt. To bake for a crowd you multiply every line by the same factor ($k$), so $k = 3$ gives $1500\,\mathrm{g}$ and $30\,\mathrm{g}$.
+Bakers keep the dough ratio $\frac{w}{f}$ fixed, where $w$ is water and $f$ is flour. A ratio of $\frac{13}{20}$ is a soft dough; anything above $\frac{4}{5}$ is closer to batter.
+A round pan of radius $r$ holds $\pi r^2$ of batter per centimetre of depth, so a pan twice as wide needs four times the dough. Its diameter is $d = 2\sqrt{A/\pi}$, and going the other way, the radius for a target area $A$ is
+$$r = \sqrt{\frac{A}{\pi}}$$
+With several pans $p_1, \dots, p_n$ the total area is $\sum_{i=1}^{n} \pi r_i^2$, and the scale factor is that sum divided by the area of the original pan:
+$$k = \frac{1}{A_0} \sum_{i=1}^{n} \pi r_i^2$$
+If batch $i$ uses $i$ cups, the first $n$ batches use $\sum_{i=1}^{n} i = \frac{n(n+1)}{2}$ cups in total.
+Two flours can be tracked per batch as a grid $\begin{pmatrix} 300 & 200 \\ 450 & 300 \end{pmatrix}$ with one row per batch, and scaling only the second batch is the matrix
+$$S = \begin{pmatrix} 1 & 0 \\ 0 & k \end{pmatrix}$$
+$x$ marks the starting weight in this paragraph, and $t \text{ in minutes}$ keeps its label as text, and a pan tilted by $\theta$ fills to a depth of $h \cos\theta$ along its wall.
+Proofing time does not scale with the batch size, which is the one rule that surprises most home bakers.

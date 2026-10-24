@@ -1,0 +1,23 @@
+The estimate 
+x
+y
+^
+xy
+​
+  ^ is the bitwise XOR, the count 
+n
+~
+n
+  ~ 100 in practice, and the walk 
+A
+B
+→
+AB
+  → 
+B
+C
+→
+BC
+  goes around, then 
+z
+z follows.

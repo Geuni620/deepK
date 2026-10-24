@@ -1,0 +1,9 @@
+The script prints where it runs:
+
+1
+2
+3
+import os
+# Print the working directory
+print(os.getcwd())
+See os.getcwd() in the library reference.

@@ -1,0 +1,17 @@
+[
+  {
+    "mode": "inline",
+    "exitCode": 1,
+    "output": "TYPED_PROVENANCE FAIL chips=[\"cancel()\"] insertion=\"cancel()을 실행한 다음 reset()을 실행하세요.\" selection=\"cancel()을 실행한 다음 reset()을 실행하세요.\"\n"
+  },
+  {
+    "mode": "closing",
+    "exitCode": 1,
+    "output": "CLOSING_FENCE FAIL model=\"```python\\nprint(1)\\n``` + 1\" insertion=\"print(1)\\n``` + 1\"\n"
+  },
+  {
+    "mode": "list",
+    "exitCode": 1,
+    "output": "INLINE_MARKER - literal item: FAIL html=<meta charset=\"utf-8\"><ul><li><code>literal item</code></li></ul>\nINLINE_MARKER - literal item: FAIL html=<meta charset=\"utf-8\"><ul><li><code>literal item</code></li></ul>\nINLINE_MARKER 1. literal item: FAIL html=<meta charset=\"utf-8\"><ol start=\"1\"><li value=\"1\"><code>literal item</code></li></ol>\nINLINE_MARKER 1. literal item: FAIL html=<meta charset=\"utf-8\"><ol start=\"1\"><li value=\"1\"><code>literal item</code></li></ol>\n"
+  }
+]

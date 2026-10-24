@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "provenance": "Synthetic HTML and plain text transcribed from the user-provided screenshot; not a browser clipboard capture. Ordered and nested cases are controlled variations.",
+  "cases": [
+    {
+      "id": "bullets-without-plain-markers",
+      "label": "화면의 네 항목: 평문에 기호가 없는 HTML 목록",
+      "plain": "Describe the outcome: ordinary language is enough.\nAsk for a review: critique recommends where to start.\nCompare alternatives: choose the version to keep.\nPoint at the page: select the elements yourself.",
+      "html": "<ul><li><strong>Describe the outcome:</strong> ordinary language is enough.</li><li><strong>Ask for a review:</strong> critique recommends where to start.</li><li><strong>Compare alternatives:</strong> choose the version to keep.</li><li><strong>Point at the page:</strong> select the elements yourself.</li></ul>",
+      "items": [
+        "Describe the outcome: ordinary language is enough.",
+        "Ask for a review: critique recommends where to start.",
+        "Compare alternatives: choose the version to keep.",
+        "Point at the page: select the elements yourself."
+      ],
+      "kind": "bullet",
+      "numbers": [],
+      "depths": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "ordered-start-and-value",
+      "label": "번호 목록의 시작 번호와 중간 번호 변경",
+      "plain": "Keep the original window.\nRetry the request.",
+      "html": "<ol start=\"3\"><li>Keep the original window.</li><li value=\"7\">Retry the request.</li></ol>",
+      "items": [
+        "Keep the original window.",
+        "Retry the request."
+      ],
+      "kind": "ordered",
+      "numbers": [
+        3,
+        7
+      ],
+      "depths": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "nested-bullets",
+      "label": "부모와 자식 항목의 중첩 깊이",
+      "plain": "Keep the source.\nPreserve the links.\nPreserve the code.\nCopy the result.",
+      "html": "<ul><li>Keep the source.<ul><li>Preserve the links.</li><li>Preserve the code.</li></ul></li><li>Copy the result.</li></ul>",
+      "items": [
+        "Keep the source.",
+        "Preserve the links.",
+        "Preserve the code.",
+        "Copy the result."
+      ],
+      "kind": "nested",
+      "numbers": [],
+      "depths": [
+        0,
+        1,
+        1,
+        0
+      ]
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "cwd": "repository root with the final fake fixture",
+  "fullCompile": [
+    "swiftc",
+    "-swift-version",
+    "6",
+    "-warnings-as-errors",
+    "-module-cache-path",
+    "<tmp>/cache",
+    "-DCODEX_TRANSLATION_STANDALONE",
+    "DeepK/Translation/CodexTranslationClient.swift",
+    "DeepK/Translation/TranslationLiteralPlan.swift",
+    "DeepKTests/CodexTransportTests.swift",
+    "DeepKTests/CodexExecutableResolverTests.swift",
+    "-o",
+    "<tmp>/CodexTransport"
+  ],
+  "boundaryCompile": {
+    "before": [
+      "swiftc",
+      "-swift-version",
+      "6",
+      "-warnings-as-errors",
+      "-parse-as-library",
+      "-DHANDOFF_PROBE",
+      "-module-cache-path",
+      "<tmp>/cache",
+      "<tmp>/before-instrumented.swift",
+      "DeepK/Translation/TranslationLiteralPlan.swift",
+      "<tmp>/BoundaryProbe.swift",
+      "-o",
+      "<tmp>/before-boundary"
+    ],
+    "after": [
+      "swiftc",
+      "-swift-version",
+      "6",
+      "-warnings-as-errors",
+      "-parse-as-library",
+      "-DHANDOFF_PROBE",
+      "-module-cache-path",
+      "<tmp>/cache",
+      "<tmp>/after-instrumented.swift",
+      "DeepK/Translation/TranslationLiteralPlan.swift",
+      "<tmp>/BoundaryProbe.swift",
+      "-o",
+      "<tmp>/after-boundary"
+    ]
+  },
+  "boundaryRuns": [
+    [
+      "<tmp>/before-boundary",
+      "pending"
+    ],
+    [
+      "<tmp>/after-boundary",
+      "pending"
+    ],
+    [
+      "<tmp>/before-boundary",
+      "handoff"
+    ],
+    [
+      "<tmp>/after-boundary",
+      "handoff"
+    ]
+  ],
+  "sequentialObservations": [
+    [
+      "<tmp>/before-boundary",
+      "pending"
+    ],
+    [
+      "<tmp>/after-boundary",
+      "pending"
+    ]
+  ],
+  "note": "Each BoundaryProbe process emits three observations. Run sequential measurements only after compilers finish; correctness runs during compilation are separate. The committed reproduction probe changes only the temporary marker root."
+}

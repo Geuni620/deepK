@@ -1,0 +1,533 @@
+{
+  "status": "stopped_partial",
+  "note": "Run stopped by the agent tool background time limit after 35/48 requests; the benchmark binary writes JSON only at the end, so these records were parsed from its console log. Same harness and client as the A/B run. All 35 attempted requests succeeded.",
+  "startedAt": "2026-10-03T10:27Z",
+  "cli": "2.1.287 (Claude Code)",
+  "model": "claude-haiku-4-5-20251001",
+  "client": "ClaudeTranslationClient.swift (working tree, sha256 5af76bf739744f3416f78b1022d9f41235e7bbcbdaa48c5f6381cf4d2004c50e)",
+  "options": {
+    "arms": [
+      "baseline-json-proof",
+      "stream-immediate",
+      "stream-ondemand",
+      "stream-idle"
+    ],
+    "samples": [
+      "en-short-1",
+      "ko-short-1",
+      "en-numbers-1",
+      "ko-numbers-1"
+    ],
+    "repeats": 2,
+    "idleGapsSeconds": [
+      90,
+      300
+    ]
+  },
+  "armDefinitions": {
+    "baseline-json-proof": "one-shot json, reuses a successful auth status proof within 30 s (isolates the transport effect)",
+    "stream-immediate-lead": "warm spare request immediately preceding stream-immediate",
+    "stream-immediate": "request right after the previous result (replacement spare still booting)",
+    "stream-ondemand": "transport streamOnDemand: no spare, stream process spawned per request",
+    "stream-idle-90s": "warm spare after >=90 s client idle",
+    "stream-idle-300s": "warm spare after >=300 s client idle"
+  },
+  "plannedRequests": 48,
+  "attemptedRequests": 35,
+  "summary": [
+    {
+      "arm": "baseline-json-proof",
+      "n": 6,
+      "ok": 6,
+      "totalP50": 2360.0,
+      "totalMin": 2169,
+      "totalMax": 2468,
+      "firstTextP50": null,
+      "paths": [
+        "oneShotJSON"
+      ]
+    },
+    {
+      "arm": "stream-immediate-lead",
+      "n": 6,
+      "ok": 6,
+      "totalP50": 921.0,
+      "totalMin": 774,
+      "totalMax": 1070,
+      "firstTextP50": 711.5,
+      "paths": [
+        "warmSpare"
+      ]
+    },
+    {
+      "arm": "stream-immediate",
+      "n": 6,
+      "ok": 6,
+      "totalP50": 1451.0,
+      "totalMin": 1357,
+      "totalMax": 1760,
+      "firstTextP50": 1306.0,
+      "paths": [
+        "bootingSpare"
+      ]
+    },
+    {
+      "arm": "stream-ondemand",
+      "n": 6,
+      "ok": 6,
+      "totalP50": 1462.5,
+      "totalMin": 1286,
+      "totalMax": 1680,
+      "firstTextP50": 1264.5,
+      "paths": [
+        "onDemandStream"
+      ]
+    },
+    {
+      "arm": "stream-idle-90s",
+      "n": 6,
+      "ok": 6,
+      "totalP50": 886.5,
+      "totalMin": 794,
+      "totalMax": 1070,
+      "firstTextP50": 732.0,
+      "paths": [
+        "warmSpare"
+      ]
+    },
+    {
+      "arm": "stream-idle-300s",
+      "n": 5,
+      "ok": 5,
+      "totalP50": 1056,
+      "totalMin": 910,
+      "totalMax": 1240,
+      "firstTextP50": 911,
+      "paths": [
+        "warmSpare"
+      ]
+    }
+  ],
+  "results": [
+    {
+      "sequence": 1,
+      "arm": "baseline-json-proof",
+      "sampleID": "en-short-1",
+      "direction": "en->ko",
+      "size": "short",
+      "totalMilliseconds": 2468,
+      "path": "oneShotJSON",
+      "firstTextMilliseconds": null,
+      "waitedBeforeMilliseconds": 0,
+      "status": "success"
+    },
+    {
+      "sequence": 2,
+      "arm": "stream-immediate-lead",
+      "sampleID": "en-short-1",
+      "direction": "en->ko",
+      "size": "short",
+      "totalMilliseconds": 779,
+      "path": "warmSpare",
+      "firstTextMilliseconds": 601,
+      "waitedBeforeMilliseconds": 2118,
+      "status": "success"
+    },
+    {
+      "sequence": 3,
+      "arm": "stream-immediate",
+      "sampleID": "en-short-1",
+      "direction": "en->ko",
+      "size": "short",
+      "totalMilliseconds": 1475,
+      "path": "bootingSpare",
+      "firstTextMilliseconds": 1359,
+      "waitedBeforeMilliseconds": 0,
+      "status": "success"
+    },
+    {
+      "sequence": 4,
+      "arm": "stream-ondemand",
+      "sampleID": "en-short-1",
+      "direction": "en->ko",
+      "size": "short",
+      "totalMilliseconds": 1611,
+      "path": "onDemandStream",
+      "firstTextMilliseconds": 1507,
+      "waitedBeforeMilliseconds": 2034,
+      "status": "success"
+    },
+    {
+      "sequence": 5,
+      "arm": "stream-idle-90s",
+      "sampleID": "en-short-1",
+      "direction": "en->ko",
+      "size": "short",
+      "totalMilliseconds": 894,
+      "path": "warmSpare",
+      "firstTextMilliseconds": 780,
+      "waitedBeforeMilliseconds": 83342,
+      "status": "success"
+    },
+    {
+      "sequence": 6,
+      "arm": "stream-idle-300s",
+      "sampleID": "en-short-1",
+      "direction": "en->ko",
+      "size": "short",
+      "totalMilliseconds": 987,
+      "path": "warmSpare",
+      "firstTextMilliseconds": 911,
+      "waitedBeforeMilliseconds": 214142,
+      "status": "success"
+    },
+    {
+      "sequence": 7,
+      "arm": "stream-immediate-lead",
+      "sampleID": "ko-short-1",
+      "direction": "ko->en",
+      "size": "short",
+      "totalMilliseconds": 970,
+      "path": "warmSpare",
+      "firstTextMilliseconds": 838,
+      "waitedBeforeMilliseconds": 2106,
+      "status": "success"
+    },
+    {
+      "sequence": 8,
+      "arm": "stream-immediate",
+      "sampleID": "ko-short-1",
+      "direction": "ko->en",
+      "size": "short",
+      "totalMilliseconds": 1390,
+      "path": "bootingSpare",
+      "firstTextMilliseconds": 1265,
+      "waitedBeforeMilliseconds": 0,
+      "status": "success"
+    },
+    {
+      "sequence": 9,
+      "arm": "stream-ondemand",
+      "sampleID": "ko-short-1",
+      "direction": "ko->en",
+      "size": "short",
+      "totalMilliseconds": 1286,
+      "path": "onDemandStream",
+      "firstTextMilliseconds": 1174,
+      "waitedBeforeMilliseconds": 2124,
+      "status": "success"
+    },
+    {
+      "sequence": 10,
+      "arm": "stream-idle-90s",
+      "sampleID": "ko-short-1",
+      "direction": "ko->en",
+      "size": "short",
+      "totalMilliseconds": 794,
+      "path": "warmSpare",
+      "firstTextMilliseconds": 649,
+      "waitedBeforeMilliseconds": 2049,
+      "status": "success"
+    },
+    {
+      "sequence": 11,
+      "arm": "stream-idle-300s",
+      "sampleID": "ko-short-1",
+      "direction": "ko->en",
+      "size": "short",
+      "totalMilliseconds": 910,
+      "path": "warmSpare",
+      "firstTextMilliseconds": 785,
+      "waitedBeforeMilliseconds": 298246,
+      "status": "success"
+    },
+    {
+      "sequence": 12,
+      "arm": "baseline-json-proof",
+      "sampleID": "ko-short-1",
+      "direction": "ko->en",
+      "size": "short",
+      "totalMilliseconds": 2169,
+      "path": "oneShotJSON",
+      "firstTextMilliseconds": null,
+      "waitedBeforeMilliseconds": 2013,
+      "status": "success"
+    },
+    {
+      "sequence": 13,
+      "arm": "stream-ondemand",
+      "sampleID": "en-numbers-1",
+      "direction": "en->ko",
+      "size": "short",
+      "totalMilliseconds": 1680,
+      "path": "onDemandStream",
+      "firstTextMilliseconds": 1413,
+      "waitedBeforeMilliseconds": 2017,
+      "status": "success"
+    },
+    {
+      "sequence": 14,
+      "arm": "stream-idle-90s",
+      "sampleID": "en-numbers-1",
+      "direction": "en->ko",
+      "size": "short",
+      "totalMilliseconds": 1070,
+      "path": "warmSpare",
+      "firstTextMilliseconds": 819,
+      "waitedBeforeMilliseconds": 2129,
+      "status": "success"
+    },
+    {
+      "sequence": 15,
+      "arm": "stream-idle-300s",
+      "sampleID": "en-numbers-1",
+      "direction": "en->ko",
+      "size": "short",
+      "totalMilliseconds": 1240,
+      "path": "warmSpare",
+      "firstTextMilliseconds": 941,
+      "waitedBeforeMilliseconds": 301039,
+      "status": "success"
+    },
+    {
+      "sequence": 16,
+      "arm": "baseline-json-proof",
+      "sampleID": "en-numbers-1",
+      "direction": "en->ko",
+      "size": "short",
+      "totalMilliseconds": 2454,
+      "path": "oneShotJSON",
+      "firstTextMilliseconds": null,
+      "waitedBeforeMilliseconds": 2079,
+      "status": "success"
+    },
+    {
+      "sequence": 17,
+      "arm": "stream-immediate-lead",
+      "sampleID": "en-numbers-1",
+      "direction": "en->ko",
+      "size": "short",
+      "totalMilliseconds": 1070,
+      "path": "warmSpare",
+      "firstTextMilliseconds": 831,
+      "waitedBeforeMilliseconds": 2030,
+      "status": "success"
+    },
+    {
+      "sequence": 18,
+      "arm": "stream-immediate",
+      "sampleID": "en-numbers-1",
+      "direction": "en->ko",
+      "size": "short",
+      "totalMilliseconds": 1760,
+      "path": "bootingSpare",
+      "firstTextMilliseconds": 1507,
+      "waitedBeforeMilliseconds": 0,
+      "status": "success"
+    },
+    {
+      "sequence": 19,
+      "arm": "stream-idle-90s",
+      "sampleID": "ko-numbers-1",
+      "direction": "ko->en",
+      "size": "short",
+      "totalMilliseconds": 1006,
+      "path": "warmSpare",
+      "firstTextMilliseconds": 703,
+      "waitedBeforeMilliseconds": 2125,
+      "status": "success"
+    },
+    {
+      "sequence": 20,
+      "arm": "stream-idle-300s",
+      "sampleID": "ko-numbers-1",
+      "direction": "ko->en",
+      "size": "short",
+      "totalMilliseconds": 1109,
+      "path": "warmSpare",
+      "firstTextMilliseconds": 825,
+      "waitedBeforeMilliseconds": 298104,
+      "status": "success"
+    },
+    {
+      "sequence": 21,
+      "arm": "baseline-json-proof",
+      "sampleID": "ko-numbers-1",
+      "direction": "ko->en",
+      "size": "short",
+      "totalMilliseconds": 2407,
+      "path": "oneShotJSON",
+      "firstTextMilliseconds": null,
+      "waitedBeforeMilliseconds": 2100,
+      "status": "success"
+    },
+    {
+      "sequence": 22,
+      "arm": "stream-immediate-lead",
+      "sampleID": "ko-numbers-1",
+      "direction": "ko->en",
+      "size": "short",
+      "totalMilliseconds": 930,
+      "path": "warmSpare",
+      "firstTextMilliseconds": 643,
+      "waitedBeforeMilliseconds": 2016,
+      "status": "success"
+    },
+    {
+      "sequence": 23,
+      "arm": "stream-immediate",
+      "sampleID": "ko-numbers-1",
+      "direction": "ko->en",
+      "size": "short",
+      "totalMilliseconds": 1589,
+      "path": "bootingSpare",
+      "firstTextMilliseconds": 1282,
+      "waitedBeforeMilliseconds": 0,
+      "status": "success"
+    },
+    {
+      "sequence": 24,
+      "arm": "stream-ondemand",
+      "sampleID": "ko-numbers-1",
+      "direction": "ko->en",
+      "size": "short",
+      "totalMilliseconds": 1490,
+      "path": "onDemandStream",
+      "firstTextMilliseconds": 1174,
+      "waitedBeforeMilliseconds": 2058,
+      "status": "success"
+    },
+    {
+      "sequence": 25,
+      "arm": "stream-idle-300s",
+      "sampleID": "en-short-1",
+      "direction": "en->ko",
+      "size": "short",
+      "totalMilliseconds": 1056,
+      "path": "warmSpare",
+      "firstTextMilliseconds": 933,
+      "waitedBeforeMilliseconds": 298264,
+      "status": "success"
+    },
+    {
+      "sequence": 26,
+      "arm": "baseline-json-proof",
+      "sampleID": "en-short-1",
+      "direction": "en->ko",
+      "size": "short",
+      "totalMilliseconds": 2313,
+      "path": "oneShotJSON",
+      "firstTextMilliseconds": null,
+      "waitedBeforeMilliseconds": 2103,
+      "status": "success"
+    },
+    {
+      "sequence": 27,
+      "arm": "stream-immediate-lead",
+      "sampleID": "en-short-1",
+      "direction": "en->ko",
+      "size": "short",
+      "totalMilliseconds": 912,
+      "path": "warmSpare",
+      "firstTextMilliseconds": 755,
+      "waitedBeforeMilliseconds": 2046,
+      "status": "success"
+    },
+    {
+      "sequence": 28,
+      "arm": "stream-immediate",
+      "sampleID": "en-short-1",
+      "direction": "en->ko",
+      "size": "short",
+      "totalMilliseconds": 1427,
+      "path": "bootingSpare",
+      "firstTextMilliseconds": 1330,
+      "waitedBeforeMilliseconds": 0,
+      "status": "success"
+    },
+    {
+      "sequence": 29,
+      "arm": "stream-ondemand",
+      "sampleID": "en-short-1",
+      "direction": "en->ko",
+      "size": "short",
+      "totalMilliseconds": 1435,
+      "path": "onDemandStream",
+      "firstTextMilliseconds": 1351,
+      "waitedBeforeMilliseconds": 2090,
+      "status": "success"
+    },
+    {
+      "sequence": 30,
+      "arm": "stream-idle-90s",
+      "sampleID": "en-short-1",
+      "direction": "en->ko",
+      "size": "short",
+      "totalMilliseconds": 801,
+      "path": "warmSpare",
+      "firstTextMilliseconds": 715,
+      "waitedBeforeMilliseconds": 2067,
+      "status": "success"
+    },
+    {
+      "sequence": 31,
+      "arm": "baseline-json-proof",
+      "sampleID": "ko-short-1",
+      "direction": "ko->en",
+      "size": "short",
+      "totalMilliseconds": 2226,
+      "path": "oneShotJSON",
+      "firstTextMilliseconds": null,
+      "waitedBeforeMilliseconds": 2084,
+      "status": "success"
+    },
+    {
+      "sequence": 32,
+      "arm": "stream-immediate-lead",
+      "sampleID": "ko-short-1",
+      "direction": "ko->en",
+      "size": "short",
+      "totalMilliseconds": 774,
+      "path": "warmSpare",
+      "firstTextMilliseconds": 668,
+      "waitedBeforeMilliseconds": 2019,
+      "status": "success"
+    },
+    {
+      "sequence": 33,
+      "arm": "stream-immediate",
+      "sampleID": "ko-short-1",
+      "direction": "ko->en",
+      "size": "short",
+      "totalMilliseconds": 1357,
+      "path": "bootingSpare",
+      "firstTextMilliseconds": 1226,
+      "waitedBeforeMilliseconds": 0,
+      "status": "success"
+    },
+    {
+      "sequence": 34,
+      "arm": "stream-ondemand",
+      "sampleID": "ko-short-1",
+      "direction": "ko->en",
+      "size": "short",
+      "totalMilliseconds": 1300,
+      "path": "onDemandStream",
+      "firstTextMilliseconds": 1178,
+      "waitedBeforeMilliseconds": 2086,
+      "status": "success"
+    },
+    {
+      "sequence": 35,
+      "arm": "stream-idle-90s",
+      "sampleID": "ko-short-1",
+      "direction": "ko->en",
+      "size": "short",
+      "totalMilliseconds": 879,
+      "path": "warmSpare",
+      "firstTextMilliseconds": 749,
+      "waitedBeforeMilliseconds": 80904,
+      "status": "success"
+    }
+  ]
+}

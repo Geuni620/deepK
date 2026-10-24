@@ -1,0 +1,151 @@
+{
+  "program": "TranslationResultTextView",
+  "note": "Ten repeats and the parent check run this one complete UI test program, not the 25-program scripts/test.sh.",
+  "workerVerification": {
+    "scope": "test-only deferred proxy hint delivery",
+    "baseRevision": "e4e00dd5c614398ff8425af525215528cd97bc93",
+    "productionChanges": false,
+    "compilerFlags": [
+      "-swift-version",
+      "6",
+      "-warnings-as-errors",
+      "-module-cache-path",
+      "<temporary cache>"
+    ],
+    "workingDirectory": "repository root",
+    "waitDeadlineSeconds": 5,
+    "files": {
+      "DeepKTests/TranslationResultTextViewTests.swift": "569e7702a8d2bd704fb9b033b5312ecf076705ec0b796857c25e0903a2f21fc4",
+      "DeepK/Translation/TranslationResultTextView.swift": "be3add33eef310a131fa6256683ceff506a41e27c224812f22ead9076e97d634",
+      "ProxyFocusedTests.swift": "70c73cd54f9e3df5c3bf46eed1cfc9a9daef1c1c05a98929e5b0b406b07f223f",
+      "TranslationResultTextView-fixed": "79714abbf1ccc3e75d8cf28dbac737302dc6ed0e5f99f3d6eebd9db416cdea42"
+    },
+    "sameFullSuiteBinaryRuns": [
+      {
+        "iteration": 1,
+        "exitCode": 0,
+        "elapsedSeconds": 24.921,
+        "logFile": "fixed-run-01.log",
+        "logSHA256": "e890b9d882debfb70be05542d7e4544ec7006bac14e38220df01670b4c669e06"
+      },
+      {
+        "iteration": 2,
+        "exitCode": 0,
+        "elapsedSeconds": 19.056,
+        "logFile": "fixed-run-02.log",
+        "logSHA256": "e890b9d882debfb70be05542d7e4544ec7006bac14e38220df01670b4c669e06"
+      },
+      {
+        "iteration": 3,
+        "exitCode": 0,
+        "elapsedSeconds": 20.516,
+        "logFile": "fixed-run-03.log",
+        "logSHA256": "e890b9d882debfb70be05542d7e4544ec7006bac14e38220df01670b4c669e06"
+      },
+      {
+        "iteration": 4,
+        "exitCode": 0,
+        "elapsedSeconds": 22.498,
+        "logFile": "fixed-run-04.log",
+        "logSHA256": "e890b9d882debfb70be05542d7e4544ec7006bac14e38220df01670b4c669e06"
+      },
+      {
+        "iteration": 5,
+        "exitCode": 0,
+        "elapsedSeconds": 19.215,
+        "logFile": "fixed-run-05.log",
+        "logSHA256": "e890b9d882debfb70be05542d7e4544ec7006bac14e38220df01670b4c669e06"
+      },
+      {
+        "iteration": 6,
+        "exitCode": 0,
+        "elapsedSeconds": 16.952,
+        "logFile": "fixed-run-06.log",
+        "logSHA256": "e890b9d882debfb70be05542d7e4544ec7006bac14e38220df01670b4c669e06"
+      },
+      {
+        "iteration": 7,
+        "exitCode": 0,
+        "elapsedSeconds": 62.581,
+        "logFile": "fixed-run-07.log",
+        "logSHA256": "e890b9d882debfb70be05542d7e4544ec7006bac14e38220df01670b4c669e06"
+      },
+      {
+        "iteration": 8,
+        "exitCode": 0,
+        "elapsedSeconds": 23.828,
+        "logFile": "fixed-run-08.log",
+        "logSHA256": "e890b9d882debfb70be05542d7e4544ec7006bac14e38220df01670b4c669e06"
+      },
+      {
+        "iteration": 9,
+        "exitCode": 0,
+        "elapsedSeconds": 26.837,
+        "logFile": "fixed-run-09.log",
+        "logSHA256": "e890b9d882debfb70be05542d7e4544ec7006bac14e38220df01670b4c669e06"
+      },
+      {
+        "iteration": 10,
+        "exitCode": 0,
+        "elapsedSeconds": 29.875,
+        "logFile": "fixed-run-10.log",
+        "logSHA256": "e890b9d882debfb70be05542d7e4544ec7006bac14e38220df01670b4c669e06"
+      }
+    ],
+    "focusedMutations": [
+      {
+        "name": "delivery-disabled",
+        "compileExitCode": 0,
+        "exitCode": 133,
+        "nativeReturnCode": -5,
+        "elapsedSeconds": 6.874,
+        "expectedFailedAssertion": "a newly attached proxy receives the current hint",
+        "expectedAssertionObserved": true,
+        "productionSourceFile": "delivery-disabled/TranslationResultTextView.swift",
+        "productionSourceSHA256": "067e28f261fa52b85d8941e431f54f61ffbaa165df2b5549a98b2fbbbcbdff87",
+        "binaryFile": "delivery-disabled/proxy-mutant",
+        "binarySHA256": "e291bc237227fb042f3062b1d4f83c88584e3883f69fa9662cb0d1900d9cf3a9",
+        "logFile": "delivery-disabled/run.log",
+        "logSHA256": "3ac0f83f5aac8ef1acb71564216dc8a543cfcadcffb97ca7bb498f157f8e44d9"
+      },
+      {
+        "name": "hidden-delivery-wrong",
+        "compileExitCode": 0,
+        "exitCode": 133,
+        "nativeReturnCode": -5,
+        "elapsedSeconds": 6.534,
+        "expectedFailedAssertion": "reattaching the proxy receives the hidden hint",
+        "expectedAssertionObserved": true,
+        "productionSourceFile": "hidden-delivery-wrong/TranslationResultTextView.swift",
+        "productionSourceSHA256": "8eb87a9759ad7d8c6d10673a0b37e167d91749eb7c0118efa699e988d686b48e",
+        "binaryFile": "hidden-delivery-wrong/proxy-mutant",
+        "binarySHA256": "8b83dc0abdf7c943d47caae1ddb946b1255dc41833d9bc482f818e49a33d2a02",
+        "logFile": "hidden-delivery-wrong/run.log",
+        "logSHA256": "c2331f799fd25b432398d9f4676435a68623b703596684b25a5c4d94b8972d61"
+      }
+    ],
+    "externalInteractions": {
+      "generalClipboardAccesses": 0,
+      "liveProviderCalls": 0,
+      "userApplicationLaunchesOrTerminations": 0
+    }
+  },
+  "mainSessionRun": {
+    "exitCode": 0,
+    "elapsedSeconds": 18.35,
+    "binarySHA256": "79714abbf1ccc3e75d8cf28dbac737302dc6ed0e5f99f3d6eebd9db416cdea42",
+    "result": "TranslationResultTextViewTests passed (no windows opened)"
+  },
+  "independentCounterReview": {
+    "blockingFindings": 0,
+    "sourceAndOriginalLogsInspected": true,
+    "recompiledOrReran": false,
+    "verified": [
+      "Observation before action; receipt and exact value required",
+      "hidden starts from arrived, not default hidden",
+      "MainActor publisher and post-setter receipt ordering",
+      "ten same-binary successful runs and two exact assertion failures; source/binary/log SHA match"
+    ],
+    "limit": "A five-second condition deadline does not guarantee success under an indefinitely stalled scheduler."
+  }
+}

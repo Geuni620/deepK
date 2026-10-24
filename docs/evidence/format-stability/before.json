@@ -1,0 +1,25 @@
+{
+  "label" : "before",
+  "scope" : "Executed native components with synthetic deterministic translation; not a live model or real cross-app clipboard test.",
+  "snapshots" : [
+    {
+      "image" : "before-wide.png",
+      "sourceFirstLineIndent" : 0,
+      "sourceHeadIndent" : 0,
+      "sourceMarkerCount" : 0,
+      "sourceTextKit2" : true,
+      "width" : 1040
+    },
+    {
+      "image" : "before-compact.png",
+      "sourceFirstLineIndent" : 0,
+      "sourceHeadIndent" : 0,
+      "sourceMarkerCount" : 0,
+      "sourceTextKit2" : true,
+      "width" : 430
+    }
+  ],
+  "source" : "Describe the outcome: ordinary language is enough. For a change you can name, commands such as layout, typeset, and colorize focus the work.\nAsk for a review: critique explains what is holding the design back and recommends where to start. You choose which changes to make.\nCompare alternatives: generate takes an element and a direction from chat, then shows variants in your running page. Choose the version to keep in source.\nPoint at the page: Live Mode lets you select elements yourself. Use Steer for a direction that applies across the page.",
+  "sourceRawPreserved" : true,
+  "translation" : "결과 설명: 원하는 결과를 일상적인 말로 설명하세요. 바꾸고 싶은 내용이 분명하면 레이아웃, 조판, 색상처럼 구체적인 작업을 지정하세요.\n검토 요청: 디자인을 어렵게 만드는 문제와 시작할 지점을 확인하세요. 어떤 변경을 적용할지는 직접 선택합니다.\n대안 비교: 요소와 원하는 방향을 전달하면 여러 안을 비교할 수 있습니다. 소스에 유지할 버전을 고르세요.\n페이지 가리키기: 바꾸려는 요소를 직접 선택하세요. 페이지 전반에 적용할 방향도 지정할 수 있습니다."
+}

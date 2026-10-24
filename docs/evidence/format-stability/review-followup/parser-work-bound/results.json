@@ -1,0 +1,20 @@
+{
+  "sourceCommit": "5e9ffd3e2d4ab3eb456d5690f9182e4a11b80e43",
+  "productionSourceSHA256": "5ec8e21bbe7b7c91f4035dc6e633ee898c658bcf170cf20c8cc7b03b7d18d177",
+  "scope": "Deterministic bound on range-query work after normalization; instrumentation only in disposable source copies, never product code. No timing threshold, GUI or model calls.",
+  "liveProviderRequests": 0,
+  "variants": [
+    {
+      "name": "fixed",
+      "exitCode": 0,
+      "output": "PASS ranges=8000 lineQueries=24000 searchWork=32000 bound=320000 items=0",
+      "instrumentedSourceSHA256": "6ec87bf0059baa38d91f0069495a80cc2346f8e1b20b986ee2f4d879d0c96f7e"
+    },
+    {
+      "name": "restored-linear-scan",
+      "exitCode": 1,
+      "output": "FAIL ranges=8000 lineQueries=24000 searchWork=160004000 bound=320000 items=0",
+      "instrumentedSourceSHA256": "a9515313e9eac925e5d053a6ff837c1dc6f2a5ed909fbd44859c6d3affd5fa0b"
+    }
+  ]
+}

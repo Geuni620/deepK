@@ -1,0 +1,438 @@
+{
+  "scope": "CPU-only optimized TranslationMarkup parser, synthetic accepted-size response; not GUI/provider latency",
+  "createdAtUTC": "2026-10-17T09:59:36.233894+00:00",
+  "compileOptions": [
+    "-O",
+    "-swift-version",
+    "6",
+    "-warnings-as-errors",
+    "-parse-as-library"
+  ],
+  "hardwareModel": "MacBookAir10,1",
+  "os": "26.6.2",
+  "swiftVersion": "Apple Swift version 6.2.1 (swiftlang-6.2.1.4.8 clang-1700.4.4.1)\nTarget: arm64-apple-macosx26.0",
+  "liveProviderRequests": 0,
+  "sourceSHA256": {
+    "before/TranslationMarkup.swift": "cad60341056863dcb62e41bd2bd8d42c30a6ae14a6ee1d3a509ee62521b332f0",
+    "review/TranslationLists.swift": "2c7e6157610a5d1641657d36c31da6b5e7547664c1a1e33e270bdf72c4df35c5",
+    "review/TranslationMarkup.swift": "9c9d5ee50e7a1c59e82a1ea6adad9d3ef64cab770cb4322247df11dbb5ae2a7d",
+    "after/TranslationLists.swift": "5ec8e21bbe7b7c91f4035dc6e633ee898c658bcf170cf20c8cc7b03b7d18d177",
+    "after/TranslationMarkup.swift": "a6590911edd1e021750386a08085a71b77e3ca2e9be56693be8b053e87dc489e"
+  },
+  "rounds": [
+    {
+      "round": 1,
+      "order": [
+        "before",
+        "review",
+        "after"
+      ],
+      "before": [
+        {
+          "blocks": 1000,
+          "bytes": 28000,
+          "resultBlocks": 2000,
+          "displayBytes": 15998,
+          "seconds": 0.013226875
+        },
+        {
+          "blocks": 2000,
+          "bytes": 56000,
+          "resultBlocks": 4000,
+          "displayBytes": 31998,
+          "seconds": 0.037310417
+        },
+        {
+          "blocks": 4000,
+          "bytes": 112000,
+          "resultBlocks": 8000,
+          "displayBytes": 63998,
+          "seconds": 0.058487458
+        },
+        {
+          "blocks": 8000,
+          "bytes": 224000,
+          "resultBlocks": 16000,
+          "displayBytes": 127998,
+          "seconds": 0.152078917
+        }
+      ],
+      "review": [
+        {
+          "blocks": 1000,
+          "bytes": 28000,
+          "resultBlocks": 2000,
+          "displayBytes": 15998,
+          "seconds": 0.032767125
+        },
+        {
+          "blocks": 2000,
+          "bytes": 56000,
+          "resultBlocks": 4000,
+          "displayBytes": 31998,
+          "seconds": 0.101713458
+        },
+        {
+          "blocks": 4000,
+          "bytes": 112000,
+          "resultBlocks": 8000,
+          "displayBytes": 63998,
+          "seconds": 0.344614417
+        },
+        {
+          "blocks": 8000,
+          "bytes": 224000,
+          "resultBlocks": 16000,
+          "displayBytes": 127998,
+          "seconds": 1.40623325
+        }
+      ],
+      "after": [
+        {
+          "blocks": 1000,
+          "bytes": 28000,
+          "resultBlocks": 2000,
+          "displayBytes": 15998,
+          "seconds": 0.022100709
+        },
+        {
+          "blocks": 2000,
+          "bytes": 56000,
+          "resultBlocks": 4000,
+          "displayBytes": 31998,
+          "seconds": 0.041050833
+        },
+        {
+          "blocks": 4000,
+          "bytes": 112000,
+          "resultBlocks": 8000,
+          "displayBytes": 63998,
+          "seconds": 0.076094208
+        },
+        {
+          "blocks": 8000,
+          "bytes": 224000,
+          "resultBlocks": 16000,
+          "displayBytes": 127998,
+          "seconds": 0.161552625
+        }
+      ]
+    },
+    {
+      "round": 2,
+      "order": [
+        "after",
+        "before",
+        "review"
+      ],
+      "after": [
+        {
+          "blocks": 1000,
+          "bytes": 28000,
+          "resultBlocks": 2000,
+          "displayBytes": 15998,
+          "seconds": 0.018216041
+        },
+        {
+          "blocks": 2000,
+          "bytes": 56000,
+          "resultBlocks": 4000,
+          "displayBytes": 31998,
+          "seconds": 0.032851208
+        },
+        {
+          "blocks": 4000,
+          "bytes": 112000,
+          "resultBlocks": 8000,
+          "displayBytes": 63998,
+          "seconds": 0.064256125
+        },
+        {
+          "blocks": 8000,
+          "bytes": 224000,
+          "resultBlocks": 16000,
+          "displayBytes": 127998,
+          "seconds": 0.208254666
+        }
+      ],
+      "before": [
+        {
+          "blocks": 1000,
+          "bytes": 28000,
+          "resultBlocks": 2000,
+          "displayBytes": 15998,
+          "seconds": 0.019896833
+        },
+        {
+          "blocks": 2000,
+          "bytes": 56000,
+          "resultBlocks": 4000,
+          "displayBytes": 31998,
+          "seconds": 0.036013834
+        },
+        {
+          "blocks": 4000,
+          "bytes": 112000,
+          "resultBlocks": 8000,
+          "displayBytes": 63998,
+          "seconds": 0.07107325
+        },
+        {
+          "blocks": 8000,
+          "bytes": 224000,
+          "resultBlocks": 16000,
+          "displayBytes": 127998,
+          "seconds": 0.140519458
+        }
+      ],
+      "review": [
+        {
+          "blocks": 1000,
+          "bytes": 28000,
+          "resultBlocks": 2000,
+          "displayBytes": 15998,
+          "seconds": 0.035416167
+        },
+        {
+          "blocks": 2000,
+          "bytes": 56000,
+          "resultBlocks": 4000,
+          "displayBytes": 31998,
+          "seconds": 0.103584333
+        },
+        {
+          "blocks": 4000,
+          "bytes": 112000,
+          "resultBlocks": 8000,
+          "displayBytes": 63998,
+          "seconds": 0.357304541
+        },
+        {
+          "blocks": 8000,
+          "bytes": 224000,
+          "resultBlocks": 16000,
+          "displayBytes": 127998,
+          "seconds": 1.496623667
+        }
+      ]
+    },
+    {
+      "round": 3,
+      "order": [
+        "review",
+        "after",
+        "before"
+      ],
+      "review": [
+        {
+          "blocks": 1000,
+          "bytes": 28000,
+          "resultBlocks": 2000,
+          "displayBytes": 15998,
+          "seconds": 0.040810833
+        },
+        {
+          "blocks": 2000,
+          "bytes": 56000,
+          "resultBlocks": 4000,
+          "displayBytes": 31998,
+          "seconds": 0.19968325
+        },
+        {
+          "blocks": 4000,
+          "bytes": 112000,
+          "resultBlocks": 8000,
+          "displayBytes": 63998,
+          "seconds": 0.783163625
+        },
+        {
+          "blocks": 8000,
+          "bytes": 224000,
+          "resultBlocks": 16000,
+          "displayBytes": 127998,
+          "seconds": 1.975997125
+        }
+      ],
+      "after": [
+        {
+          "blocks": 1000,
+          "bytes": 28000,
+          "resultBlocks": 2000,
+          "displayBytes": 15998,
+          "seconds": 0.022383875
+        },
+        {
+          "blocks": 2000,
+          "bytes": 56000,
+          "resultBlocks": 4000,
+          "displayBytes": 31998,
+          "seconds": 0.047173916
+        },
+        {
+          "blocks": 4000,
+          "bytes": 112000,
+          "resultBlocks": 8000,
+          "displayBytes": 63998,
+          "seconds": 1.108080541
+        },
+        {
+          "blocks": 8000,
+          "bytes": 224000,
+          "resultBlocks": 16000,
+          "displayBytes": 127998,
+          "seconds": 0.446202875
+        }
+      ],
+      "before": [
+        {
+          "blocks": 1000,
+          "bytes": 28000,
+          "resultBlocks": 2000,
+          "displayBytes": 15998,
+          "seconds": 0.018462917
+        },
+        {
+          "blocks": 2000,
+          "bytes": 56000,
+          "resultBlocks": 4000,
+          "displayBytes": 31998,
+          "seconds": 0.046303
+        },
+        {
+          "blocks": 4000,
+          "bytes": 112000,
+          "resultBlocks": 8000,
+          "displayBytes": 63998,
+          "seconds": 0.093718333
+        },
+        {
+          "blocks": 8000,
+          "bytes": 224000,
+          "resultBlocks": 16000,
+          "displayBytes": 127998,
+          "seconds": 0.268507291
+        }
+      ]
+    }
+  ],
+  "harnessSHA256": "dbf7066a89b808ebc8275acff1314d0bc58d2d82907382c29f9bf1848da7bd44",
+  "beforeCommit": "f0de4d1d2aa3b710ad1f2a0f5127ed2ca31765c8",
+  "reviewCommit": "142e5e45b09207bfcc45da12af0663e87f2081fa",
+  "afterCommit": "5e9ffd3e2d4ab3eb456d5690f9182e4a11b80e43",
+  "summary": {
+    "before": {
+      "1000": {
+        "seconds": [
+          0.013226875,
+          0.019896833,
+          0.018462917
+        ],
+        "medianSeconds": 0.018462917,
+        "bytes": 28000
+      },
+      "2000": {
+        "seconds": [
+          0.037310417,
+          0.036013834,
+          0.046303
+        ],
+        "medianSeconds": 0.037310417,
+        "bytes": 56000
+      },
+      "4000": {
+        "seconds": [
+          0.058487458,
+          0.07107325,
+          0.093718333
+        ],
+        "medianSeconds": 0.07107325,
+        "bytes": 112000
+      },
+      "8000": {
+        "seconds": [
+          0.152078917,
+          0.140519458,
+          0.268507291
+        ],
+        "medianSeconds": 0.152078917,
+        "bytes": 224000
+      }
+    },
+    "review": {
+      "1000": {
+        "seconds": [
+          0.032767125,
+          0.035416167,
+          0.040810833
+        ],
+        "medianSeconds": 0.035416167,
+        "bytes": 28000
+      },
+      "2000": {
+        "seconds": [
+          0.101713458,
+          0.103584333,
+          0.19968325
+        ],
+        "medianSeconds": 0.103584333,
+        "bytes": 56000
+      },
+      "4000": {
+        "seconds": [
+          0.344614417,
+          0.357304541,
+          0.783163625
+        ],
+        "medianSeconds": 0.357304541,
+        "bytes": 112000
+      },
+      "8000": {
+        "seconds": [
+          1.40623325,
+          1.496623667,
+          1.975997125
+        ],
+        "medianSeconds": 1.496623667,
+        "bytes": 224000
+      }
+    },
+    "after": {
+      "1000": {
+        "seconds": [
+          0.022100709,
+          0.018216041,
+          0.022383875
+        ],
+        "medianSeconds": 0.022100709,
+        "bytes": 28000
+      },
+      "2000": {
+        "seconds": [
+          0.041050833,
+          0.032851208,
+          0.047173916
+        ],
+        "medianSeconds": 0.041050833,
+        "bytes": 56000
+      },
+      "4000": {
+        "seconds": [
+          0.076094208,
+          0.064256125,
+          1.108080541
+        ],
+        "medianSeconds": 0.076094208,
+        "bytes": 112000
+      },
+      "8000": {
+        "seconds": [
+          0.161552625,
+          0.208254666,
+          0.446202875
+        ],
+        "medianSeconds": 0.208254666,
+        "bytes": 224000
+      }
+    }
+  }
+}

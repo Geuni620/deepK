@@ -1,0 +1,19 @@
+g of flour and 
+10
+ 
+g
+10g of salt. To bake for a crowd you multiply every line by the same factor (
+k
+k), so 
+k
+=
+3
+k=3 gives 
+1500
+ 
+g
+1500g and 
+30
+ 
+g
+30g.

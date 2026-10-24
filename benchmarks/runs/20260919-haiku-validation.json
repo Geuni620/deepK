@@ -1,0 +1,37 @@
+{
+  "apiProvider" : "firstParty",
+  "authMethod" : "claude.ai",
+  "cliVersion" : "2.1.278",
+  "model" : "claude-haiku-4-5-20251001",
+  "modelUsageVerified" : true,
+  "note" : "공식 CLI auth status로 매 요청 전 구독 인증 확인. 콜드 CLI 요청 3건이며 p95나 보편적 최속을 보장하지 않음.",
+  "samples" : [
+    {
+      "input" : "Keep the original window open.",
+      "output" : "원래 창을 열어 두세요.",
+      "preparationMs" : 222.84770900000001,
+      "source" : "en",
+      "target" : "ko",
+      "totalMs" : 2461.5061249999999,
+      "turnMs" : 2238.6584160000002
+    },
+    {
+      "input" : "변경 사항을 저장한 뒤 다시 시도하세요.",
+      "output" : "Save your changes and try again.",
+      "preparationMs" : 233.47624999999999,
+      "source" : "ko",
+      "target" : "en",
+      "totalMs" : 2391.9370840000001,
+      "turnMs" : 2158.460834
+    },
+    {
+      "input" : "Retry at most 2 times and preserve the request ID.",
+      "output" : "최대 2번까지 재시도하고 요청 ID를 보존하세요.",
+      "preparationMs" : 226.68362500000001,
+      "source" : "en",
+      "target" : "ko",
+      "totalMs" : 2501.6906669999998,
+      "turnMs" : 2275.0070420000002
+    }
+  ]
+}

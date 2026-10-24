@@ -1,0 +1,6 @@
+Use Array.prototype.map() to build a new array:
+
+js
+Copy to Clipboard
+const doubled = numbers.map(n => n * 2);
+The callback runs once for each element. Use forEach() when you need no new array.

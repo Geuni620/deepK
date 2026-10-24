@@ -1,0 +1,41 @@
+Compute the ratio 
+a
+b
+b
+a
+​
+ 
+    ratio = a / b
+Step one is done. 
+p
+p is the next value.
+Then (
+q
+q) follows, and the value is 
+w
+w
+  indented second line
+Line one
+u
+u is next
+and (
+y
+y) end.
+
+Press 
+x
+2
+x 
+2
+  Enter to square, the value 
+c
+d
+d
+c
+​
+   is shown, and 
+v
+2
+v 
+2
+ is the square.

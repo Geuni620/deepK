@@ -1,0 +1,8 @@
+Install the package:
+
+npm
+Yarn
+pnpm
+npm install @docusaurus/core
+
+Then restart the dev server with npm run start.

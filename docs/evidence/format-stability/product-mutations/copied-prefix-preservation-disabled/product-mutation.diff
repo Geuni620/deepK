@@ -1,0 +1,5 @@
+--- a/DeepK/Translation/TranslationStore.swift
++++ b/DeepK/Translation/TranslationStore.swift
+@@ -354 +354 @@
+-              input.utf8.starts(with: capturedSource.plain.utf8) else { return nil }
++              input == capturedSource.plain else { return nil }

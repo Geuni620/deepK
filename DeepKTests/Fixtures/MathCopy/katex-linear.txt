@@ -1,0 +1,207 @@
+Item 
+e
+i
+π
++
+1
+=
+0
+e 
+iπ
+ +1=0 end.
+
+Item 
+A
+T
+A
+A 
+T
+ A end.
+
+Item 
+log
+⁡
+2
+n
+log 
+2
+​
+ n end.
+
+Item 
+x
+a
+b
+x 
+ab
+  end.
+
+Item 
+sin
+⁡
+2
+x
+sin 
+2
+ x end.
+
+Item 
+cos
+⁡
+2
+θ
++
+sin
+⁡
+2
+θ
+=
+1
+cos 
+2
+ θ+sin 
+2
+ θ=1 end.
+
+Item 
+max
+⁡
+i
+x
+i
+max 
+i
+​
+ x 
+i
+​
+  end.
+
+Item 
+u
+n
+v
+n
+u 
+n
+​
+ v 
+n
+​
+  end.
+
+Item 
+∑
+i
+a
+i
+b
+i
+∑ 
+i
+​
+ a 
+i
+​
+ b 
+i
+​
+  end.
+
+Item 
+(
+x
+−
+x
+0
+)
+2
++
+(
+y
+−
+y
+0
+)
+2
+=
+r
+2
+(x−x 
+0
+​
+ ) 
+2
+ +(y−y 
+0
+​
+ ) 
+2
+ =r 
+2
+  end.
+
+Item 
+(
+1
++
+r
+t
+)
+n
+(1+r 
+t
+​
+ ) 
+n
+  end.
+
+Item 
+∥
+w
+−
+w
+∗
+∥
+2
+∥w−w 
+∗
+ ∥ 
+2
+  end.
+
+The largest is
+
+max
+⁡
+i
+x
+i
+i
+max
+​
+ x 
+i
+​
+ 
+The limit is
+
+lim
+⁡
+x
+→
+0
+sin
+⁡
+x
+x
+=
+1
+x→0
+lim
+​
+  
+x
+sinx
+​
+ =1

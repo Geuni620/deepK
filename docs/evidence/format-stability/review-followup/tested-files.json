@@ -1,0 +1,22 @@
+[
+  {
+    "path": "DeepK/Translation/TranslationStore.swift",
+    "sha256": "fdf38bae728f088c9894a6f064abdb686d27580e530c5dc05b6c1a7f3f519975",
+    "matchesTestedSnapshot": true
+  },
+  {
+    "path": "DeepK/Translation/TranslationMarkup.swift",
+    "sha256": "a6590911edd1e021750386a08085a71b77e3ca2e9be56693be8b053e87dc489e",
+    "matchesTestedSnapshot": true
+  },
+  {
+    "path": "DeepKTests/TranslationStoreTests.swift",
+    "sha256": "688475d6d3b21249abedabcfe081756f0e4441874c0ef51aed3c1e951df5a419",
+    "matchesTestedSnapshot": true
+  },
+  {
+    "path": "DeepKTests/TranslationMarkupTests.swift",
+    "sha256": "42175f568fa1e371f90e3d7c544ade0be9cd790bcfcf306f552599d5e6f349a1",
+    "matchesTestedSnapshot": true
+  }
+]

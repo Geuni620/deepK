@@ -1,0 +1,66 @@
+--- a/DeepKTests/CodexTransportTests.swift
++++ b/DeepKTests/CodexTransportTests.swift
+@@ -13,13 +13,5 @@
+-        inlineMarkupOnlyExtendsThePrompt()
+-        await immediateResponseRaceAndFinalText()
+-        await cachedDiscoveryIsReusedAndLowEffortIsSelected()
+-        await disconnectInvalidatesDiscoveryCache()
+-        await authenticationErrorInvalidatesDiscoveryCache()
+-        await externalAccountModeChangeIsRejected()
+-        await completedThreadIsUnsubscribedAndLateOutputIsIgnored()
+-        await serverToolRequestIsRejected()
+-        await nonChatGPTAccountIsRejected()
+-        await failedTurnIsReported()
+-        await timeoutInterruptsTheTurn()
+-        await cancellationInterruptsTheTurn()
+-        await cancelledTurnStartResponseIsInterrupted()
++        for index in 1...3 {
++            print("Focused cancellation round \(index)"); fflush(nil)
++            await cancellationInterruptsTheTurn()
++            await cancelledTurnStartResponseIsInterrupted()
++        }
+@@ -28,40 +20,2 @@
+-        await reconnectIgnoresLateOldReaderCallbacks()
+-        await managedLogoutIsExplicit()
+-        print("Codex test: literal integrity")
+-        fflush(nil)
+-        literalPlansPreserveBytesAndStreamingPrefixes()
+-        await literalsAreRestoredDuringTransport()
+-        await skillMentionsAreGuardedDuringTransport()
+-        await skillMentionsAreGuardedWithInlineMarkup()
+-        print("Codex test: standby reuse"); fflush(nil)
+-        await preparedThreadsAreSingleUseAndReplaced()
+-        print("Codex test: late preparation cleanup"); fflush(nil)
+-        await cancelledPreparationCleansUpLateThread()
+-        print("Codex test: cancellation during preparation"); fflush(nil)
+-        await cancellationDoesNotSendAfterPreparation()
+-        print("Codex test: standby lifecycle"); fflush(nil)
+-        await prewarmLifecycleAndGenerationGuards()
+-        print("Codex test: standby expiry"); fflush(nil)
+-        await expiredAndIdleThreadsAreReleased()
+-        print("Codex test: authentication change"); fflush(nil)
+-        await prewarmRejectsChangedAuthentication()
+-        print("Codex test: preparation failure"); fflush(nil)
+-        await preparationFailureFallsBackToColdThread()
+-        print("Codex test: injected context config"); fflush(nil)
+-        await translationConfigUsesExactKeySet()
+-        print("Codex test: service tier"); fflush(nil)
+-        await serviceTierIsAlwaysExplicit()
+-        print("Codex test: tier change after standby"); fflush(nil)
+-        await tierChangeReplacesReadyStandby()
+-        print("Codex test: tier change during preparation"); fflush(nil)
+-        await tierChangeDuringPreparationDropsOldTier()
+-        print("Codex test: tier generation guard"); fflush(nil)
+-        await staleTierGenerationIsIgnored()
+-        print("Codex test: mismatched tier standby"); fflush(nil)
+-        await mismatchedTierStandbyIsNotUsed()
+-        print("Codex test: inherited environment"); fflush(nil)
+-        inheritedEnvironmentKeepsOnlyLaunchValues()
+-        await launchEnvironmentReachesTheAppServer()
+-    }
+-
+-    /// 넘겨야 하는 키 전체다. 허용 목록 상수를 참조하지 않고 적어 두어, 목록에서 빠지면 실패한다.
++    }
++
+@@ -1143 +1096,0 @@
+-        await CodexExecutableResolverTests.runAll()

@@ -1,0 +1,51 @@
+[
+  {
+    "name": "wrong-retry-count",
+    "exitCode": 1,
+    "scenario": "replay/plain-numbers",
+    "outcome": "failure",
+    "expectedCheck": "replay.numbers"
+  },
+  {
+    "name": "swapped-table-values",
+    "exitCode": 1,
+    "scenario": "replay/markdown-table",
+    "outcome": "failure",
+    "expectedCheck": "replay.tableValue"
+  },
+  {
+    "name": "missing-archived-record",
+    "exitCode": 2,
+    "scenario": null,
+    "outcome": null,
+    "expectedCheck": "fixture.archivedCount"
+  },
+  {
+    "name": "known-plus-new-failure",
+    "exitCode": 1,
+    "scenario": "replay/plain-numbers",
+    "outcome": "failure",
+    "expectedCheck": "replay.literal"
+  },
+  {
+    "name": "stale-known-failure",
+    "exitCode": 1,
+    "scenario": "language/short-english",
+    "outcome": "unexpected_pass",
+    "expectedCheck": null
+  },
+  {
+    "name": "isolated-known-default",
+    "exitCode": 0,
+    "scenario": "replay/plain-numbers",
+    "outcome": "known_failure",
+    "expectedCheck": "replay.numbers"
+  },
+  {
+    "name": "isolated-known-strict",
+    "exitCode": 1,
+    "scenario": "replay/plain-numbers",
+    "outcome": "known_failure",
+    "expectedCheck": "replay.numbers"
+  }
+]
