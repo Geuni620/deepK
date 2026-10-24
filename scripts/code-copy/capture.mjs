@@ -5,12 +5,12 @@
 //
 // 준비: npm install --prefix /private/tmp/deepk-code-copy playwright-core@1.64.0
 // 실행: node scripts/code-copy/capture.mjs [node_modules 경로] [출력 폴더]
-import http from 'node:http';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { pages } from './page.mjs';
+import { startFixtureServer } from '../fixture-server.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const modules = path.resolve(process.argv[2] ?? '/private/tmp/deepk-code-copy/node_modules');
@@ -18,18 +18,7 @@ const output = path.resolve(process.argv[3] ?? `${root}/DeepKTests/Fixtures/Code
 const chrome = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const { chromium } = await import(`${modules}/playwright-core/index.mjs`);
 
-const html = pages();
-const server = http.createServer((request, response) => {
-  const name = decodeURIComponent(new URL(request.url, 'http://localhost').pathname).slice(1).replace(/\.html$/, '');
-  if (!html[name]) {
-    response.statusCode = 404;
-    return response.end();
-  }
-  response.setHeader('content-type', 'text/html; charset=utf-8');
-  response.end(html[name]);
-}).listen(0);
-await new Promise((resolve) => server.on('listening', resolve));
-const origin = `http://localhost:${server.address().port}`;
+const { server, origin } = await startFixtureServer(pages());
 
 const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'deepk-code-copy-'));
 const context = await chromium.launchPersistentContext(profile, { executablePath: chrome, headless: true, viewport: { width: 1000, height: 900 } });
