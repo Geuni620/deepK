@@ -159,6 +159,7 @@ require_command shasum
 require_command date
 require_command codesign
 require_command lipo
+require_command python3
 [[ -x /usr/libexec/PlistBuddy ]] || fail "PlistBuddy를 찾을 수 없습니다."
 
 DEVELOPER_ID="${DEEPK_DEVELOPER_ID:-}"
@@ -252,6 +253,8 @@ APP_PATH="${DERIVED_DATA_PATH}/Build/Products/Release/DeepK.app"
 [[ -x "$APP_PATH/Contents/MacOS/DeepK" ]] \
   || fail "Release 실행 파일을 찾을 수 없습니다: $APP_PATH/Contents/MacOS/DeepK"
 validate_app_metadata "$APP_PATH"
+python3 "$SCRIPT_DIR/check-app-bundle.py" "$APP_PATH" \
+  || fail "앱에 로컬 인증정보나 앱 밖을 가리키는 링크가 포함되어 있습니다."
 
 STAGED_APP="${STAGING_DIR}/DeepK.app"
 ditto "$APP_PATH" "$STAGED_APP"

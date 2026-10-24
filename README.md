@@ -76,6 +76,7 @@ deepK/
 ./scripts/test.sh
 ./scripts/build.sh
 node --test scripts/fixture-server.test.mjs
+python3 scripts/test-app-bundle-contents.py
 ```
 
 테스트 도구에는 `rg`와 Python 3가 필요합니다. 개발용 fixture 서버 검증에는 Node.js도 사용합니다. `test.sh`는 로직·가짜 통신·화면 밖 렌더링을 검사하며 실제 구독을 호출하지 않습니다. 실제 계정·GUI를 사용하는 검증은 별도의 명시적 실행 옵션이 필요합니다.
