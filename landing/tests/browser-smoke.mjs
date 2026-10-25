@@ -1,3 +1,4 @@
+// playwright-cli invokes this standalone callback outside the Astro application.
 async function browser_smoke(page) {
   const origin = 'http://127.0.0.1:4433';
   const passed = [];
@@ -121,14 +122,15 @@ async function browser_smoke(page) {
   );
   passed.push('fixture translation and stale/unknown/empty input regression');
   await page.evaluate(() => {
-    window.__clipboardText = null;
-    window.__clipboardReject = false;
+    document.documentElement.dataset.smokeClipboardText = '';
+    document.documentElement.dataset.smokeClipboardReject = 'false';
     Object.defineProperty(navigator, 'clipboard', {
       configurable: true,
       value: {
         writeText: async (text) => {
-          if (window.__clipboardReject) throw new Error('Clipboard denied for smoke check');
-          window.__clipboardText = text;
+          if (document.documentElement.dataset.smokeClipboardReject === 'true')
+            throw new Error('Clipboard denied for smoke check');
+          document.documentElement.dataset.smokeClipboardText = text;
         },
       },
     });
@@ -137,11 +139,13 @@ async function browser_smoke(page) {
   await copy.click();
   check((await copy.textContent()) === '복사됨', 'Copy success feedback missing');
   check(
-    (await page.evaluate(() => window.__clipboardText)).includes('업데이트된 일정'),
+    (await page.evaluate(() => document.documentElement.dataset.smokeClipboardText)).includes(
+      '업데이트된 일정',
+    ),
     'Copy did not use current result',
   );
   await page.evaluate(() => {
-    window.__clipboardReject = true;
+    document.documentElement.dataset.smokeClipboardReject = 'true';
   });
   await copy.click();
   check((await copy.textContent()) === '복사할 수 없어요', 'Copy denial feedback missing');

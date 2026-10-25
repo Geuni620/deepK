@@ -1,3 +1,4 @@
+// playwright-cli invokes this standalone callback outside the Astro application.
 async function browser_layout(page) {
   const origin = 'http://127.0.0.1:4433';
   await page.goto(origin + '/');
