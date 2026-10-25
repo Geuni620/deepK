@@ -1,0 +1,34 @@
+---
+import type { Variant } from '../../data/variants';
+import HeroTitle from '../shared/HeroTitle.astro';
+import PrimaryAction from '../shared/PrimaryAction.astro';
+import TranslationWindow from '../shared/TranslationWindow.astro';
+interface Props {
+  variant: Variant;
+}
+const { variant } = Astro.props;
+---
+
+<section class="mx-auto max-w-7xl px-6 pt-14 pb-20 lg:px-12">
+  <HeroTitle variant={variant} />
+  <div class="my-8 text-center">
+    <PrimaryAction />
+  </div>
+  <div class="relative mt-12 min-h-105 overflow-hidden rounded-2xl bg-gradient-to-br from-[#f5f7fb] to-[#dfe4ee] text-[#202127]">
+    <div class="flex items-center justify-between bg-white/80 px-5 py-3 text-xs">
+      <span>◉　Notion　파일　편집　보기</span>
+      <span>ㅋ　⌕　◉　100%　화요일 12:30</span>
+    </div>
+    <div class="absolute top-14 right-7 w-48 rounded-xl border border-black/5 bg-white/95 p-3 text-xs shadow-xl">
+      <p class="mb-2 border-b border-black/10 pb-2 text-[#7f8793]">두 번 복사 감지 중</p>
+      <p class="rounded bg-[#2763e7] p-2 text-white">번역 창 열기　⌘C ⌘C</p>
+      <p class="p-2">설정…</p>
+    </div>
+    <div class="mx-auto mt-32 max-w-md px-6 pb-10 md:mt-20">
+      <TranslationWindow
+        source="회의 자료는 금요일 오전까지 공유하겠습니다."
+        result="I'll share the meeting materials by Friday morning."
+      />
+    </div>
+  </div>
+</section>

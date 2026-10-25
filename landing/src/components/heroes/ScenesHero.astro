@@ -1,0 +1,16 @@
+---
+import type { Variant } from '../../data/variants';
+import HeroTitle from '../shared/HeroTitle.astro';
+import TranslationDemo from '../demo/TranslationDemo.astro';
+interface Props {
+  variant: Variant;
+}
+const { variant } = Astro.props;
+---
+
+<section class="mx-auto max-w-7xl px-6 pt-14 pb-20 lg:px-12">
+  <HeroTitle variant={variant} />
+  <div class="mt-12">
+    <TranslationDemo initialState="intro" />
+  </div>
+</section>

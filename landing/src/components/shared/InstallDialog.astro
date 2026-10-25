@@ -1,0 +1,30 @@
+<dialog
+  id="install-info"
+  aria-labelledby="install-heading"
+  class="fixed inset-0 m-auto w-[min(440px,calc(100%_-_32px))] rounded-3xl border border-line bg-page p-7 text-ink shadow-2xl"
+>
+  <div class="mb-6 flex items-center justify-between gap-4">
+    <span class="text-xs font-semibold uppercase tracking-[.16em] text-muted">macOS app</span>
+    <button data-close-install aria-label="설치 안내 닫기" class="rounded-full px-3 py-1 text-xl">
+      ×
+    </button>
+  </div>
+  <h2 id="install-heading" class="text-2xl font-bold tracking-tight">
+    Mac 앱 설치 안내
+  </h2>
+  <p class="mt-3 text-sm leading-7 text-muted">
+    공개 설치 파일은 아직 준비 중입니다. 현재 화면에서는 디자인과 예시 사용 흐름을 확인할 수
+    있습니다.
+  </p>
+  <ul class="mt-5 space-y-3 rounded-2xl border border-line bg-surface p-5 text-sm">
+    <li>macOS 15 이상</li>
+    <li>Codex CLI 또는 Claude Code 구독 로그인</li>
+    <li>입력 모니터링 · 손쉬운 사용 권한</li>
+  </ul>
+  <button
+    data-close-install
+    class="mt-6 w-full rounded-full bg-ink px-5 py-3 text-sm font-semibold text-page"
+  >
+    확인했어요
+  </button>
+</dialog>

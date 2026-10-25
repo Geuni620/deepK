@@ -1,0 +1,97 @@
+<dialog
+  id="preview-dialog"
+  aria-labelledby="preview-title"
+  class="fixed inset-0 m-auto h-[calc(100dvh_-_28px)] max-h-none w-[calc(100%_-_28px)] max-w-400 overflow-hidden rounded-2xl border border-line bg-page p-0 text-ink shadow-2xl"
+>
+  <div class="flex h-full flex-col">
+    <header class="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-line bg-surface px-4 py-4 md:px-6">
+      <div class="min-w-0">
+        <p id="preview-category" class="mb-1 font-mono text-[10px] text-muted"></p>
+        <h2 id="preview-title" class="text-lg font-semibold tracking-tight"></h2>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <button
+          data-preview-previous
+          aria-label="이전 예시"
+          class="rounded-lg border border-line px-3 py-2 text-sm"
+        >
+          ←
+        </button>
+        <button
+          data-preview-next
+          aria-label="다음 예시"
+          class="rounded-lg border border-line px-3 py-2 text-sm"
+        >
+          →
+        </button>
+        <button
+          data-preview-close
+          aria-label="미리보기 닫기"
+          class="ml-2 rounded-lg px-3 py-1 text-2xl"
+        >
+          ×
+        </button>
+      </div>
+    </header>
+    <div class="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-line px-4 py-3 text-xs md:px-6">
+      <div class="flex gap-1 rounded-lg bg-surface p-1" role="group" aria-label="보기 모드">
+        <button
+          data-preview-mode="live"
+          aria-pressed="true"
+          class="rounded-md px-3 py-2 aria-pressed:bg-ink aria-pressed:text-page"
+        >
+          구현 화면
+        </button>
+        <button
+          data-preview-mode="reference"
+          aria-pressed="false"
+          class="rounded-md px-3 py-2 aria-pressed:bg-ink aria-pressed:text-page"
+        >
+          원본 시안
+        </button>
+      </div>
+      <div class="flex items-center gap-3">
+        <select
+          id="preview-zoom"
+          aria-label="미리보기 확대"
+          class="max-w-36 rounded-lg border border-line bg-surface px-3 py-2"
+        >
+          <option value="fit">너비에 맞춤</option>
+          <option value="0.75">75%</option>
+          <option value="1">100%</option>
+        </select>
+        <a id="open-standalone" href="/" target="_blank" rel="noopener" class="font-semibold">
+          새 창 ↗
+        </a>
+      </div>
+    </div>
+    <div id="preview-stage" class="min-h-0 flex-1 overflow-auto bg-[#e7e4dd] p-4 md:p-6">
+      <div
+        id="preview-canvas"
+        class="relative mx-auto overflow-hidden rounded-lg bg-white shadow-xl"
+      >
+        <iframe
+          id="live-frame"
+          title="선택한 디자인의 구현 화면"
+          class="absolute top-0 left-0 origin-top-left border-0"
+          allow="clipboard-write"
+        ></iframe>
+        <img
+          id="reference-frame"
+          alt="선택한 원본 디자인"
+          hidden
+          class="absolute top-0 left-0 origin-top-left"
+        />
+      </div>
+    </div>
+    <footer class="flex shrink-0 flex-wrap items-center justify-between gap-3 border-t border-line px-4 py-3 text-xs md:px-6">
+      <p id="preview-description" class="text-muted"></p>
+      <button
+        id="preview-candidate"
+        class="rounded-full bg-ink px-5 py-2.5 font-semibold text-page"
+      >
+        후보로 저장
+      </button>
+    </footer>
+  </div>
+</dialog>

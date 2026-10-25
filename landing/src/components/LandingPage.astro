@@ -1,0 +1,59 @@
+---
+import type { Variant, SectionKind } from '../data/variants';
+import SiteNav from './shared/SiteNav.astro';
+import Hero from './heroes/Hero.astro';
+import Sections from './sections/Sections.astro';
+import PrimaryAction from './shared/PrimaryAction.astro';
+interface Props {
+  variant: Variant;
+}
+const { variant } = Astro.props;
+const navigation: Record<SectionKind, { href: string; label: string }> = {
+  how: { href: '#how', label: '작동 방식' },
+  comparison: { href: '#how', label: '작동 방식' },
+  story: { href: '#how', label: '작동 방식' },
+  features: { href: '#features', label: '기능' },
+  code: { href: '#features', label: '기능' },
+  subscription: { href: '#subscription', label: '구독' },
+  settings: { href: '#settings', label: '설정' },
+  faq: { href: '#faq', label: 'FAQ' },
+  privacy: { href: '#privacy', label: '개인정보' },
+  principles: { href: '#privacy', label: '원칙' },
+  promises: { href: '#privacy', label: '약속' },
+};
+const links = variant.sections.map((kind) => navigation[kind]);
+---
+
+<div class:list={[variant.theme === 'playful' && 'bg-accent']}>
+  <SiteNav links={links} playful={variant.theme === 'playful'} />
+</div>
+<main>
+  <Hero variant={variant} />
+  <Sections variant={variant} />
+  <section
+    class:list={['px-6 py-24 text-center md:py-32', variant.theme === 'playful' && 'bg-accent']}
+  >
+    <img
+      src="/brand/deepk-icon.png"
+      alt=""
+      width="68"
+      height="68"
+      class="mx-auto mb-7 rounded-2xl"
+    />
+    <h2 class="text-3xl leading-[1.35] font-bold tracking-tight md:text-5xl">
+      다음 문단은
+      <br />
+      deepK와 읽어 보세요.
+    </h2>
+    <div class="mt-9">
+      <PrimaryAction dark />
+    </div>
+    <p class="mt-5 text-xs text-muted">macOS 15 이상 · 공개 설치 파일 준비 중</p>
+  </section>
+</main>
+<footer class="mx-auto flex max-w-7xl items-center justify-between border-t border-line px-6 py-8 text-xs text-muted lg:px-12">
+  <span>© 2026 deepK</span>
+  <a href="/" target="_top" class="hover:text-ink">
+    모든 시안으로 돌아가기 ↗
+  </a>
+</footer>

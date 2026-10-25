@@ -1,0 +1,116 @@
+---
+import { samples, type DemoState } from '../../data/samples';
+import TranslationWindow from '../shared/TranslationWindow.astro';
+interface Props {
+  initialState?: DemoState;
+}
+const { initialState = 'intro' } = Astro.props;
+const sample = initialState === 'input' ? samples[2] : samples[0];
+---
+
+<div
+  data-translation-demo
+  data-initial-state={initialState}
+  class="relative rounded-3xl border border-line bg-surface p-5 text-[#30291f] shadow-sm md:p-8"
+>
+  <div
+    class="flex flex-wrap gap-2 border-b border-[#e8e2d8] pb-5"
+    role="group"
+    aria-label="예시 선택"
+  >
+    {samples.map((item) => (
+      <button
+        data-sample={item.id}
+        aria-pressed={item.id === sample.id && initialState !== 'input'}
+        class="rounded-full border border-[#ded8cc] px-4 py-2 text-xs font-medium aria-pressed:bg-[#2a2118] aria-pressed:text-white"
+      >
+        {item.label}
+      </button>
+    ))}
+    <button
+      data-input-tab
+      aria-pressed={initialState === 'input'}
+      class="rounded-full border border-[#ded8cc] px-4 py-2 text-xs font-medium aria-pressed:bg-[#2a2118] aria-pressed:text-white"
+    >
+      직접 입력
+    </button>
+  </div>
+  <div class="relative mt-7 min-h-83">
+    <article data-source-panel hidden={initialState === 'input'} class="max-w-3xl pb-20 md:pr-20">
+      <p data-source-context class="font-mono text-[10px] tracking-[.14em] text-[#968b7c]">
+        {sample.context}
+      </p>
+      <h2 data-source-title class="mt-5 text-3xl font-semibold tracking-tight">
+        {sample.title}
+      </h2>
+      <p data-source-intro class="mt-6 text-sm leading-8 text-[#a19a8d]">
+        {sample.intro}
+      </p>
+      <p
+        data-source-text
+        class:list={[
+          'mt-4 cursor-text rounded-md p-2 text-base leading-9',
+          initialState !== 'intro' && 'bg-[#ffe574]',
+        ]}
+      >
+        {sample.source}
+      </p>
+      <p data-source-outro class="mt-4 text-sm leading-8 text-[#a19a8d]">
+        {sample.outro}
+      </p>
+      <button
+        data-select-paragraph
+        class="mt-6 rounded-full border border-[#dcd3c4] px-4 py-2 text-xs font-semibold"
+      >
+        이 문단 선택
+      </button>
+    </article>
+    <div data-input-panel hidden={initialState !== 'input'} class="max-w-3xl">
+      <label class="text-sm font-semibold" for={`input-${initialState}`}>
+        내 문장으로 번역해 보세요
+      </label>
+      <textarea
+        id={`input-${initialState}`}
+        data-demo-input
+        maxlength="500"
+        rows="5"
+        class="mt-4 block w-full resize-y rounded-xl border border-[#ded6c8] bg-[#fffdf8] p-4 text-sm leading-8"
+        aria-describedby={`input-hint-${initialState}`}
+      >{sample.source}</textarea>
+      <div class="mt-2 flex justify-between gap-3 text-[11px] text-[#918575]">
+        <p id={`input-hint-${initialState}`}>
+          예시 문장의 결과를 확인할 수 있습니다. 새 문장은 API 연결 후 지원합니다.
+        </p>
+        <span data-input-count>{sample.source.length}/500</span>
+      </div>
+    </div>
+    <div
+      data-result-panel
+      hidden={initialState !== 'result'}
+      class="relative z-10 mt-5 md:absolute md:top-10 md:right-0 md:w-[46%]"
+    >
+      <button
+        data-close-result
+        class="absolute top-2 right-2 z-10 rounded-full px-3 py-1 text-xl text-[#7d7466]"
+        aria-label="번역 결과 닫기"
+      >
+        ×
+      </button>
+      <TranslationWindow source={sample.source} result={sample.result} />
+    </div>
+  </div>
+  <div class="flex flex-wrap items-center justify-between gap-4 border-t border-[#e8e2d8] pt-5">
+    <p data-demo-feedback role="status" class="max-w-xl text-xs leading-6 text-[#887c6d]">
+      문단을 선택하거나 예시 버튼으로 시작하세요. 표시되는 결과는 준비된 예시입니다.
+    </p>
+    <button
+      data-translate-example
+      class="shrink-0 rounded-full bg-[#ffd330] px-5 py-3 text-sm font-semibold"
+    >
+      예시 번역 보기 <span class="ml-2 font-mono text-[10px] opacity-60">⌘C ⌘C</span>
+    </button>
+  </div>
+</div>
+<script>
+  import '../../scripts/demo';
+</script>

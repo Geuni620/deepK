@@ -1,0 +1,108 @@
+.faq-list {
+  display: grid;
+}
+.faq-item {
+  --faq-duration: 0ms;
+  border-top: 1px solid var(--line);
+}
+.faq-item:last-child {
+  border-bottom: 1px solid var(--line);
+}
+.faq-item[data-faq-motion='animated'] {
+  --faq-duration: 220ms;
+}
+.faq-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  min-height: 64px;
+  padding: 20px 0;
+  list-style: none;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.6;
+}
+.faq-summary::-webkit-details-marker {
+  display: none;
+}
+.faq-summary:focus-visible {
+  outline-offset: -6px;
+}
+.faq-symbol {
+  display: grid;
+  flex: 0 0 24px;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+}
+.faq-symbol svg {
+  width: 20px;
+  height: 20px;
+}
+.faq-item[open] .faq-symbol {
+  transform: rotate(45deg);
+}
+.faq-item[data-faq-expanded='false'] .faq-symbol {
+  transform: rotate(0deg);
+}
+.faq-answer {
+  padding: 0 44px 22px 0;
+}
+.faq-answer p {
+  margin: 0;
+  max-width: 42rem;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 2;
+}
+
+[data-faq][data-tone='playful'] .faq-list {
+  gap: 14px;
+}
+[data-faq][data-tone='playful'] .faq-item {
+  border: 2px solid var(--ink);
+  border-radius: 20px;
+  background: var(--tint);
+  box-shadow: 2px 3px 0 var(--ink);
+}
+[data-faq][data-tone='playful'] .faq-summary {
+  padding: 19px 22px;
+  border-radius: 18px;
+}
+[data-faq][data-tone='playful'] .faq-symbol {
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+}
+[data-faq][data-tone='playful'] .faq-symbol svg {
+  width: 16px;
+  height: 16px;
+}
+[data-faq][data-tone='playful'] .faq-answer {
+  padding: 0 64px 22px 22px;
+}
+
+.faq-symbol {
+  transition: transform var(--faq-duration) cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .faq-summary:hover {
+    color: color-mix(in srgb, var(--ink) 75%, var(--muted));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-symbol {
+    transition: none;
+  }
+}
+
+@media (max-width: 480px) {
+  [data-faq][data-tone='playful'] .faq-summary {
+    padding: 17px 18px;
+  }
+  [data-faq][data-tone='playful'] .faq-answer {
+    padding: 0 18px 20px;
+  }
+}

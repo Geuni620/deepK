@@ -1,0 +1,45 @@
+---
+import type { Variant } from '../../data/variants';
+import PrimaryAction from '../shared/PrimaryAction.astro';
+import { samples } from '../../data/samples';
+interface Props {
+  variant: Variant;
+}
+const { variant } = Astro.props;
+---
+
+<section class="mx-auto max-w-7xl px-6 pb-24 lg:px-12">
+  <p class="border-y border-ink/50 py-2 text-center font-editorial text-[clamp(70px,10vw,140px)] font-bold tracking-[-.08em]">
+    deepK
+  </p>
+  <div class="grid items-end gap-10 pt-16 pb-10 md:grid-cols-[1.3fr_.7fr]">
+    <h1 class="font-editorial text-[clamp(35px,4.5vw,64px)] leading-[1.4] font-bold tracking-[-.055em]">
+      {variant.headline.map((line) => (
+        <span class="block">{line}</span>
+      ))}
+    </h1>
+    <div>
+      <p class="mb-7 max-w-sm text-sm leading-8 text-muted">{variant.description}</p>
+      <PrimaryAction dark />
+    </div>
+  </div>
+  <div class="grid gap-8 border-t border-ink/50 pt-8 md:grid-cols-2 md:gap-16">
+    <article class="md:border-r md:border-line md:pr-12">
+      <p class="mb-8 font-mono text-[10px] tracking-[.18em]">ORIGINAL · ENGLISH</p>
+      <p class="font-editorial text-xl leading-10">
+        Great tools disappear into the work. You stop noticing them, and start noticing what you can
+        finally do.
+      </p>
+      <p class="mt-5 bg-accent p-3 font-editorial text-xl leading-9">{samples[0].source}</p>
+    </article>
+    <article>
+      <p class="mb-8 font-mono text-[10px] tracking-[.18em]">TRANSLATION · 한국어</p>
+      <p class="font-editorial text-xl leading-10 text-muted">
+        좋은 도구는 작업 속으로 스며듭니다. 도구를 의식하지 않게 되고, 마침내 할 수 있게 된 일에
+        집중하게 됩니다.
+      </p>
+      <p class="mt-6 font-editorial text-xl leading-10 font-semibold">{samples[0].result}</p>
+      <p class="mt-6 text-xs text-muted">설명용 예시 번역</p>
+    </article>
+  </div>
+</section>

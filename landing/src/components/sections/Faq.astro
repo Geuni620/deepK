@@ -1,0 +1,47 @@
+---
+import { faqItems } from '../../data/faq';
+import '../../styles/faq.css';
+
+interface Props {
+  tone?: 'plain' | 'playful';
+}
+const { tone = 'plain' } = Astro.props;
+---
+
+<section id="faq" data-faq data-tone={tone} class="px-6 py-20 md:py-28">
+  <div class={tone === 'playful' ? 'mx-auto max-w-3xl' : 'mx-auto max-w-4xl'}>
+    <h2
+      class:list={[
+        'mb-10 text-3xl tracking-tight md:text-4xl',
+        tone === 'playful' ? 'text-center font-playful' : 'font-bold',
+      ]}
+    >
+      {tone === 'playful' ? '궁금한 거 있어요?' : '자주 묻는 질문'}
+    </h2>
+    <div class="faq-list">
+      {faqItems.map((item) => (
+        <details class="faq-item" data-faq-motion="instant">
+          <summary data-faq-trigger aria-controls={`faq-answer-${item.id}`} class="faq-summary">
+            <span>{item.question}</span>
+            <span class="faq-symbol" aria-hidden="true">
+              <svg viewBox="0 0 20 20" fill="none">
+                <path
+                  d="M10 4v12M4 10h12"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </span>
+          </summary>
+          <div id={`faq-answer-${item.id}`} class="faq-answer">
+            <p>{item.answer}</p>
+          </div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+<script>
+  import '../../scripts/faq';
+</script>

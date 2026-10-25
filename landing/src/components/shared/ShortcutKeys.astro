@@ -1,0 +1,25 @@
+---
+interface Props {
+  large?: boolean;
+  dark?: boolean;
+}
+const { large = false, dark = false } = Astro.props;
+---
+
+<div class="flex justify-center gap-4" aria-label="Command C 두 번">
+  {[0, 1].map((index) => (
+    <kbd
+      class:list={[
+        'flex flex-col justify-between rounded-3xl border p-5 font-mono shadow-xl',
+        large ? 'h-36 w-36 md:h-48 md:w-48' : 'h-16 w-16 rounded-xl p-3',
+        dark
+          ? 'border-white/10 bg-gradient-to-br from-[#2d2d27] to-[#181814] text-white'
+          : 'border-line bg-surface text-ink',
+        index === 1 && 'border-accent!',
+      ]}
+    >
+      <span class:list={[large ? 'text-3xl' : 'text-sm', 'opacity-60']}>⌘</span>
+      <span class:list={[large ? 'text-6xl font-semibold' : 'text-xl font-semibold']}>C</span>
+    </kbd>
+  ))}
+</div>

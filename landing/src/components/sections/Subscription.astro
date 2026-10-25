@@ -1,0 +1,27 @@
+<section id="subscription" class="bg-inverse px-6 py-20 text-[#fffaf0] md:py-28">
+  <div class="mx-auto grid max-w-6xl items-center gap-12 md:grid-cols-2">
+    <div>
+      <p class="font-mono text-xs text-[#b5a994]">/ your subscription, your choice</p>
+      <h2 class="mt-6 text-3xl leading-[1.35] font-bold tracking-tight md:text-5xl">
+        쓰던 구독 그대로,
+        <br />
+        필요한 번역만.
+      </h2>
+      <p class="mt-6 max-w-md text-sm leading-8 text-[#c7bdab]">
+        Codex CLI 또는 Claude Code에 로그인한 계정을 사용합니다. 제공자와 모델은 직접 선택하고, 다른
+        유료 API로 자동 전환하지 않습니다.
+      </p>
+    </div>
+    <div class="space-y-4 rounded-2xl border border-white/10 bg-white/5 p-6">
+      {['ChatGPT · Codex CLI', 'Claude · Claude Code'].map((name) => (
+        <div class="flex items-center justify-between border-b border-white/10 py-5 last:border-0">
+          <span class="text-base font-medium">{name}</span>
+          <span class="text-xs text-[#c8bb9c]">직접 로그인</span>
+        </div>
+      ))}
+      <p class="pt-2 text-xs leading-6 text-[#a99e89]">
+        구독과 제공자의 사용량 제한은 별도로 적용됩니다.
+      </p>
+    </div>
+  </div>
+</section>

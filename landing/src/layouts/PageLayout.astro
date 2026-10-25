@@ -1,0 +1,55 @@
+---
+import '../styles/global.css';
+import InstallDialog from '../components/shared/InstallDialog.astro';
+import type { Theme } from '../data/variants';
+interface Props {
+  title: string;
+  theme?: Theme;
+  previewName?: string;
+}
+const { title, theme = 'warm', previewName } = Astro.props;
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <meta
+      name="description"
+      content="deepK 랜딩페이지의 디자인과 체험 상태를 비교하는 로컬 미리보기"
+    />
+    <link rel="icon" href="/brand/deepk-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Noto+Serif+KR:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <title>{title} · deepK</title>
+    <script is:inline>
+      document.documentElement.dataset.embed = String(
+        new URLSearchParams(location.search).get('embed') === '1',
+      );
+    </script>
+  </head>
+  <body data-theme={theme} class="font-sans antialiased">
+    {previewName && (
+      <div
+        data-preview-nav
+        class="flex flex-wrap items-center justify-between gap-2 border-b border-line bg-surface px-5 py-3 text-xs text-muted"
+      >
+        <a href="/" class="font-semibold text-ink">
+          ← 모든 시안
+        </a>
+        <span>{previewName} · 예시 번역 / 설치 파일 준비 중</span>
+      </div>
+    )}
+    <slot />
+    <InstallDialog />
+    <script>
+      import '../scripts/preview-actions';
+    </script>
+  </body>
+</html>

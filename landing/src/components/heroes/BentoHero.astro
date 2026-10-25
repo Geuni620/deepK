@@ -1,0 +1,25 @@
+---
+import type { Variant } from '../../data/variants';
+import HeroTitle from '../shared/HeroTitle.astro';
+import PrimaryAction from '../shared/PrimaryAction.astro';
+interface Props {
+  variant: Variant;
+}
+const { variant } = Astro.props;
+---
+
+<section class="mx-auto max-w-7xl px-6 pt-14 pb-12 text-center lg:px-12">
+  <HeroTitle variant={variant} />
+  <div class="mt-8 flex justify-center">
+    <PrimaryAction />
+  </div>
+  <div class="mx-auto mt-14 flex max-w-xl items-center justify-center gap-7 rounded-3xl bg-surface p-8 shadow-sm">
+    <img src="/brand/deepk-icon.png" alt="" width="96" height="96" class="w-24 rounded-3xl" />
+    <div class="text-left">
+      <p class="text-sm text-muted">번역에 필요한 순간만</p>
+      <p class="mt-3 font-mono text-3xl font-semibold tracking-tight">
+        ⌘C <span class="text-muted">→</span> ⌘C
+      </p>
+    </div>
+  </div>
+</section>

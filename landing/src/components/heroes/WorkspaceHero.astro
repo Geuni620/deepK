@@ -1,0 +1,38 @@
+---
+import type { Variant } from '../../data/variants';
+import HeroTitle from '../shared/HeroTitle.astro';
+import PrimaryAction from '../shared/PrimaryAction.astro';
+import TranslationWindow from '../shared/TranslationWindow.astro';
+import { samples } from '../../data/samples';
+interface Props {
+  variant: Variant;
+}
+const { variant } = Astro.props;
+---
+
+<section class="mx-auto max-w-7xl px-6 pt-14 pb-20 lg:px-12">
+  <HeroTitle variant={variant} />
+  <div class="mt-8 text-center">
+    <PrimaryAction />
+  </div>
+  <div class="relative mt-14 min-h-112 overflow-hidden rounded-2xl border border-line bg-surface p-6 shadow-lg md:p-12">
+    <div class="mb-8 flex items-center justify-between border-b border-line pb-4 font-mono text-xs text-muted">
+      <span>README.md</span>
+      <span>~/work/your-next-idea</span>
+    </div>
+    <div class="max-w-2xl">
+      <p class="font-mono text-xs text-muted">DOCUMENTATION / JAVASCRIPT</p>
+      <h2 class="mt-5 text-3xl font-semibold tracking-tight">Cancelling tasks</h2>
+      <p class="mt-7 leading-8 text-muted">
+        Keep your work in context. Read the source and understand the next step without switching
+        tabs.
+      </p>
+      <p class="my-8 inline-block bg-accent/60 p-2 text-lg">{samples[1].source}</p>
+      <pre class="overflow-x-auto rounded-xl bg-page p-5 font-mono text-sm text-muted"><code>const task = schedule(work);
+await task.whenIdle();</code></pre>
+    </div>
+    <div class="mt-7 md:absolute md:right-10 md:bottom-10 md:w-[42%]">
+      <TranslationWindow source={samples[1].source} result={samples[1].result} compact />
+    </div>
+  </div>
+</section>

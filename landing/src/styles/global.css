@@ -1,0 +1,110 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'IBM Plex Sans KR', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --font-editorial: 'Noto Serif KR', Georgia, serif;
+  --font-playful: 'Black Han Sans', 'IBM Plex Sans KR', sans-serif;
+}
+
+:root,
+[data-theme='warm'] {
+  --page: #fbf6ec;
+  --surface: #ffffff;
+  --ink: #2a2118;
+  --muted: #786b5b;
+  --line: #e4dacb;
+  --accent: #ffcf24;
+  --tint: #ffe574;
+  --inverse: #2a2118;
+}
+[data-theme='dark'] {
+  --page: #0d0d0b;
+  --surface: #1a1a16;
+  --ink: #f3f1e8;
+  --muted: #aaa89c;
+  --line: #33332a;
+  --accent: #f6d64c;
+  --tint: #26261e;
+  --inverse: #050504;
+}
+[data-theme='editorial'] {
+  --page: #f5f1e8;
+  --surface: #eee9df;
+  --ink: #23221b;
+  --muted: #7c786b;
+  --line: #b9b4a7;
+  --accent: #ffe56a;
+  --tint: #e9e3d5;
+  --inverse: #202019;
+}
+[data-theme='white'] {
+  --page: #ffffff;
+  --tint: #eef1f6;
+  --line: #e7e9ec;
+}
+[data-theme='cool'] {
+  --page: #f1f2f3;
+  --tint: #e5e8ef;
+  --line: #dfe2e6;
+}
+[data-theme='playful'] {
+  --page: #ffffff;
+  --accent: #ffda3d;
+  --tint: #fff7d6;
+  --line: #302a20;
+}
+
+@theme inline {
+  --color-page: var(--page);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-tint: var(--tint);
+  --color-inverse: var(--inverse);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--ink);
+}
+button,
+a,
+input,
+textarea,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+button:not(:disabled),
+summary {
+  cursor: pointer;
+}
+:focus-visible {
+  outline: 3px solid #c69917;
+  outline-offset: 4px;
+}
+::selection {
+  color: #2a2118;
+  background: #ffe56a;
+}
+dialog::backdrop {
+  background: #1c191480;
+  backdrop-filter: blur(5px);
+}
+[data-embed='true'] [data-preview-nav] {
+  display: none;
+}
+[hidden] {
+  display: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

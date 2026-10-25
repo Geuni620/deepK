@@ -1,0 +1,36 @@
+---
+import type { Variant, SectionKind } from '../../data/variants';
+import How from './HowItWorks.astro';
+import Features from './FeaturesGrid.astro';
+import Subscription from './Subscription.astro';
+import Faq from './Faq.astro';
+import Code from './CodeFeature.astro';
+import Comparison from './BeforeAfter.astro';
+import Story from './StorySteps.astro';
+import Settings from './SettingsCard.astro';
+import Privacy from './PrivacySection.astro';
+import Principles from './PrinciplesSection.astro';
+import Promises from './PromisesSection.astro';
+interface Props {
+  variant: Variant;
+}
+const { variant } = Astro.props;
+const sections = {
+  how: How,
+  features: Features,
+  subscription: Subscription,
+  code: Code,
+  comparison: Comparison,
+  story: Story,
+  settings: Settings,
+  privacy: Privacy,
+  principles: Principles,
+  promises: Promises,
+} satisfies Record<Exclude<SectionKind, 'faq'>, unknown>;
+---
+
+{variant.sections.map((kind) => {
+  if (kind === 'faq') return <Faq tone={variant.theme === 'playful' ? 'playful' : 'plain'} />;
+  const Section = sections[kind];
+  return <Section />;
+})}

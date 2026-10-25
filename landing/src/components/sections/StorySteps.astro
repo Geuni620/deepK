@@ -1,0 +1,48 @@
+---
+import TranslationWindow from '../shared/TranslationWindow.astro';
+import ShortcutKeys from '../shared/ShortcutKeys.astro';
+const steps = [
+  '읽다가 막히면, 고르기만.',
+  '⌘C, 그리고 한 번 더.',
+  '작은 창에서 바로 읽기.',
+  '쓰던 곳이라면, 그 자리에.',
+];
+---
+
+<section id="how" class="bg-tint/35 px-6 py-24">
+  <div class="mx-auto max-w-6xl">
+    <h2 class="mb-16 text-3xl font-bold tracking-tight md:text-5xl">
+      하루에 몇 번이고, 같은 흐름으로.
+    </h2>
+    {steps.map((title, index) => (
+      <article
+        class:list={[
+          'grid items-center gap-12 py-12 md:grid-cols-2',
+          index % 2 === 1 && 'md:[&>div:first-child]:order-2',
+        ]}
+      >
+        <div>
+          <p class="font-mono text-xs text-muted">0{index + 1}</p>
+          <h3 class="mt-4 text-2xl font-bold tracking-tight md:text-4xl">{title}</h3>
+          <p class="mt-5 max-w-md text-sm leading-8 text-muted">
+            문서를 읽고 이해하는 흐름을 유지하세요. 필요한 만큼 읽은 뒤 원래 작업을 이어 갈 수
+            있습니다.
+          </p>
+        </div>
+        <div class="flex min-h-58 items-center justify-center rounded-3xl bg-surface p-7">
+          {index === 1 ? (
+            <ShortcutKeys />
+          ) : index === 2 ? (
+            <TranslationWindow compact />
+          ) : (
+            <p class="rounded bg-accent/50 p-3 text-sm">
+              {index === 0
+                ? 'Returns a Promise that resolves when idle.'
+                : "I'll share the meeting materials by Friday morning."}
+            </p>
+          )}
+        </div>
+      </article>
+    ))}
+  </div>
+</section>
