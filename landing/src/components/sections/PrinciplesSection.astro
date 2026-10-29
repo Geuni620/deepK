@@ -1,0 +1,22 @@
+<section id="privacy" class="bg-inverse px-6 py-24 text-[#f5f1e8]">
+  <div class="mx-auto max-w-6xl">
+    <h2 class="font-editorial text-3xl leading-[1.6] md:text-5xl">
+      “번역은 읽기를
+      <br />
+      멈추게 해서는 안 됩니다.”
+    </h2>
+    <div class="mt-16 grid gap-10 md:grid-cols-3">
+      {[
+        ['I', '작은 창 하나', '읽던 화면 위에서 필요한 번역만 확인합니다.'],
+        ['II', '지금 고른 문장만', '문서 전체를 오가지 않고 고른 부분에 집중합니다.'],
+        ['III', '쓰던 구독과 함께', '로그인한 Codex 또는 Claude Code를 사용합니다.'],
+      ].map(([number, title, copy]) => (
+        <article class="border-t border-white/20 pt-6">
+          <span class="font-editorial text-xl text-accent">{number}</span>
+          <h3 class="mt-5 text-xl font-medium">{title}</h3>
+          <p class="mt-4 text-sm leading-8 text-white/55">{copy}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

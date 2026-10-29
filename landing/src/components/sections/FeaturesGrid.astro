@@ -1,0 +1,40 @@
+---
+const features = [
+  {
+    mark: '⌘C ⌘C',
+    title: '두 번 복사, 작은 창 하나',
+    copy: '평소의 복사 흐름에 한 번만 더합니다.',
+  },
+  { mark: '{ }', title: '코드는 코드로', copy: '코드 블록과 인라인 코드를 읽기 쉽게 유지합니다.' },
+  { mark: '↔', title: '한국어와 영어 사이', copy: '자동 또는 직접 고른 방향으로 번역합니다.' },
+  {
+    mark: '↗',
+    title: '쓰던 곳으로 돌아가기',
+    copy: '결과를 확인한 뒤 복사하거나 명시적으로 삽입합니다.',
+  },
+];
+---
+
+<section id="features" class="px-6 py-20 md:py-28">
+  <div class="mx-auto max-w-6xl">
+    <h2 class="max-w-2xl text-3xl leading-tight font-bold tracking-[-.045em] md:text-5xl">
+      번역에 필요한 것만
+      <br />
+      남겼습니다.
+    </h2>
+    <div class="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+      {features.map((item, index) => (
+        <article
+          class:list={[
+            'rounded-3xl border border-line p-7',
+            index === 0 ? 'bg-tint' : 'bg-surface',
+          ]}
+        >
+          <span class="font-mono text-3xl font-semibold">{item.mark}</span>
+          <h3 class="mt-9 text-lg font-semibold">{item.title}</h3>
+          <p class="mt-3 text-sm leading-7 text-muted">{item.copy}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,42 @@
+---
+import { samples } from '../../data/samples';
+interface Props {
+  source?: string;
+  result?: string;
+  compact?: boolean;
+}
+const { source = samples[0].source, result = samples[0].result, compact = false } = Astro.props;
+---
+
+<div
+  class:list={[
+    'w-full rounded-2xl border border-black/5 bg-white text-[#2a2118] shadow-[0_24px_60px_#33250f20]',
+    compact ? 'max-w-sm' : 'max-w-lg',
+  ]}
+>
+  <div class="flex items-center gap-1.5 px-5 pt-4">
+    <span class="h-2.5 w-2.5 rounded-full bg-[#ff6258]"></span>
+    <span class="h-2.5 w-2.5 rounded-full bg-[#ffbf2f]"></span>
+    <span class="h-2.5 w-2.5 rounded-full bg-[#2acb43]"></span>
+    <span class="ml-2 text-[11px] font-semibold">deepK</span>
+  </div>
+  <div class="px-5 py-5">
+    <p class="mb-2 text-[10px] text-[#958a7d]">예시 · English → 한국어</p>
+    <p data-window-source class="text-xs leading-6 text-[#94897e]">
+      {source}
+    </p>
+    <div class="my-4 h-px bg-[#eee8df]"></div>
+    <p data-window-result class="whitespace-pre-line text-sm font-medium leading-7">
+      {result}
+    </p>
+    <div class="mt-5 flex items-center justify-between gap-3">
+      <span class="text-[10px] text-[#998f83]">예시 번역 · API 미연결</span>
+      <button
+        data-copy-result={result}
+        class="rounded-lg bg-[#30271c] px-3 py-1.5 text-[11px] text-white"
+      >
+        복사
+      </button>
+    </div>
+  </div>
+</div>

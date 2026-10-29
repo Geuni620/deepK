@@ -1,0 +1,79 @@
+---
+import '../styles/global.css';
+import InstallDialog from '../components/shared/InstallDialog.astro';
+import type { Theme } from '../data/variants';
+interface Props {
+  title: string;
+  theme?: Theme;
+  previewName?: string;
+  description?: string;
+  indexable?: boolean;
+}
+const {
+  title,
+  theme = 'warm',
+  previewName,
+  description = 'deepK 랜딩페이지의 디자인과 예시 사용 흐름을 비교하는 화면입니다.',
+  indexable = false,
+} = Astro.props;
+const canonical = indexable && Astro.site ? new URL(Astro.url.pathname, Astro.site) : undefined;
+const socialImage = Astro.site ? new URL('/brand/deepk-icon.png', Astro.site) : undefined;
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="robots" content={indexable ? 'index,follow' : 'noindex,nofollow'} />
+    <meta name="description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ko_KR" />
+    <meta property="og:site_name" content="deepK" />
+    <meta property="og:title" content={`${title} · deepK`} />
+    <meta property="og:description" content={description} />
+    {canonical && <link rel="canonical" href={canonical} />}
+    {canonical && <meta property="og:url" content={canonical} />}
+    {socialImage && <meta property="og:image" content={socialImage} />}
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" href="/brand/deepk-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Noto+Serif+KR:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <title>{title} · deepK</title>
+    <script is:inline>
+      document.documentElement.dataset.embed = String(
+        new URLSearchParams(location.search).get('embed') === '1',
+      );
+    </script>
+  </head>
+  <body data-theme={theme} class="font-sans antialiased">
+    {indexable && (
+      <a
+        href="#main-content"
+        class="sr-only z-50 rounded-lg bg-ink px-5 py-3 text-page focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
+      >
+        본문으로 바로가기
+      </a>
+    )}
+    {previewName && (
+      <div
+        data-preview-nav
+        class="flex flex-wrap items-center justify-between gap-2 border-b border-line bg-surface px-5 py-3 text-xs text-muted"
+      >
+        <a href="/designs/" class="font-semibold text-ink">
+          ← 모든 시안
+        </a>
+        <span>{previewName} · 디자인 비교 / 예시 번역</span>
+      </div>
+    )}
+    <slot />
+    <InstallDialog />
+    <script>
+      import '../scripts/preview-actions';
+    </script>
+  </body>
+</html>

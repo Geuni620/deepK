@@ -1,0 +1,28 @@
+---
+import type { Variant } from '../../data/variants';
+interface Props {
+  variant: Variant;
+  align?: 'center' | 'left';
+}
+const { variant, align = 'center' } = Astro.props;
+---
+
+<div class:list={[align === 'center' ? 'mx-auto max-w-5xl text-center' : 'max-w-3xl']}>
+  <p class="mb-6 inline-flex rounded-full bg-tint px-4 py-2 font-mono text-[11px] font-semibold tracking-wide">
+    ⌘ macOS 메뉴 막대 번역기
+  </p>
+  <h1
+    class:list={[
+      'text-[clamp(36px,5.3vw,76px)] leading-[1.17] font-bold tracking-[-.055em]',
+      variant.theme === 'editorial' && 'font-editorial',
+      variant.theme === 'playful' && 'font-playful font-normal',
+    ]}
+  >
+    {variant.headline.map((line) => (
+      <span class="block">{line}</span>
+    ))}
+  </h1>
+  <p class="mx-auto mt-7 max-w-xl text-[15px] leading-8 text-muted md:text-base">
+    {variant.description}
+  </p>
+</div>

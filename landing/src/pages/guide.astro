@@ -1,0 +1,110 @@
+---
+import DocumentLayout from '../layouts/DocumentLayout.astro';
+import InstallOptions from '../components/shared/InstallOptions.astro';
+import { release } from '../data/release';
+---
+
+<DocumentLayout
+  title="Mac에 deepK 설치하기"
+  description="앱 설치부터 AI 계정 연결과 권한 설정까지. 처음 한 번 준비하면 읽던 문장에서 바로 번역을 시작할 수 있어요."
+>
+  <section id="install">
+    <h2>1. 앱을 설치하세요</h2>
+    <p>
+      Apple Silicon Mac과 macOS {release.minimumMacOS} 이상이 필요합니다. Intel Mac용 앱은 아직
+      제공하지 않습니다.
+    </p>
+    <div class="mt-6 rounded-2xl border border-line bg-surface p-6">
+      <InstallOptions guideLink={false} />
+    </div>
+    <p>
+      ZIP으로 받았다면 압축을 풀고 <code>DeepK.app</code>을 응용 프로그램 폴더로 옮깁니다. 공증된
+      앱이므로 macOS 보안 설정을 끄거나 격리 속성을 지울 필요는 없습니다.
+    </p>
+  </section>
+  <section>
+    <h2>2. 사용할 AI 계정으로 로그인하세요</h2>
+    <p>
+      deepK는 Mac에 설치한 Codex CLI 또는 Claude Code를 통해 번역합니다. 사용할 도구 하나를 공식
+      안내에 따라 설치하고, 이 Mac에서 구독 계정으로 로그인하세요.
+    </p>
+    <ul>
+      <li>
+        <a
+          href="https://developers.openai.com/codex/cli/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Codex CLI 공식 설치 안내 ↗
+        </a>
+      </li>
+      <li>
+        <a
+          href="https://code.claude.com/docs/en/quickstart"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Claude Code 공식 시작 안내 ↗
+        </a>
+      </li>
+    </ul>
+    <p>
+      deepK를 실행한 뒤 메뉴 막대의 설정에서 제공자를 선택하고 연결을 확인합니다. 구독 요금과 사용량
+      제한은 제공자 조건을 따릅니다.
+    </p>
+  </section>
+  <section>
+    <h2>3. macOS 권한을 허용하세요</h2>
+    <p>시스템 설정 → 개인정보 보호 및 보안에서 설치한 deepK의 권한을 확인합니다.</p>
+    <ul>
+      <li>
+        <strong>입력 모니터링:</strong> ⌘C를 두 번 누르는 동작을 감지할 때 필요합니다.
+      </li>
+      <li>
+        <strong>손쉬운 사용:</strong> 번역문을 원래 입력 위치에 삽입할 때 필요합니다.
+      </li>
+    </ul>
+    <p>
+      개발용 앱을 쓰다가 배포본으로 바꾸면 기존 권한 등록을 갱신해야 할 수 있습니다. 권한을 바꾼 뒤
+      macOS가 다시 실행하라고 안내하면 앱을 종료하고 다시 엽니다.
+    </p>
+  </section>
+  <section>
+    <h2>4. 문장을 고르고 ⌘C를 두 번</h2>
+    <p>
+      읽던 앱에서 문장을 선택하고 복사 단축키를 연달아 두 번 누릅니다. 작은 번역 창에서 결과를 읽고,
+      필요하면 복사하거나 원래 입력 위치에 삽입하세요. 직접 입력으로도 번역할 수 있습니다.
+    </p>
+  </section>
+  <section>
+    <h2>업데이트와 삭제</h2>
+    <p>
+      Homebrew로 설치했다면 deepK를 종료한 뒤 아래 명령을 실행합니다. 새 버전이 게시됐을 때
+      업데이트됩니다.
+    </p>
+    <pre><code>brew update
+brew upgrade --cask Geuni620/tap/deepk</code></pre>
+    <p>
+      앱을 삭제하려면 아래 명령을 사용합니다. 별도로 설치한 CLI와 해당 CLI의 로그인 정보는 그대로
+      유지됩니다.
+    </p>
+    <pre><code>brew uninstall --cask Geuni620/tap/deepk</code></pre>
+    <p>ZIP으로 설치했다면 응용 프로그램 폴더에서 앱을 교체하거나 삭제하면 됩니다.</p>
+  </section>
+  <section>
+    <h2>현재 배포본에 대해</h2>
+    <p>
+      0.1.0은 초기 배포본입니다. 서명·Apple 공증과 Homebrew 설치를 확인했으며, 다른 Mac에서의 전체
+      사용 흐름과 새 버전으로의 업데이트 검증은 아직 남아 있습니다.
+    </p>
+    <p>
+      <a href={release.notesUrl} target="_blank" rel="noopener noreferrer">
+        릴리스 노트 ↗
+      </a>{' '}
+      ·{' '}
+      <a href={`${release.repositoryUrl}/issues`} target="_blank" rel="noopener noreferrer">
+        문제 제보 ↗
+      </a>
+    </p>
+  </section>
+</DocumentLayout>

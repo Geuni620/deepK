@@ -1,0 +1,27 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import LandingPage from '../../components/LandingPage.astro';
+import DemoPage from '../../components/demo/DemoPage.astro';
+import GuidePage from '../../components/demo/GuidePage.astro';
+import { examples, type Example } from '../../data/examples';
+import { getVariant } from '../../data/variants';
+
+export function getStaticPaths() {
+  return examples.map((example) => ({ params: { slug: example.slug }, props: { example } }));
+}
+interface Props {
+  example: Example;
+}
+const { example } = Astro.props;
+const variant = 'variant' in example ? getVariant(example.variant) : undefined;
+---
+
+<PageLayout title={example.title} theme={variant?.theme ?? 'warm'} previewName={example.title}>
+  {variant ? (
+    <LandingPage variant={variant} />
+  ) : example.kind === 'flow' ? (
+    <DemoPage initialState={example.initialState} />
+  ) : (
+    <GuidePage />
+  )}
+</PageLayout>

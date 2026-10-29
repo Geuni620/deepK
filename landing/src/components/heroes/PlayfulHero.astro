@@ -1,0 +1,41 @@
+---
+import type { Variant } from '../../data/variants';
+import HeroTitle from '../shared/HeroTitle.astro';
+import PrimaryAction from '../shared/PrimaryAction.astro';
+import { release } from '../../data/release';
+interface Props {
+  variant: Variant;
+  production?: boolean;
+}
+const { variant, production = false } = Astro.props;
+---
+
+<section class="bg-accent px-6 pt-12 pb-20 text-center">
+  <HeroTitle variant={variant} />
+  <div class="mt-8">
+    <PrimaryAction dark label={production ? 'Mac용 deepK 받기' : '⌘C ⌘C, 만나 보기'} />
+    {production && (
+      <p class="mt-4 text-xs leading-7 text-muted">
+        Apple Silicon · macOS {release.minimumMacOS} 이상 · v{release.version}
+      </p>
+    )}
+  </div>
+  <div class="relative mx-auto mt-14 flex max-w-4xl items-center justify-center gap-8">
+    <div class="hidden max-w-58 -rotate-4 rounded-2xl border-2 border-ink bg-white p-5 text-left text-sm leading-6 shadow-[3px_4px_0_#302a20] lg:block">
+      <p class="text-[11px] text-muted">Keep the original window open.</p>
+      <p class="mt-2 font-bold">원래 창은 열어 두세요.</p>
+    </div>
+    <img
+      src="/brand/deepk-icon.png"
+      alt="deepK 곰 아이콘"
+      width="264"
+      height="264"
+      fetchpriority="high"
+      class="w-52 rotate-3 rounded-[46px] border-2 border-ink shadow-[6px_7px_0_#302a20] md:w-66"
+    />
+    <div class="hidden max-w-58 rotate-3 rounded-2xl border-2 border-ink bg-white p-5 text-left text-sm leading-6 shadow-[3px_4px_0_#302a20] lg:block">
+      <p class="text-[11px] text-muted">Could you confirm the launch date?</p>
+      <p class="mt-2 font-bold">출시일을 확인해 주실 수 있나요?</p>
+    </div>
+  </div>
+</section>

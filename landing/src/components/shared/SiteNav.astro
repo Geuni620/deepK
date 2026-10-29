@@ -1,0 +1,27 @@
+---
+import Brand from './Brand.astro';
+import PrimaryAction from './PrimaryAction.astro';
+interface Props {
+  playful?: boolean;
+  links?: { href: string; label: string }[];
+}
+const { playful = false, links = [{ href: '#demo', label: '직접 체험' }] } = Astro.props;
+---
+
+<header
+  id="top"
+  class:list={[
+    'mx-auto flex max-w-7xl items-center justify-between gap-5 px-6 py-6 lg:px-12',
+    playful && 'bg-accent',
+  ]}
+>
+  <Brand />
+  <nav aria-label="페이지 탐색" class="hidden items-center gap-7 text-sm text-muted md:flex">
+    {links.map((link) => (
+      <a href={link.href} class="hover:text-ink">
+        {link.label}
+      </a>
+    ))}
+  </nav>
+  <PrimaryAction label="Mac용 받기" dark />
+</header>

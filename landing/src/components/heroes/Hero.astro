@@ -1,0 +1,28 @@
+---
+import type { HeroKind, Variant } from '../../data/variants';
+import Warm from './WarmHero.astro';
+import Keyboard from './KeyboardHero.astro';
+import Editorial from './EditorialHero.astro';
+import Workspace from './WorkspaceHero.astro';
+import Bento from './BentoHero.astro';
+import MenuBar from './MenuBarHero.astro';
+import Scenes from './ScenesHero.astro';
+import Playful from './PlayfulHero.astro';
+interface Props {
+  variant: Variant;
+}
+const { variant } = Astro.props;
+const heroes = {
+  warm: Warm,
+  keyboard: Keyboard,
+  editorial: Editorial,
+  workspace: Workspace,
+  bento: Bento,
+  menubar: MenuBar,
+  scenes: Scenes,
+  playful: Playful,
+} satisfies Record<HeroKind, unknown>;
+const SelectedHero = heroes[variant.hero];
+---
+
+<SelectedHero variant={variant} />

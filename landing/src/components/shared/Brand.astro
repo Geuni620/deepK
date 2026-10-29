@@ -1,0 +1,21 @@
+---
+interface Props {
+  compact?: boolean;
+}
+const { compact = false } = Astro.props;
+---
+
+<a
+  href="#top"
+  class="inline-flex shrink-0 items-center gap-2.5 font-bold tracking-tight"
+  aria-label="deepK 처음으로"
+>
+  <img
+    src="/brand/deepk-icon.png"
+    alt=""
+    width={compact ? 26 : 34}
+    height={compact ? 26 : 34}
+    class="rounded-[9px]"
+  />
+  <span class:list={[compact ? 'text-base' : 'text-xl']}>deepK</span>
+</a>

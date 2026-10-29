@@ -1,0 +1,21 @@
+---
+import type { Variant } from '../../data/variants';
+import HeroTitle from '../shared/HeroTitle.astro';
+import PrimaryAction from '../shared/PrimaryAction.astro';
+import ShortcutKeys from '../shared/ShortcutKeys.astro';
+interface Props {
+  variant: Variant;
+}
+const { variant } = Astro.props;
+---
+
+<section class="mx-auto max-w-7xl px-6 pt-20 pb-28 lg:px-12">
+  <div class="mb-14">
+    <ShortcutKeys large dark />
+  </div>
+  <HeroTitle variant={variant} />
+  <div class="mt-9 flex justify-center">
+    <PrimaryAction />
+  </div>
+  <p class="mt-6 text-center font-mono text-xs text-muted">select → ⌘C → ⌘C → understand</p>
+</section>
