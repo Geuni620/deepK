@@ -57,12 +57,21 @@ deepK is in its first public release. Translation speed depends on the provider,
 
 ## First run
 
-1. Open Settings from the menu bar, choose Codex or Claude Code, and check the connection.
-2. Allow Input Monitoring in macOS System Settings. Inserting back into the original app also needs Accessibility permission.
-3. Select text in another app and press ⌘C twice. You can also type text directly.
-4. Review the translation, then copy or insert it. Quit from the menu or with ⌘Q.
+deepK lives only in the menu bar. Launching it does not show a Dock icon or a window; it only adds an icon to the menu bar at the top right of the screen.
+
+1. Open deepK from Applications, or run `open /Applications/DeepK.app` in Terminal, then find the deepK icon in the menu bar.
+2. Open Settings from the menu bar, choose Codex or Claude Code, and check the connection.
+3. Allow Input Monitoring in macOS System Settings. Inserting back into the original app also needs Accessibility permission. If it still does not work after you allow a permission, quit deepK and launch it again.
+4. Select text in another app and press ⌘C twice. You can also type text directly.
+5. Review the translation, then copy or insert it. Quit from the menu or with ⌘Q.
 
 Double-copy translation is on by default in a new install and can be turned off in Settings. If the app path changes because of a new checkout or signing method, you may need to grant macOS permissions again.
+
+**If nothing appears after launch**
+
+- With many menu bar icons, the deepK icon can be hidden behind the notch or other icons. Hide or rearrange some menu bar icons and look again.
+- A deepK built from source and the released app share the bundle ID `com.deepk.app`. If another copy is already running, `open -a DeepK` only activates that copy instead of launching the new one. Check which path is running with `pgrep -fl DeepK`, quit the other copy from its menu, then run `open /Applications/DeepK.app` again.
+- macOS may register permissions separately for each copy of the app. If System Settings lists more than one deepK, turn on permissions for the copy you actually use.
 
 ## What is sent, and security limits
 
@@ -85,7 +94,7 @@ cd deepK
 ./scripts/build-and-run.sh
 ```
 
-The script quits any running deepK, then builds, signs, and launches it. Any open translation is not preserved. To build only, use `./scripts/build.sh`.
+The script quits any running deepK, then builds, signs, and launches it. This also quits the released deepK, which uses the same bundle ID. Any open translation is not preserved. To build only, use `./scripts/build.sh`.
 
 - [Set up Codex CLI](docs/development.md#codex-cli-준비)
 - [Set up Claude Code](docs/development.md#claude-code-준비): the app's install script needs Node.js and npm.
