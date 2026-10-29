@@ -55,6 +55,8 @@ struct ResultMenuAction {
     var title: String
     var isEnabled: @MainActor () -> Bool
     var perform: @MainActor () -> Void
+    /// Set for an action about the selected words: it runs instead of `perform` while text is selected.
+    var performWithSelection: (@MainActor (String) -> Void)? = nil
 }
 
 /// A single selectable text surface keeps selection across paragraph boundaries.
@@ -1548,7 +1550,11 @@ final class ResultTextView: NSTextView, NSViewToolTipOwner {
         guard !menuActions.isEmpty else { return base }
         let menu = (base?.copy() as? NSMenu) ?? NSMenu()
         if !menu.items.isEmpty { menu.insertItem(.separator(), at: 0) }
-        for action in menuActions.reversed() { menu.insertItem(ResultMenuActionTarget.item(for: action), at: 0) }
+        let range = selectedRange()
+        let selection = range.length > 0 ? (string as NSString).substring(with: range) : ""
+        for action in menuActions.reversed() {
+            menu.insertItem(ResultMenuActionTarget.item(for: action, selection: selection), at: 0)
+        }
         return menu
     }
 
@@ -1567,13 +1573,15 @@ final class ResultTextView: NSTextView, NSViewToolTipOwner {
 /// represented object.
 @MainActor private final class ResultMenuActionTarget: NSObject, NSMenuItemValidation {
     private let action: ResultMenuAction
+    private let selection: String
 
-    private init(_ action: ResultMenuAction) {
+    private init(_ action: ResultMenuAction, selection: String) {
         self.action = action
+        self.selection = selection
     }
 
-    static func item(for action: ResultMenuAction) -> NSMenuItem {
-        let target = ResultMenuActionTarget(action)
+    static func item(for action: ResultMenuAction, selection: String = "") -> NSMenuItem {
+        let target = ResultMenuActionTarget(action, selection: selection)
         let item = NSMenuItem(title: action.title, action: #selector(run(_:)), keyEquivalent: "")
         item.target = target
         item.representedObject = target
@@ -1582,7 +1590,12 @@ final class ResultTextView: NSTextView, NSViewToolTipOwner {
 
     @objc private func run(_ sender: Any?) {
         guard action.isEnabled() else { return }
-        action.perform()
+        if let performWithSelection = action.performWithSelection,
+           !selection.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            performWithSelection(selection)
+        } else {
+            action.perform()
+        }
     }
 
     func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {

@@ -103,6 +103,12 @@ final class DeepKApplicationDelegate: NSObject, NSApplicationDelegate {
         // ⌘↩: 번역 창이 key이면 포커스와 상관없이 원문 끝에 `---` 경계를 덧붙인다.
         edit.addItem(.separator())
         edit.addItem(AppModel.shared.sourceEditor.makeMenuItem())
+        // ⌘L: 번역이 끝났을 때 옆 창에서 그 번역에 대해 묻는다.
+        if AppModel.shared.followUpEnabled {
+            let ask = NSMenuItem(title: "번역에 대해 묻기", action: #selector(AppModel.openFollowUpFromMenu), keyEquivalent: "l")
+            ask.target = AppModel.shared
+            edit.addItem(ask)
+        }
         main.addItem(editItem)
         NSApp.mainMenu = main
     }

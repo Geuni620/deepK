@@ -72,6 +72,12 @@ swiftc -swift-version 6 -warnings-as-errors -module-cache-path "$TEST_DIR/cache"
 "$TEST_DIR/TranslationProvider"
 
 swiftc -swift-version 6 -warnings-as-errors -parse-as-library -module-cache-path "$TEST_DIR/cache" \
+  "$PROJECT_ROOT/DeepK/FollowUp/FollowUpConversation.swift" \
+  "$PROJECT_ROOT/DeepK/FollowUp/FollowUpChat.swift" \
+  "$PROJECT_ROOT/DeepKTests/FollowUpTests.swift" -o "$TEST_DIR/FollowUp"
+"$TEST_DIR/FollowUp"
+
+swiftc -swift-version 6 -warnings-as-errors -parse-as-library -module-cache-path "$TEST_DIR/cache" \
   "$PROJECT_ROOT/DeepK/Translation/TranslationOutputLint.swift" \
   "$PROJECT_ROOT/DeepKTests/TranslationOutputLintTests.swift" -o "$TEST_DIR/TranslationOutputLint"
 "$TEST_DIR/TranslationOutputLint"

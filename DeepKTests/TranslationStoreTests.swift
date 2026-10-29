@@ -89,6 +89,9 @@ private enum TranslationStoreTests {
         await providerCancellationIsIgnoredWhenProviderStillCompletes()
         await languageChangeCancelsAndUsesTheNewDirection()
         await ambiguousEnglishUsesConservativeFallback()
+        await undecidedLanguageIsPickedForThisSourceOnly()
+        await koreanTargetFollowsTheDirection()
+        directionRawValuesRoundTrip()
         await imeCompositionDoesNotRequestUntilCompositionEnds()
         await duplicateEditorCallbacksDoNotRestartTheRequest()
         await automaticRequestUsesConfigurableDebounce()
@@ -511,6 +514,80 @@ private enum TranslationStoreTests {
         require(store.result?.direction == .koreanToEnglish, "the result should retain the current direction")
     }
 
+    /// A short Cyrillic phrase ranks Kazakh first: Russian is offered, and the pick holds until a new copy.
+    private static func undecidedLanguageIsPickedForThisSourceOnly() async {
+        let probe = TranslationProbe(), store = makeStore(probe: probe, engineReady: true)
+        store.invokeCopiedText("Привет мир")
+        require(store.status == .error(.unsupportedLanguage), "a Kazakh-ranked phrase is undecided")
+        require(store.undecidedLanguageCandidates.contains(.russian), "Russian is offered: \(store.undecidedLanguageCandidates)")
+
+        store.translateSource(as: .russian)
+        let picked = await probe.nextRequest()
+        require(picked.sourceLanguage == .russian && picked.targetLanguage == .korean, "the pick is the source language")
+        await probe.complete(picked.id, with: "안녕 세상")
+        await waitForSuccess(store)
+        require(store.undecidedLanguageCandidates.isEmpty, "a decided source offers nothing")
+
+        store.editSource("Привет мир!", isComposing: false)
+        let edited = await probe.nextRequest()
+        require(edited.sourceLanguage == .russian, "editing the same source keeps the pick")
+        await probe.complete(edited.id, with: "안녕 세상!")
+        await waitForSuccess(store)
+
+        store.invokeCopiedText("مرحبا بالعالم")
+        try? await Task.sleep(for: .milliseconds(30))
+        require(store.sourceLanguageOverride == nil, "a new copy drops the pick")
+        require(await probe.takeRequests().isEmpty, "a new undecided copy is not sent")
+
+        let fixed = makeStore(probe: TranslationProbe(), engineReady: true)
+        fixed.setDirection(.englishToKorean)
+        fixed.translateSource(as: .russian)
+        require(fixed.sourceLanguageOverride == nil, "a fixed direction takes no pick")
+    }
+
+    private static func koreanTargetFollowsTheDirection() async {
+        let probe = TranslationProbe(), store = makeStore(probe: probe, engineReady: true)
+        store.setDirection(TranslationDirection(source: nil, koreanTarget: .japanese))
+        store.invokeCopiedText("회의는 다음 주 화요일로 옮겨도 괜찮을까요?")
+        let korean = await probe.nextRequest()
+        require(korean.sourceLanguage == .korean && korean.targetLanguage == .japanese, "automatic Korean goes to the chosen language")
+        await probe.complete(korean.id, with: "会議は来週の火曜日に移しても大丈夫でしょうか？")
+        await waitForSuccess(store)
+
+        store.invokeCopiedText("The meeting starts at three in the afternoon.")
+        let english = await probe.nextRequest()
+        require(english.sourceLanguage == .english && english.targetLanguage == .korean, "other languages still go to Korean")
+        await probe.complete(english.id, with: "회의는 오후 세 시에 시작합니다.")
+        await waitForSuccess(store)
+
+        store.setDirection(TranslationDirection(source: .korean, koreanTarget: .german))
+        store.invokeCopiedText("안녕하세요")
+        let fixed = await probe.nextRequest()
+        require(fixed.sourceLanguage == .korean && fixed.targetLanguage == .german, "a fixed Korean source uses the chosen language")
+        await probe.complete(fixed.id, with: "Hallo")
+    }
+
+    private static func directionRawValuesRoundTrip() {
+        // Values saved before more languages keep their meaning.
+        require(TranslationDirection(rawValue: "auto") == .automatic && TranslationDirection.automatic.rawValue == "auto", "auto")
+        require(TranslationDirection(rawValue: "en-ko") == .englishToKorean, "en-ko")
+        require(TranslationDirection(rawValue: "ko-en") == .koreanToEnglish, "ko-en")
+        for direction in [TranslationDirection(source: nil, koreanTarget: .simplifiedChinese),
+                          TranslationDirection(source: .traditionalChinese),
+                          TranslationDirection(source: .korean, koreanTarget: .traditionalChinese),
+                          TranslationDirection(source: .vietnamese)] {
+            require(TranslationDirection(rawValue: direction.rawValue) == direction, "round trip: \(direction.rawValue)")
+        }
+        require(TranslationDirection(source: .korean, koreanTarget: .traditionalChinese).rawValue == "ko-zh-Hant", "a code with a dash")
+        require(TranslationDirection(rawValue: "auto>zh-Hans")?.koreanTarget == .simplifiedChinese, "automatic keeps where Korean goes")
+        for invalid in ["ja-en", "ko-ko", "auto>ko", "xx-ko", "auto>"] {
+            require(TranslationDirection(rawValue: invalid) == nil, "invalid: \(invalid)")
+        }
+        // A fixed non-Korean source does not depend on where Korean goes.
+        require(TranslationDirection(source: .japanese, koreanTarget: .german) == TranslationDirection(source: .japanese),
+                "the Korean target does not change a fixed Japanese source")
+    }
+
     private static func imeCompositionDoesNotRequestUntilCompositionEnds() async {
         let probe = TranslationProbe()
         let store = makeStore(
@@ -553,7 +630,20 @@ private enum TranslationStoreTests {
         }
 
         // Neither a confident Latin-language result nor a non-Latin alphabet is coerced to English.
-        for input in ["Hola mundo", "Bonjour tout le monde", "Jeg er veldig glad", "こんにちは世界", "你好世界", "Привет мир", "مرحبا بالعالم", "12345 — !"] {
+        // Supported languages go to Korean; the others stay undecided.
+        let detected: [(String, TranslationLanguage)] = [
+            ("Hola mundo", .spanish), ("Bonjour tout le monde", .french), ("こんにちは世界", .japanese),
+            ("你好世界", .traditionalChinese), ("Die Methode wird asynchron ausgeführt.", .german), ("No sé.", .spanish)
+        ]
+        for (input, language) in detected {
+            let probe = TranslationProbe(), store = makeStore(probe: probe, engineReady: true)
+            store.invokeCopiedText(input)
+            let request = await probe.nextRequest()
+            require(request.sourceLanguage == language && request.targetLanguage == .korean,
+                    "\(input) is \(language.rawValue) → ko, got \(request.sourceLanguage.rawValue) → \(request.targetLanguage.rawValue)")
+            await probe.complete(request.id, with: "번역")
+        }
+        for input in ["Jeg er veldig glad", "Привет мир", "مرحبا بالعالم", "12345 — !"] {
             let probe = TranslationProbe(), store = makeStore(probe: probe, engineReady: true)
             store.invokeCopiedText(input)
             require(store.status == .error(.unsupportedLanguage), "unsupported input stays unsupported: \(input)")
