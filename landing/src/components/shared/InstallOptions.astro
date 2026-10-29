@@ -1,5 +1,10 @@
 ---
 import { release } from '../../data/release';
+
+interface Props {
+  guideLink?: boolean;
+}
+const { guideLink = true } = Astro.props;
 ---
 
 <div data-install-options>
@@ -41,10 +46,12 @@ import { release } from '../../data/release';
     <br />
     번역용 Codex CLI 또는 Claude Code의 설치·구독 로그인이 필요해요.
   </p>
-  <a
-    href="/guide/"
-    class="mt-4 inline-flex min-h-11 items-center text-xs font-semibold underline underline-offset-4"
-  >
-    CLI 로그인과 권한 설정이 처음이라면 ↗
-  </a>
+  {guideLink && (
+    <a
+      href="/guide/"
+      class="mt-4 inline-flex min-h-11 items-center text-xs font-semibold underline underline-offset-4"
+    >
+      CLI 로그인과 권한 설정이 처음이라면 ↗
+    </a>
+  )}
 </div>

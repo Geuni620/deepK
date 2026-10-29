@@ -161,6 +161,60 @@ async function browser_smoke(page) {
     'Install information did not close',
   );
   passed.push('install information dialog');
+  await page.goto(origin + '/');
+  await page.evaluate(() => {
+    document.documentElement.dataset.smokeClipboardText = '';
+    document.documentElement.dataset.smokeClipboardReject = 'false';
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: {
+        writeText: async (text) => {
+          if (document.documentElement.dataset.smokeClipboardReject === 'true')
+            throw new Error('Clipboard denied for smoke check');
+          document.documentElement.dataset.smokeClipboardText = text;
+        },
+      },
+    });
+  });
+  await page.getByRole('link', { name: 'Mac용 deepK 받기', exact: true }).click();
+  const installDialog = page.getByRole('dialog', { name: 'Mac에 deepK 설치하기' });
+  check(await installDialog.isVisible(), 'Main install dialog did not open');
+  const installCopy = installDialog.getByRole('button', { name: 'Homebrew 설치 명령 복사' });
+  const installCommand = (await installDialog.locator('code').textContent()).trim();
+  check(installCommand.startsWith('brew install --cask '), 'Install command missing');
+  await installCopy.click();
+  check(
+    (await page.evaluate(() => document.documentElement.dataset.smokeClipboardText)) ===
+      installCommand,
+    'Install copy did not use the shown command',
+  );
+  check((await installCopy.textContent()).trim() === '복사됨', 'Install copy success missing');
+  await page.evaluate(() => {
+    document.documentElement.dataset.smokeClipboardReject = 'true';
+  });
+  await installCopy.click();
+  check((await installCopy.textContent()).trim() === '복사', 'Install copy label stayed copied');
+  check(
+    (await installDialog.getByRole('status').textContent()).includes('직접 선택'),
+    'Install copy denial feedback missing',
+  );
+  const dialogZip = await installDialog
+    .getByRole('link', { name: 'Mac 앱 ZIP 다운로드' })
+    .getAttribute('href');
+  check(
+    /\/releases\/download\/v[0-9.]+\/.+\.zip$/.test(dialogZip),
+    'ZIP link is not a release asset',
+  );
+  await installDialog.getByRole('button', { name: '설치 안내 닫기' }).click();
+  check(!(await installDialog.isVisible()), 'Main install dialog did not close');
+  check(
+    (await page
+      .locator('#install')
+      .getByRole('link', { name: 'Mac 앱 ZIP 다운로드' })
+      .getAttribute('href')) === dialogZip,
+    'Install section and dialog disagree on the ZIP link',
+  );
+  passed.push('main page install dialog, command copy, and release link');
   await page.goto(origin + '/examples/playful-bear/');
   const firstFaq = page.locator('[data-faq] details').first();
   const trigger = firstFaq.locator('summary');

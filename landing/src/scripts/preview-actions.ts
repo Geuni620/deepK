@@ -18,12 +18,13 @@ document.addEventListener('click', async (event) => {
     const status = installCopy
       .closest('[data-install-options]')
       ?.querySelector<HTMLElement>('[data-install-copy-status]');
+    const label = installCopy.querySelector('[data-copy-label]');
     try {
       await navigator.clipboard.writeText(installCopy.dataset.copyInstall);
-      const label = installCopy.querySelector('[data-copy-label]');
       if (label) label.textContent = '복사됨';
       if (status) status.textContent = '터미널에 붙여넣어 실행하세요.';
     } catch {
+      if (label) label.textContent = '복사';
       if (status) status.textContent = '명령어를 직접 선택해 복사해 주세요.';
     }
     return;
