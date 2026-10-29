@@ -1,14 +1,14 @@
 // playwright-cli invokes this standalone callback outside the Astro application.
 async function browser_layout(page) {
   const origin = 'http://127.0.0.1:4433';
-  await page.goto(origin + '/');
+  await page.goto(origin + '/designs/');
   const paths = await page
     .locator('[data-example-card] > a')
     .evaluateAll((links) => links.map((link) => new URL(link.href).pathname));
   const results = [];
   for (const width of [1440, 768, 390]) {
     await page.setViewportSize({ width, height: 900 });
-    for (const path of ['/', ...paths]) {
+    for (const path of ['/', '/designs/', '/guide/', '/privacy/', ...paths]) {
       const response = await page.goto(origin + path);
       if (response.status() !== 200) throw new Error(path + ': HTTP ' + response.status());
       const result = await page.evaluate(() => ({

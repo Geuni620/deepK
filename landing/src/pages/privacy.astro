@@ -1,0 +1,60 @@
+---
+import DocumentLayout from '../layouts/DocumentLayout.astro';
+import { release } from '../data/release';
+---
+
+<DocumentLayout
+  title="개인정보와 번역 데이터"
+  description="deepK 0.1.0이 번역할 때 보내는 정보와 Mac에 남기는 정보를 안내합니다."
+>
+  <section>
+    <h2>원문은 선택한 AI 제공자에게 전송됩니다</h2>
+    <p>
+      deepK는 Mac에 설치된 공식 CLI를 이용해 번역 지시와 원문을 Codex 또는 Claude Code의 제공자에게
+      보냅니다. 제공자의 정보 처리와 보관 조건은 사용하는 계정과 서비스 정책을 따릅니다.
+    </p>
+    <p>
+      Codex를 사용하면 Mac의 <code>~/.codex/AGENTS.md</code> 전역 지침이 있을 때 그 내용도 요청에
+      포함될 수 있습니다. 전역 지침에 민감한 정보를 넣지 마세요.
+    </p>
+  </section>
+  <section>
+    <h2>번역 결과는 잠시 메모리에 보관합니다</h2>
+    <p>
+      성공한 번역 결과는 앱 메모리에 최대 32개·5분간 보관합니다. 앱을 재시작하면 비워집니다.
+      복사하거나 다른 앱에 삽입한 내용은 해당 앱과 macOS 클립보드의 동작을 따릅니다.
+    </p>
+  </section>
+  <section>
+    <h2>민감한 원문은 번역 전에 확인하세요</h2>
+    <p>
+      비밀번호 관리자가 민감한 복사라고 표시한 내용은 일부 차단합니다. 표시가 늦게 붙거나 표시가
+      없는 복사, 번역 창에 직접 붙여넣은 내용까지 모두 보호하지는 못합니다.
+    </p>
+    <p>비밀번호·토큰·회사 기밀·다른 사람의 개인정보가 들어 있는지 전송 전에 확인해주세요.</p>
+  </section>
+  <section>
+    <h2>이 소개 페이지의 외부 연결</h2>
+    <p>
+      메인 소개와 설치 안내 페이지에는 번역 원문을 입력하거나 전송하는 기능과 자체 분석 도구를
+      연결하지 않았습니다. 글꼴을 표시할 때 Google Fonts에 요청하며, 다운로드와 문제 제보 링크는
+      GitHub로 연결됩니다.
+    </p>
+  </section>
+  <section>
+    <h2>문제 제보와 제3자 고지</h2>
+    <p>
+      문제를 제보할 때는 원문·인증정보·개인정보를 제거한 재현 절차를 남겨주세요. 실제 원문이나
+      로그인 파일을 첨부하지 않아도 됩니다.
+    </p>
+    <p>
+      <a href={`${release.repositoryUrl}/issues`} target="_blank" rel="noopener noreferrer">
+        문제 제보 ↗
+      </a>{' '}
+      ·{' '}
+      <a href={release.noticesUrl} target="_blank" rel="noopener noreferrer">
+        제3자 고지 ↗
+      </a>
+    </p>
+  </section>
+</DocumentLayout>

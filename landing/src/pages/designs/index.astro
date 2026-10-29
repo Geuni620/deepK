@@ -1,0 +1,112 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import ExampleCard from '../../components/gallery/ExampleCard.astro';
+import PreviewDialog from '../../components/gallery/PreviewDialog.astro';
+import { examples, categories } from '../../data/examples';
+import { selectedVariantId } from '../../data/variants';
+const selectedExample = examples.find(
+  (example) => 'variant' in example && example.variant === selectedVariantId,
+);
+if (!selectedExample) throw new Error('The selected landing design is missing from the catalog.');
+---
+
+<PageLayout title="Design collection">
+  <header class="mx-auto flex max-w-350 items-center justify-between border-b border-line px-6 py-5 lg:px-10">
+    <a href="/" class="flex items-center gap-3">
+      <img src="/brand/deepk-icon.png" alt="" width="34" height="34" class="rounded-xl" />
+      <span class="text-lg font-bold tracking-tight">
+        deepK{' '}
+        <span class="ml-2 hidden font-mono text-[10px] font-normal tracking-[.1em] text-muted sm:inline">
+          DESIGN COLLECTION
+        </span>
+      </span>
+    </a>
+    <span class="rounded-full border border-line px-3 py-1.5 text-[10px] text-muted">
+      LOCAL PREVIEW
+    </span>
+  </header>
+  <main class="mx-auto max-w-350 px-6 pt-14 pb-36 lg:px-10">
+    <div class="flex flex-col justify-between gap-8 md:flex-row md:items-end">
+      <div>
+        <p class="font-mono text-[10px] tracking-[.18em] text-muted">18 EXAMPLES, ONE DEEPK.</p>
+        <h1 class="mt-5 text-[clamp(34px,4.6vw,60px)] leading-[1.24] font-bold tracking-[-.06em]">
+          가장 deepK다운
+          <br />
+          화면을 골라보세요.
+        </h1>
+        <p class="mt-5 max-w-xl text-sm leading-8 text-muted">
+          디자인 10안과 반응형 3개, 체험 4개 상태와 안내 화면을 모았습니다.
+          <br class="hidden md:block" />
+          카드를 열어 구현을 확인하고, 마음에 드는 안을 후보로 저장하세요.
+        </p>
+      </div>
+      <a
+        href={`/examples/${selectedExample.slug}/`}
+        data-open-case={selectedExample.slug}
+        class="inline-flex shrink-0 items-center justify-center gap-8 rounded-full bg-ink px-6 py-4 text-sm font-semibold text-page"
+      >
+        선택한 {selectedExample.title} 보기 <span>↗</span>
+      </a>
+    </div>
+    <div class="mt-12 mb-6 flex flex-wrap items-center justify-between gap-4">
+      <nav class="flex flex-wrap gap-2" aria-label="예시 분류">
+        {categories.map((category) => (
+          <button
+            data-filter={category.id}
+            aria-pressed={category.id === 'all'}
+            class="rounded-full border border-line bg-transparent px-4 py-2.5 text-xs text-muted aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-page"
+          >
+            {category.label}{' '}
+            <span class="ml-1 font-mono opacity-60">
+              {category.id === 'all'
+                ? examples.length
+                : examples.filter((example) => example.kind === category.id).length}
+            </span>
+          </button>
+        ))}
+      </nav>
+      <p id="visible-count" aria-live="polite" class="font-mono text-[10px] text-muted">
+        18 EXAMPLES
+      </p>
+    </div>
+    <div class="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+      {examples.map((example, index) => (
+        <ExampleCard example={example} index={index} />
+      ))}
+    </div>
+    <p id="empty-state" hidden class="py-20 text-center text-sm text-muted">
+      선택한 후보가 없습니다. 카드 아래에서 마음에 드는 안을 골라주세요.
+    </p>
+    <div class="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-6 text-[11px] leading-7 text-muted">
+      <p>
+        예시 번역으로 동작하는 디자인 비교용 화면입니다. 실제 앱 설치는 메인 페이지에서 안내합니다.
+      </p>
+      <span>Astro · Cloudflare Workers 예정</span>
+    </div>
+  </main>
+  <aside
+    id="selection-tray"
+    hidden
+    aria-label="선택한 후보"
+    class="fixed right-4 bottom-4 left-4 z-20 mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 rounded-2xl border border-line bg-surface/95 p-4 shadow-2xl backdrop-blur md:px-6"
+  >
+    <div class="min-w-0">
+      <p class="mb-2 text-[10px] font-semibold tracking-wide text-muted">
+        선택한 후보 <span id="selection-count">0</span>
+      </p>
+      <div id="selection-list" class="flex flex-wrap gap-2" aria-live="polite"></div>
+    </div>
+    <div class="flex gap-2 text-xs">
+      <button data-only-selected class="rounded-full bg-ink px-4 py-2.5 text-page">
+        후보만 보기
+      </button>
+      <button data-clear-selection class="rounded-full border border-line px-4 py-2.5">
+        비우기
+      </button>
+    </div>
+  </aside>
+  <PreviewDialog />
+  <script>
+    import '../../scripts/gallery';
+  </script>
+</PageLayout>

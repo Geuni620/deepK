@@ -1,0 +1,84 @@
+---
+import PageLayout from './PageLayout.astro';
+interface Props {
+  title: string;
+  description: string;
+}
+const { title, description } = Astro.props;
+---
+
+<PageLayout title={title} description={description} indexable>
+  <header
+    id="top"
+    class="mx-auto flex max-w-4xl items-center justify-between gap-6 border-b border-line px-6 py-6"
+  >
+    <a href="/" class="inline-flex items-center gap-3 text-xl font-bold">
+      <img src="/brand/deepk-icon.png" alt="" width="34" height="34" class="rounded-xl" />
+      deepK
+    </a>
+    <a href="/" class="inline-flex min-h-11 items-center text-xs text-muted">
+      ← 메인으로
+    </a>
+  </header>
+  <main id="main-content" class="mx-auto max-w-3xl px-6 py-16 md:py-24">
+    <h1 class="text-4xl leading-[1.35] font-bold tracking-tight md:text-5xl">{title}</h1>
+    <p class="mt-6 text-sm leading-8 text-muted">{description}</p>
+    <div class="document-content mt-14">
+      <slot />
+    </div>
+  </main>
+  <footer class="mx-auto flex max-w-4xl flex-wrap justify-between gap-4 border-t border-line px-6 py-8 text-xs leading-7 text-muted">
+    <a href="/">© 2026 deepK</a>
+    <nav aria-label="추가 안내" class="flex gap-6">
+      <a href="/guide/">설치 안내</a>
+      <a href="/privacy/">개인정보 안내</a>
+    </nav>
+  </footer>
+</PageLayout>
+
+<style>
+  .document-content :global(section + section) {
+    margin-top: 48px;
+  }
+  .document-content :global(h2) {
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: -0.03em;
+  }
+  .document-content :global(p),
+  .document-content :global(li) {
+    font-size: 14px;
+    line-height: 2;
+  }
+  .document-content :global(p + p),
+  .document-content :global(ul),
+  .document-content :global(ol) {
+    margin-top: 16px;
+  }
+  .document-content :global(ul),
+  .document-content :global(ol) {
+    padding-left: 22px;
+  }
+  .document-content :global(ul) {
+    list-style: disc;
+  }
+  .document-content :global(ol) {
+    list-style: decimal;
+  }
+  .document-content :global(a:not([class])) {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .document-content :global(pre) {
+    margin: 20px 0;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 20px;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font-size: 12px;
+    line-height: 2;
+  }
+</style>

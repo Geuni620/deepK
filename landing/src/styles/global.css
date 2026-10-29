@@ -53,6 +53,7 @@
   --accent: #ffda3d;
   --tint: #fff7d6;
   --line: #302a20;
+  --muted: #6a5a42;
 }
 
 @theme inline {
@@ -84,6 +85,17 @@ select {
 button:not(:disabled),
 summary {
   cursor: pointer;
+}
+button,
+a {
+  touch-action: manipulation;
+}
+button:not(:disabled):active,
+a[data-install-info]:active {
+  transform: scale(0.98);
+}
+:where(section[id]) {
+  scroll-margin-top: 24px;
 }
 :focus-visible {
   outline: 3px solid #c69917;

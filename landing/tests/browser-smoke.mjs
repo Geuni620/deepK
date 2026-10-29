@@ -14,7 +14,7 @@ async function browser_smoke(page) {
     if (!condition) throw new Error(message);
   };
   await page.setViewportSize({ width: 1440, height: 1000 });
-  await page.goto(origin + '/');
+  await page.goto(origin + '/designs/');
   check(
     (await page.locator('[data-example-card]').count()) === 18,
     'Catalog should have 18 examples',
@@ -80,7 +80,7 @@ async function browser_smoke(page) {
     (await page.locator('[data-candidate]:checked').count()) === 0,
     'Malformed storage was not rejected',
   );
-  await page.goto(origin + '/?case=../../outside');
+  await page.goto(origin + '/designs/?case=../../outside');
   check(
     !(await page.locator('#preview-dialog').evaluate((dialog) => dialog.open)),
     'Unknown case opened preview',
@@ -150,14 +150,14 @@ async function browser_smoke(page) {
   await copy.click();
   check((await copy.textContent()) === '복사할 수 없어요', 'Copy denial feedback missing');
   passed.push('clipboard success and denial with isolated browser mock');
-  await page.getByRole('button', { name: 'Mac용 받기', exact: true }).click();
+  await page.getByRole('link', { name: 'Mac용 받기', exact: true }).first().click();
   check(
-    await page.getByRole('dialog', { name: 'Mac 앱 설치 안내' }).isVisible(),
+    await page.getByRole('dialog', { name: 'Mac에 deepK 설치하기' }).isVisible(),
     'Install information did not open',
   );
-  await page.getByRole('button', { name: '확인했어요', exact: true }).click();
+  await page.getByRole('button', { name: '설치 안내 닫기', exact: true }).click();
   check(
-    !(await page.getByRole('dialog', { name: 'Mac 앱 설치 안내' }).isVisible()),
+    !(await page.getByRole('dialog', { name: 'Mac에 deepK 설치하기' }).isVisible()),
     'Install information did not close',
   );
   passed.push('install information dialog');
