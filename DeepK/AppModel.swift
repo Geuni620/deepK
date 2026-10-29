@@ -32,6 +32,10 @@ final class AppModel: NSObject, NSWindowDelegate {
     var codexExecutableInfo: CodexTranslationClient.ExecutableInfo?
     /// Codex 번역에 Fast(priority) 계층을 쓸지 여부다. 기본은 꺼짐(default 계층)이다.
     var codexFastServiceTier = UserDefaults.standard.bool(forKey: "codexFastServiceTier")
+    private(set) var koreanTarget = UserDefaults.standard.string(forKey: "koreanTargetLanguage")
+        .flatMap(TranslationLanguage.init(rawValue:)).flatMap { $0 == .korean ? nil : $0 }
+        ?? UserDefaults.standard.string(forKey: "translationDirection").flatMap(TranslationDirection.init(rawValue:))?.koreanTarget
+        ?? .english
     var requestModelLabel: String?
     var providerMessages: [TranslationProvider: String] = [.codex: "연결 확인 전", .claude: "연결 확인 전"]
     var connectionMessage = "번역 연결 확인 중"
@@ -84,6 +88,11 @@ final class AppModel: NSObject, NSWindowDelegate {
     @ObservationIgnored private var window: NSWindow?
     /// Set once by `presentSettingsWindow`; the tests give it an offscreen window instead.
     @ObservationIgnored var settingsWindow: NSWindow?
+    /// Questions about the shown translation, in a window beside the translation window.
+    let followUp = FollowUpChat()
+    @ObservationIgnored private var followUpWindow: NSWindow?
+    /// `defaults write com.deepk.app followUpChat -bool false` hides '묻기' after a relaunch.
+    let followUpEnabled = UserDefaults.standard.object(forKey: "followUpChat") as? Bool ?? true
     /// The screen area the settings window stays inside. Replaced in tests, whose window is offscreen.
     @ObservationIgnored var settingsScreenFrame: (NSWindow) -> CGRect = { ($0.screen ?? NSScreen.main)?.visibleFrame ?? .zero }
     /// The settings frame the last resize made and how far the screen edges pushed it; undone on the way back
@@ -238,6 +247,10 @@ final class AppModel: NSObject, NSWindowDelegate {
         // 경고와 함께 보여 준다. `outputHanjaRepair -bool false`면 한국어 결과에 섞인 한자를 그대로 둔다. 재실행하면 반영된다.
         store.applyOutputCheckSwitches(from: .standard)
         store.onOutputReport = { [weak self] in self?.reportOutputCheck($0) }
+        followUp.answer = { [weak self] prompt, onPartialText in
+            guard let self else { throw CancellationError() }
+            return try await answerFollowUp(prompt: prompt, onPartialText: onPartialText)
+        }
         let initialSelection = TranslationSelection.load(from: .standard)
         store.setTranslationContext(
             cacheContext: initialSelection.cacheContext,
@@ -247,7 +260,7 @@ final class AppModel: NSObject, NSWindowDelegate {
         )
         if let raw = UserDefaults.standard.string(forKey: "translationDirection"),
            let direction = TranslationDirection(rawValue: raw) {
-            store.setDirection(direction)
+            store.setDirection(direction.withKoreanTarget(koreanTarget))
         }
     }
 
@@ -916,6 +929,15 @@ final class AppModel: NSObject, NSWindowDelegate {
         store.retry()
     }
 
+    /// Where Korean source goes, in both automatic and fixed Korean direction. Kept apart from the direction,
+    /// so fixing another source language does not forget it.
+    func changeKoreanTarget(_ target: TranslationLanguage) {
+        guard target != .korean else { return }
+        koreanTarget = target
+        UserDefaults.standard.set(target.rawValue, forKey: "koreanTargetLanguage")
+        changeDirection(store.direction.withKoreanTarget(target))
+    }
+
     func changeDirection(_ direction: TranslationDirection) {
         requestStarted = ProcessInfo.processInfo.systemUptime
         elapsedMilliseconds = nil
@@ -1280,6 +1302,8 @@ final class AppModel: NSObject, NSWindowDelegate {
         invocation = nil
         originalApplication = nil
         pendingCopy = nil
+        // The conversation stays for the next time the window opens.
+        followUpWindow?.orderOut(nil)
         window?.orderOut(nil)
         guard restoreOriginalFocus else { return }
         NSApp.hide(nil)
@@ -1291,6 +1315,10 @@ final class AppModel: NSObject, NSWindowDelegate {
     func windowShouldClose(_ sender: NSWindow) -> Bool {
         if sender === settingsWindow {
             closeSettingsWindow()
+            return false
+        }
+        if sender === followUpWindow {
+            closeFollowUpWindow()
             return false
         }
         hideAndRestore()
@@ -1462,6 +1490,94 @@ final class AppModel: NSObject, NSWindowDelegate {
             resizeSettingsWindow(to: CodeStylePickerModel.tabsSize, animated: false)
         }
         flushResultDisplaySave()
+    }
+
+    // MARK: - 묻기
+
+    /// The shown translation is complete and belongs to the source on screen.
+    var canAskFollowUp: Bool {
+        followUpEnabled && captureMessage == nil && store.canCopy && store.resultCopy != nil
+    }
+
+    /// The conversation is about another source than the one on screen.
+    var followUpIsStale: Bool {
+        guard let conversation = followUp.conversation else { return false }
+        return conversation.source != store.sourceText
+    }
+
+    /// Opens the window beside the translation window. A conversation about the source on screen goes on;
+    /// an empty one about an earlier source starts over, and a non-empty one stays, marked as stale.
+    func openFollowUp(quote: String? = nil) {
+        guard canAskFollowUp || followUp.conversation != nil else { return }
+        let current = followUp.conversation
+        if current == nil || (followUpIsStale && current?.turns.isEmpty == true && followUp.pending == nil) {
+            guard restartFollowUp() else { return }
+        }
+        if let quote = FollowUpConversation.normalizedQuote(quote) { followUp.quote = quote }
+        followUp.modelLabel = TranslationSelection(provider: selectedProvider, model: selectedModel).label
+        showFollowUpWindow()
+    }
+
+    /// A new conversation about the source and translation on screen.
+    @discardableResult func restartFollowUp() -> Bool {
+        guard canAskFollowUp, let copy = store.resultCopy, let result = store.result else { return false }
+        followUp.start(FollowUpConversation(source: store.sourceText, translation: copy.plain,
+                                            sourceLanguage: result.sourceLanguage.rawValue,
+                                            targetLanguage: result.targetLanguage.rawValue))
+        followUp.modelLabel = TranslationSelection(provider: selectedProvider, model: selectedModel).label
+        return true
+    }
+
+    @objc func openFollowUpFromMenu() {
+        openFollowUp()
+    }
+
+    /// The answer comes from the selected provider and model, in a session of its own: never the translation's.
+    private func answerFollowUp(prompt: String, onPartialText: @escaping @Sendable (String) -> Void) async throws -> String {
+        let provider = selectedProvider
+        let model = TranslationSelection.model(for: provider, in: .standard)
+        followUp.modelLabel = TranslationSelection(provider: provider, model: model).label
+        switch provider {
+        case .codex:
+            return try await client.answer(prompt: prompt, instructions: FollowUpConversation.instructions, model: model,
+                                           fastServiceTier: codexFastServiceTier, onPartialText: onPartialText)
+        case .claude:
+            return try await claudeClient.answer(prompt: prompt, instructions: FollowUpConversation.instructions, model: model)
+        }
+    }
+
+    private func showFollowUpWindow() {
+        let chatWindow: NSWindow
+        if let followUpWindow {
+            chatWindow = followUpWindow
+        } else {
+            chatWindow = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 340, height: 420),
+                                  styleMask: [.titled, .closable, .resizable], backing: .buffered, defer: false)
+            chatWindow.title = "원문에 대해 묻기"
+            chatWindow.minSize = NSSize(width: 300, height: 320)
+            chatWindow.isReleasedWhenClosed = false
+            chatWindow.delegate = self
+            chatWindow.appearance = NSAppearance(named: .aqua)
+            chatWindow.collectionBehavior = [.moveToActiveSpace, .fullScreenAuxiliary]
+            chatWindow.contentView = NSHostingView(rootView: FollowUpChatView().preferredColorScheme(.light))
+            followUpWindow = chatWindow
+        }
+        if !chatWindow.isVisible, let anchor = window, anchor.isVisible {
+            chatWindow.setFrame(FollowUpChat.frame(beside: anchor.frame, size: chatWindow.frame.size,
+                                                   in: (anchor.screen ?? NSScreen.main)?.visibleFrame ?? anchor.frame),
+                                display: false)
+        } else if !chatWindow.isVisible {
+            chatWindow.center()
+        }
+        NSApp.unhide(nil)
+        chatWindow.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+    }
+
+    /// Closing the window ends the conversation; nothing is kept.
+    private func closeFollowUpWindow() {
+        followUp.clear()
+        followUpWindow?.orderOut(nil)
     }
 
     func shutdown() async {
