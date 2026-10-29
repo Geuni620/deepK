@@ -1,38 +1,59 @@
-# deepK
+<p align="center">
+  <img src="DeepK/Assets.xcassets/AppIcon.appiconset/icon_128x128@2x.png" width="128" alt="">
+</p>
 
-읽거나 쓰던 흐름을 유지하면서 한국어와 영어를 번역하는 macOS 메뉴 막대 앱입니다.
+<h1 align="center">deepK</h1>
+<p align="center"><b>한국어</b> · <a href="README.en.md">English</a></p>
+<p align="center"><b>읽던 문장을 선택하고 ⌘C를 두 번. 쓰던 AI 구독으로 번역하는 Mac 메뉴 막대 앱입니다.</b></p>
 
-다른 앱에서 텍스트를 선택하고 **⌘C를 두 번** 누르면 번역 창이 열립니다. 번역문을 복사하거나 원래 입력 위치에 명시적으로 삽입할 수 있습니다. ChatGPT로 로그인한 Codex CLI 또는 Claude 구독으로 로그인한 Claude Code를 사용합니다.
+<p align="center">
+  <a href="https://github.com/Geuni620/deepK/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/Geuni620/deepK?style=flat-square&label=release"></a>
+  <img alt="macOS 15+" src="https://img.shields.io/badge/macOS-15%2B-bf5af2?style=flat-square&logo=apple&logoColor=white">
+  <img alt="Apple silicon" src="https://img.shields.io/badge/Apple_silicon-native-5e5ce6?style=flat-square">
+</p>
+
+```sh
+brew install --cask Geuni620/tap/deepk
+```
+
+다른 앱에서 텍스트를 선택하고 **⌘C를 두 번** 누르면 번역 창이 열립니다. 번역문을 복사하거나 원래 입력 위치에 명시적으로 삽입할 수 있습니다. ChatGPT로 로그인한 Codex CLI 또는 Claude 구독으로 로그인한 Claude Code를 사용해 한국어와 영어를 번역합니다.
 
 ![번역 화면](docs/screenshots/translation-result.png)
 
+## 설치
+
+Apple Silicon Mac과 macOS 15 이상이 필요합니다. Intel Mac용 파일은 아직 제공하지 않습니다.
+
+**Homebrew**
+
+```sh
+brew install --cask Geuni620/tap/deepk
+```
+
+**직접 내려받기**
+
+[최신 릴리스](https://github.com/Geuni620/deepK/releases/latest)에서 `deepK-distribution-*.zip`을 내려받아 압축을 풀고 `DeepK.app`을 응용 프로그램 폴더로 옮깁니다. Developer ID로 서명하고 Apple 공증을 받은 앱입니다. 함께 올린 `.sha256` 파일로 내려받은 파일을 확인할 수 있습니다.
+
+```sh
+shasum -a 256 deepK-distribution-*.zip
+```
+
+설치 후 번역에 사용할 [Codex CLI](docs/development.md#codex-cli-준비) 또는 [Claude Code](docs/development.md#claude-code-준비)를 설치하고, 이 Mac에서 구독 계정으로 로그인한 뒤 [처음 사용할 때](#처음-사용할-때)를 따릅니다. 제공자의 구독 조건과 사용량 제한은 별도로 적용됩니다.
+
+**업데이트와 삭제**
+
+- Homebrew: 앱을 종료한 뒤 `brew update && brew upgrade --cask Geuni620/tap/deepk`
+- 직접 내려받기: 새 릴리스의 `DeepK.app`으로 교체
+- 삭제: `brew uninstall --cask Geuni620/tap/deepk` 또는 응용 프로그램 폴더에서 `DeepK.app` 삭제
+
 ## 현재 상태
 
-개발 중인 개인용 앱입니다. 소스에서 빌드해 사용할 수 있으며, 공증된 설치 파일은 아직 제공하지 않습니다. 번역 속도는 제공자·모델·입력에 따라 달라집니다.
+초기 배포 단계의 앱입니다. 번역 속도는 제공자·모델·입력에 따라 달라집니다.
 
 - 원문 입력과 자동 번역, 자동·수동 언어 방향 선택
 - 코드 블록·인라인 코드·링크를 유지하는 결과 표시와 복사
 - 구분선(`---`)으로 나눈 문단의 이어서 번역
 - 메뉴 막대 상주, 원래 앱 복귀와 명시적 삽입
-- 같은 저장소의 `landing/`에서 관리하는 랜딩페이지 문서
-
-## 소스에서 실행
-
-macOS 15 이상, 전체 Xcode와 Swift 6가 필요합니다. 기존 검증 환경은 Xcode 26.1.1 / Swift 6.2.1입니다. 사용할 제공자의 CLI를 별도로 설치하고 해당 Mac에서 구독 계정으로 로그인해야 합니다.
-
-```sh
-git clone https://github.com/Geuni620/deepK.git
-cd deepK
-./scripts/build-and-run.sh
-```
-
-이 스크립트는 실행 중인 deepK를 종료한 뒤 빌드·서명·실행합니다. 열려 있던 번역창 내용은 유지되지 않습니다. 빌드만 하려면 `./scripts/build.sh`를 사용합니다.
-
-- [Codex CLI 준비](docs/development.md#codex-cli-준비)
-- [Claude Code 준비](docs/development.md#claude-code-준비): 앱 전용 설치 스크립트에는 Node.js와 npm이 필요합니다.
-- 이후 업데이트: `git pull --ff-only` 후 `./scripts/build-and-run.sh`
-
-Git 이력이 없는 소스 ZIP은 빌드 시 `DEEPK_BUILD_NUMBER`를 명시해야 합니다. 새 Git 이력의 빌드 번호와 기존 설치에 배포할 때의 주의점은 [개발 안내](docs/development.md#새-git-이력의-빌드-번호)를 참고하세요.
 
 ## 처음 사용할 때
 
@@ -54,6 +75,24 @@ Git 이력이 없는 소스 ZIP은 빌드 시 `DEEPK_BUILD_NUMBER`를 명시해�
 
 환경 변수 전달 범위는 [개발 안내](docs/development.md#보내는-내용과-실행-환경), 알려진 한계는 [보안 점검 기록](plans/public-release-security.md)을 참고하세요. 원문·토큰·인증 파일을 공개 이슈나 로그에 올리지 마세요.
 
+## 소스에서 실행
+
+macOS 15 이상, 전체 Xcode와 Swift 6가 필요합니다. 기존 검증 환경은 Xcode 26.1.1 / Swift 6.2.1입니다. 사용할 제공자의 CLI를 별도로 설치하고 해당 Mac에서 구독 계정으로 로그인해야 합니다.
+
+```sh
+git clone https://github.com/Geuni620/deepK.git
+cd deepK
+./scripts/build-and-run.sh
+```
+
+이 스크립트는 실행 중인 deepK를 종료한 뒤 빌드·서명·실행합니다. 열려 있던 번역창 내용은 유지되지 않습니다. 빌드만 하려면 `./scripts/build.sh`를 사용합니다.
+
+- [Codex CLI 준비](docs/development.md#codex-cli-준비)
+- [Claude Code 준비](docs/development.md#claude-code-준비): 앱 전용 설치 스크립트에는 Node.js와 npm이 필요합니다.
+- 이후 업데이트: `git pull --ff-only` 후 `./scripts/build-and-run.sh`
+
+Git 이력이 없는 소스 ZIP은 빌드 시 `DEEPK_BUILD_NUMBER`를 명시해야 합니다. 새 Git 이력의 빌드 번호와 기존 설치에 배포할 때의 주의점은 [개발 안내](docs/development.md#새-git-이력의-빌드-번호)를 참고하세요.
+
 ## 저장소 구조
 
 ```text
@@ -65,10 +104,10 @@ deepK/
 ├── docs/                 # 개발·배포 안내와 검증 자료
 ├── plans/                # 앱 개발 계획과 이전 기록
 ├── benchmarks/           # 측정 표본과 기록
-└── landing/              # 랜딩페이지와 참고 계획
+└── landing/              # Astro 랜딩페이지와 계획
 ```
 
-랜딩페이지는 현재 구조와 문서를 정리한 단계입니다. 콘텐츠·체험·API·모델·비용·배포 방식은 미정이며, 이전 초안을 현재 구현 결정으로 취급하지 않습니다. [랜딩 안내](landing/README.md)를 참고하세요.
+설치 파일은 이 저장소의 [GitHub Releases](https://github.com/Geuni620/deepK/releases)에서, Homebrew 설치 정보는 [Geuni620/homebrew-tap](https://github.com/Geuni620/homebrew-tap)에서 배포합니다. 랜딩페이지의 실행·검증 방법은 [랜딩 안내](landing/README.md)를 참고하세요.
 
 ## 개발과 검증
 
@@ -90,4 +129,4 @@ python3 scripts/test-app-bundle-contents.py
 
 ## 제3자 데이터
 
-한자 독음 표에는 Unicode Unihan 데이터가 포함되어 있습니다. Unicode License v3 전문은 [데이터 소스](DeepK/Translation/HanjaReadingData.swift)와 [제3자 고지](docs/development.md#제3자-데이터)에 유지합니다. 프로젝트 전체의 재사용 라이선스는 별도로 정합니다.
+한자 독음 표에는 Unicode Unihan 데이터가 포함되어 있습니다. Unicode License v3 전문은 [제3자 고지](THIRD-PARTY-NOTICES.txt)와 [데이터 소스](DeepK/Translation/HanjaReadingData.swift)에 유지합니다. 프로젝트 전체의 재사용 라이선스는 별도로 정합니다.
