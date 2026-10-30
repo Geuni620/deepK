@@ -82,6 +82,8 @@ final class AppModel: NSObject, NSWindowDelegate {
     }
 
     @ObservationIgnored private var window: NSWindow?
+    /// 시스템 설정 권한 화면 옆에 앱 아이콘을 끌어다 놓는 안내를 띄운다.
+    @ObservationIgnored private let permissionGuide = PermissionGuideController()
     /// Set once by `presentSettingsWindow`; the tests give it an offscreen window instead.
     @ObservationIgnored var settingsWindow: NSWindow?
     /// The screen area the settings window stays inside. Replaced in tests, whose window is offscreen.
@@ -1247,12 +1249,49 @@ final class AppModel: NSObject, NSWindowDelegate {
 
     func openInputMonitoringSettings() {
         prepareForSystemPermissionUI()
-        NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_ListenEvent")!)
+        permissionGuide.present(.inputMonitoring) { [weak self] _ in
+            self?.inputMonitoringGranted()
+        }
     }
 
     func openAccessibilitySettings() {
         prepareForSystemPermissionUI()
-        NSWorkspace.shared.open(InvocationSession.accessibilitySettingsURL)
+        permissionGuide.present(.accessibility) { [weak self] _ in
+            self?.refreshPermissionStatus()
+        }
+    }
+
+    /// 허용 직후에는 실행 중인 프로세스에 키 입력이 전달되지 않을 수 있어,
+    /// 감시가 연결되지 않으면 앱을 다시 열도록 제안한다.
+    private func inputMonitoringGranted() {
+        restartShortcut()
+        guard shortcutEnabled, !shortcutReady else { return }
+        let alert = NSAlert()
+        alert.messageText = "입력 모니터링을 허용했습니다"
+        alert.informativeText = "deepK를 다시 열면 ⌘C 두 번 감지가 연결됩니다. 번역 창의 내용은 유지되지 않습니다."
+        alert.addButton(withTitle: "다시 열기")
+        alert.addButton(withTitle: "나중에")
+        NSApp.activate(ignoringOtherApps: true)
+        if alert.runModal() == .alertFirstButtonReturn { relaunch() }
+    }
+
+    /// 현재 프로세스가 끝난 뒤 같은 앱 번들을 다시 연다. 경로는 셸 인자로 넘겨 따옴표 처리를 피한다.
+    func relaunch() {
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/bin/sh")
+        process.arguments = [
+            "-c",
+            "while /bin/kill -0 \"$1\" 2>/dev/null; do /bin/sleep 0.1; done; /usr/bin/open \"$0\"",
+            Bundle.main.bundleURL.path,
+            String(ProcessInfo.processInfo.processIdentifier),
+        ]
+        do {
+            try process.run()
+        } catch {
+            feedback = "deepK를 다시 열지 못했습니다. 직접 다시 열어 주세요"
+            return
+        }
+        NSApp.terminate(nil)
     }
 
     func openLoginItemSettings() {

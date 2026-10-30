@@ -209,6 +209,11 @@ swiftc -swift-version 6 -warnings-as-errors -module-cache-path "$TEST_DIR/cache"
 "$TEST_DIR/WindowPresentation"
 
 swiftc -swift-version 6 -warnings-as-errors -module-cache-path "$TEST_DIR/cache" \
+  "$PROJECT_ROOT/DeepK/MacIntegration/PermissionGuideLayout.swift" \
+  "$PROJECT_ROOT/DeepKTests/PermissionGuideLayoutTests.swift" -o "$TEST_DIR/PermissionGuideLayout"
+"$TEST_DIR/PermissionGuideLayout"
+
+swiftc -swift-version 6 -warnings-as-errors -module-cache-path "$TEST_DIR/cache" \
   "$PROJECT_ROOT/DeepK/Settings/LoginItemController.swift" \
   "$PROJECT_ROOT/DeepKTests/LoginItemControllerTests.swift" -o "$TEST_DIR/LoginItemController"
 "$TEST_DIR/LoginItemController"
