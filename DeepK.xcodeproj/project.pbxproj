@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		5B7F64A00000000000000001 /* DeepK.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DeepK.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5B7F64A00000000000000001 /* deepK.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = deepK.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -42,7 +42,7 @@
 		5B7F64830000000000000001 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				5B7F64A00000000000000001 /* DeepK.app */,
+				5B7F64A00000000000000001 /* deepK.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -67,7 +67,7 @@
 			);
 			name = DeepK;
 			productName = DeepK;
-			productReference = 5B7F64A00000000000000001 /* DeepK.app */;
+			productReference = 5B7F64A00000000000000001 /* deepK.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -134,12 +134,14 @@
 				ENABLE_PREVIEWS = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = deepK;
+				INFOPLIST_KEY_CFBundleDisplayName = "deepK Dev";
+				INFOPLIST_KEY_CFBundleName = "deepK Dev";
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.deepk.app;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.deepk.app.dev;
+				PRODUCT_NAME = "deepK Dev";
+				PRODUCT_MODULE_NAME = DeepK;
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -166,11 +168,13 @@
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = deepK;
+				INFOPLIST_KEY_CFBundleName = deepK;
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.deepk.app;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = deepK;
+				PRODUCT_MODULE_NAME = DeepK;
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
@@ -189,12 +193,14 @@
 				CODE_SIGNING_REQUIRED = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = deepK;
+				INFOPLIST_KEY_CFBundleDisplayName = "deepK Dev";
+				INFOPLIST_KEY_CFBundleName = "deepK Dev";
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.deepk.app;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.deepk.app.dev;
+				PRODUCT_NAME = "deepK Dev";
+				PRODUCT_MODULE_NAME = DeepK;
 				SDKROOT = macosx;
 				SWIFT_VERSION = 6.0;
 				SWIFT_STRICT_CONCURRENCY = complete;
@@ -211,11 +217,13 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = deepK;
+				INFOPLIST_KEY_CFBundleName = deepK;
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.deepk.app;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = deepK;
+				PRODUCT_MODULE_NAME = DeepK;
 				SDKROOT = macosx;
 				SWIFT_VERSION = 6.0;
 				SWIFT_STRICT_CONCURRENCY = complete;

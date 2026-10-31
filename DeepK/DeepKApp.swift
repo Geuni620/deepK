@@ -67,7 +67,7 @@ final class DeepKApplicationDelegate: NSObject, NSApplicationDelegate {
         settings.target = AppModel.shared
         applicationMenu.addItem(settings)
         applicationMenu.addItem(.separator())
-        applicationMenu.addItem(NSMenuItem(title: "deepK 종료", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
+        applicationMenu.addItem(NSMenuItem(title: "\(AppIdentity.displayName) 종료", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
         main.addItem(applicationItem)
 
         let fileItem = NSMenuItem()

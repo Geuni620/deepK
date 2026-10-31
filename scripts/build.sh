@@ -17,7 +17,12 @@ xcodebuild \
   CODE_SIGNING_ALLOWED=NO \
   build
 
-APP_PATH="${PROJECT_ROOT}/.build/DerivedData/Build/Products/Debug/DeepK.app"
+APP_PATH="${PROJECT_ROOT}/.build/DerivedData/Build/Products/Debug/deepK Dev.app"
+# 개발 실행이 설치된 배포 앱의 권한·설정을 사용하지 않도록 실제 빌드 결과도 확인한다.
+if [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP_PATH/Contents/Info.plist")" != com.deepk.app.dev ]]; then
+  echo "개발 앱 식별자가 com.deepk.app.dev가 아닙니다. 실행을 중단합니다." >&2
+  exit 1
+fi
 SIGNING_IDENTITY="${DEEPK_SIGNING_IDENTITY:-}"
 if [[ -z "$SIGNING_IDENTITY" ]]; then
   SIGNING_IDENTITY="$(security find-identity -v -p codesigning | awk '/"Apple Development:/ { print $2; exit }')"

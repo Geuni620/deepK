@@ -51,7 +51,7 @@ git pull --ff-only
 ./scripts/build-and-run.sh
 ```
 
-스크립트는 macOS 15 이상·전체 Xcode·Swift 6 환경을 확인하고, 실행 중인 deepK를 정상 종료한 뒤 빌드·서명·실행한다. 종료되지 않거나 빌드가 실패하면 중단한다. 기존 설정과 로그인은 삭제하지 않지만 열려 있던 번역창 내용은 유지되지 않는다. 다른 폴더에서도 스크립트의 절대 경로로 실행할 수 있다. 같은 checkout 경로를 계속 사용하면 권한에 등록할 앱 경로도 유지된다.
+스크립트는 macOS 15 이상·전체 Xcode·Swift 6 환경을 확인하고, 실행 중인 deepK Dev만 정상 종료한 뒤 빌드·서명·실행한다. 설치된 deepK는 유지한다. 개발 앱이 종료되지 않거나 빌드가 실패하면 중단한다. 기존 설정과 로그인은 삭제하지 않지만 개발 앱에 열려 있던 번역창 내용은 유지되지 않는다. 다른 폴더에서도 스크립트의 절대 경로로 실행할 수 있다. 같은 checkout 경로를 계속 사용하면 권한에 등록할 앱 경로도 유지된다.
 
 다른 Mac에서는 사용할 Codex CLI 또는 Claude Code를 별도로 설치하고 해당 Mac에서 구독 로그인해야 한다. Claude 전용 설치는 아래 `setup-claude.sh`를 사용한다. 실행 파일이나 로그인 정보는 Git에 포함되지 않는다. 두 권한도 Mac마다 처음 허용해야 하며, 개발 인증서가 없으면 재빌드 후 권한 재등록이 필요할 수 있다. 이 스크립트는 소스에서 로컬 빌드하는 방식이며 공증된 배포 패키지를 만들지 않는다.
 
@@ -60,7 +60,7 @@ Codex CLI는 아래 [Codex CLI 준비](#codex-cli-준비)의 순서로 찾는다
 빌드만 하려면 `./scripts/build.sh`를 사용한다. 종료한 앱만 다시 열 때는 다음 명령으로 충분하다.
 
 ```sh
-open .build/DerivedData/Build/Products/Debug/DeepK.app
+open ".build/DerivedData/Build/Products/Debug/deepK Dev.app"
 ```
 
 Xcode에서는 `DeepK.xcodeproj`를 열고 `DeepK` scheme을 실행한다. 스크립트는 빌드 후 이 Mac의 Apple Development 인증서가 있으면 서명해 권한 식별자를 유지한다. DEEPK_SIGNING_IDENTITY로 인증서를 지정할 수도 있다. 인증서가 없으면 임시 서명 상태로 남고 재빌드 후 권한 재허용이 필요할 수 있다. 공개 배포·공증은 범위 밖이다.
@@ -70,7 +70,7 @@ Xcode에서는 `DeepK.xcodeproj`를 열고 `DeepK` scheme을 실행한다. 스�
 ## 처음 사용할 때
 
 1. 메뉴 막대에서 deepK를 열고 설정에서 기본 제공자를 선택한다. Codex/Luna는 ChatGPT로 로그인한 Codex CLI를 사용한다. Claude Code는 아래 앱 전용 CLI 준비 후 Claude 구독 로그인을 사용한다. ‘연결 확인’으로 선택한 제공자의 상태를 확인하며 별도 API 키 과금으로 전환하지 않는다.
-2. deepK 설정의 권한 요청 버튼을 누르고 macOS 시스템 설정에서 입력 모니터링을 허용한다. 원래 위치 삽입에는 접근성도 필요하다. 목록에 없다면 시스템 설정의 추가 버튼으로 위 빌드 결과의 `DeepK.app`을 선택한다. macOS가 재실행을 요구하면 앱을 다시 연다.
+2. deepK Dev 설정의 권한 요청 버튼을 누르고 macOS 시스템 설정에서 입력 모니터링을 허용한다. 원래 위치 삽입에는 접근성도 필요하다. 목록에 없다면 시스템 설정의 추가 버튼으로 위 빌드 결과의 `deepK Dev.app`을 선택한다. macOS가 재실행을 요구하면 앱을 다시 연다.
 3. 설정의 다시 확인을 누른다. 준비된 상태에서 다른 앱의 텍스트를 선택하고 ⌘C를 두 번 누르면 자동 번역한다. 한 번 복사는 그대로 동작한다.
 4. 결과 복사는 클립보드에 번역문을 넣는다. 삽입은 지원하는 편집 가능한 원래 위치에서만 별도 클릭으로 실행한다. 실패한 경우 내용 변경을 확인하고 복사를 사용한다.
 
@@ -114,6 +114,8 @@ defaults delete com.deepk.app codexExecutablePath
 ```sh
 ./scripts/setup-claude.sh
 ```
+
+기본으로 개발 앱(`com.deepk.app.dev`)에만 CLI 경로를 저장한다. 설치된 배포 앱에 이 경로를 명시적으로 지정하려면 `./scripts/setup-claude.sh --installed`를 사용한다.
 
 이 스크립트는 `.build/claude-runtime`에 CLI 2.1.278을 설치하고 deepK의 실행 파일 경로만 저장한다. 스크립트를 실행하지 않았다면 deepK는 `CLAUDE_EXECUTABLE`·`CLAUDE_CLI_PATH`, `~/.local/bin/claude`(자동 업데이트되는 전역 CLI), `~/.npm-global/bin/claude`, `/opt/homebrew/bin/claude`, `/usr/local/bin/claude`, `/usr/bin/claude`, PATH 순서로 찾아 처음 실행할 수 있는 CLI를 사용한다. deepK를 다시 실행한 뒤 설정에서 Claude Code를 선택한다. 기존 Claude 구독 로그인은 공식 CLI가 관리하며 `auth status`로 claude.ai 구독 인증을 확인한다. 번역 창을 쓰는 동안(최근 30분 활동)은 약 25초마다 백그라운드에서 다시 확인하고, 30초 안에 시작해 성공한 확인이 있을 때만 요청한다. 매 번역에서 CLI가 보고한 인증 출처도 구독인지 확인하며 다르면 즉시 중단하고 다시 확인한다. API 계정이나 인증 불명 상태에서는 요청하지 않는다. 로그인되지 않았다면 앱 전용 CLI 경로로 `auth login`을 실행한다. 토큰을 직접 복사할 필요는 없다.
 
@@ -183,7 +185,11 @@ Claude에는 `DISABLE_AUTOUPDATER=1`·`CLAUDE_CODE_DISABLE_TERMINAL_TITLE=1`도 
 
 자동 테스트는 GUI 창을 열지 않는다. 수동 GUI 검증용 입력 호스트는 환경 변수와 실행 인자를 모두 요구하며, 작은 창에 목적을 표시하고 30초 후 종료한다. 에이전트가 사용자 화면에서 이 검증 창을 자동 반복 실행하지 않는다.
 
-권한 스위치가 켜져 있어도 개발 중 서명 방식이 바뀌면 macOS의 기존 허용 기록과 실제 앱이 일치하지 않을 수 있다. deepK에서 키 입력 감시가 시작되지 않고 이 불일치가 확인된 경우, 앱을 종료한 뒤 입력 모니터링·손쉬운 사용의 기존 deepK 항목을 삭제하고 현재 `DeepK.app`을 다시 추가해 허용한다. 단순 스위치 상태와 실제 키 이벤트 수신 가능 상태를 구분한다.
+Debug 빌드는 `deepK Dev`(`com.deepk.app.dev`), 배포용 Release는 `deepK`(`com.deepk.app`)로 권한과 앱 설정을 따로 보관한다. 개발 실행 스크립트는 실행 중인 개발 앱만 종료한다. 개발 앱의 권한을 설정하거나 촬영할 때 설치된 deepK의 항목을 초기화하지 않는다. 개발 앱은 처음 한 번 별도로 권한을 허용해야 하며, `defaults`로 개발 앱 설정을 바꿀 때는 아래 예시의 `com.deepk.app` 대신 `com.deepk.app.dev`를 쓴다. CLI 자체의 구독 로그인은 제공자의 공유 계정을 그대로 사용한다.
+
+`package-release.sh --local`로 만든 공증하지 않은 테스트 패키지도 `deepK Dev` 식별자를 사용한다. 배포 모드만 기존 `com.deepk.app`을 사용한다.
+
+권한 스위치와 현재 프로세스의 실제 감시 연결은 다를 수 있다. 권한 팝오버의 ‘감시 다시 연결’은 이벤트 탭을 다시 만들고 준비 상태를 검증한 결과를 표시한다. 허용 직후에도 실패하면 ‘앱 다시 열기…’에서 번역 내용이 사라진다는 안내를 확인한 뒤 재실행할 수 있다. 예전 Debug 빌드가 배포 앱과 같은 식별자로 권한을 등록했던 Mac은 기존 기록의 서명 불일치가 남을 수 있다. 이 경우 현재 설치 앱으로 권한을 한 번 다시 등록해야 할 수 있으며, 식별자 분리가 이미 어긋난 OS 기록을 자동으로 고치지는 않는다. 일반 배포 버전 간 업데이트에서 권한이 유지되는지는 같은 배포 서명의 실제 앱으로 별도 검증한다.
 
 ## 번역 결과 검사
 
