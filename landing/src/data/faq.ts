@@ -41,7 +41,7 @@ const ko: FaqItem[] = [
     id: 'update',
     question: '다음 버전은 어떻게 업데이트하나요?',
     answer:
-      'Homebrew로 설치했다면 앱을 종료한 뒤 brew update와 brew upgrade --cask Geuni620/tap/deepk를 실행하세요. ZIP으로 설치했다면 새 파일의 앱으로 교체하면 됩니다.',
+      'Homebrew로 설치했다면 앱을 종료한 뒤 brew update와 brew upgrade --cask Geuni620/tap/deepk를 실행하세요. ZIP으로 설치했다면 새 파일의 deepK.app으로 교체하세요. 이전 이름의 DeepK.app은 함께 실행하지 말고 삭제하세요.',
   },
 ];
 
@@ -79,7 +79,7 @@ const en: FaqItem[] = [
     id: 'update',
     question: 'How do I update to the next version?',
     answer:
-      'If you installed with Homebrew, quit the app and run brew update, then brew upgrade --cask Geuni620/tap/deepk. If you used the ZIP, replace the app with the one from the new file.',
+      'If you installed with Homebrew, quit the app and run brew update, then brew upgrade --cask Geuni620/tap/deepk. If you used the ZIP, replace it with deepK.app from the new file. Do not run the older DeepK.app alongside it; delete it.',
   },
 ];
 

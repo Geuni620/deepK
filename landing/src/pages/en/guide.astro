@@ -59,7 +59,13 @@ import { release } from '../../data/release';
   </section>
   <section>
     <h2>3. Allow macOS permissions</h2>
-    <p>Check the permissions for deepK in System Settings → Privacy &amp; Security.</p>
+    <p>
+      The deepK app is currently in Korean. In its settings, open 일반 (General) → 권한
+      (Permissions) and click <strong>설정 열기…</strong> (Open Settings…) next to the permission
+      you need. System Settings opens to that pane with a small guide window. Drag the deepK icon
+      from the guide window into the list and turn on the switch. If deepK is already in the list,
+      just turn on the switch.
+    </p>
     <ul>
       <li>
         <strong>Input Monitoring:</strong> needed to detect pressing ⌘C twice.
@@ -69,9 +75,12 @@ import { release } from '../../data/release';
       </li>
     </ul>
     <p>
-      If you switch from a development build to the released app, you may need to update the
-      existing permission entries. If macOS asks you to relaunch after changing permissions, quit
-      the app and open it again.
+      If pressing ⌘C twice is still not detected after you allow it, click
+      <strong>감시 다시 연결</strong> (Reconnect Monitoring) on the same screen, or reopen deepK
+      with
+      <strong>앱 다시 열기…</strong> (Reopen App…). If you moved over from an earlier development
+      build and the switch is on but deepK is still not ready, you may need to re-register the
+      permission for the installed deepK.
     </p>
   </section>
   <section>
@@ -79,7 +88,8 @@ import { release } from '../../data/release';
     <p>
       In the app you are reading, select a sentence and press the copy shortcut twice in a row. Read
       the result in the small translation window, then copy it or insert it where you were typing if
-      you need to. You can also type text in directly to translate it.
+      you need to. You can also type text in directly to translate it. Translating on a double copy
+      is on by default, and you can turn it off in Settings.
     </p>
   </section>
   <section>
@@ -95,15 +105,19 @@ brew upgrade --cask Geuni620/tap/deepk</code></pre>
       as they are.
     </p>
     <pre><code>brew uninstall --cask Geuni620/tap/deepk</code></pre>
-    <p>If you installed from the ZIP, replace or delete the app in your Applications folder.</p>
+    <p>
+      If you installed from the ZIP, replace or delete the app in your Applications folder. Starting
+      with 0.1.1, the app is named <code>deepK.app</code>. If the older <code>DeepK.app</code> is
+      still there, do not run both; delete the old one.
+    </p>
   </section>
   <section>
     <h2>About the current release</h2>
     <p>
-      {release.version} separates permissions for the development and released apps, unifies the
-      app name, and improves reconnecting the shortcut monitor. Signing, Apple notarization, and
-      keeping Input Monitoring after an update on this Mac have been checked. The full flow on other
-      Macs and real keyboard triggering and insertion in this version have not been verified yet.
+      {release.version} separates permissions for the development and released apps, unifies the app
+      name, and improves reconnecting the shortcut monitor. Signing, Apple notarization, and keeping
+      Input Monitoring after an update on this Mac have been checked. The full flow on other Macs
+      and real keyboard triggering and insertion in this version have not been verified yet.
     </p>
     <p>
       <a href={release.notesUrl} target="_blank" rel="noopener noreferrer">
