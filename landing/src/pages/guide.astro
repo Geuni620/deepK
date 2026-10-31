@@ -18,7 +18,7 @@ import { release } from '../data/release';
       <InstallOptions guideLink={false} />
     </div>
     <p>
-      ZIP으로 받았다면 압축을 풀고 <code>DeepK.app</code>을 응용 프로그램 폴더로 옮깁니다. 공증된
+      ZIP으로 받았다면 압축을 풀고 <code>deepK.app</code>을 응용 프로그램 폴더로 옮깁니다. 공증된
       앱이므로 macOS 보안 설정을 끄거나 격리 속성을 지울 필요는 없습니다.
     </p>
   </section>
@@ -94,8 +94,9 @@ brew upgrade --cask Geuni620/tap/deepk</code></pre>
   <section>
     <h2>현재 배포본에 대해</h2>
     <p>
-      0.1.0은 초기 배포본입니다. 서명·Apple 공증과 Homebrew 설치를 확인했으며, 다른 Mac에서의 전체
-      사용 흐름과 새 버전으로의 업데이트 검증은 아직 남아 있습니다.
+      {release.version}은 개발·배포 앱의 권한을 분리하고 앱 이름과 감시 재연결을 정비한
+      업데이트입니다. 서명·Apple 공증과 이 Mac에서의 업데이트 후 입력 모니터링 유지를 확인했습니다.
+      다른 Mac에서의 전체 사용 흐름과 이 버전의 실제 키보드 호출·삽입 검증은 아직 남아 있습니다.
     </p>
     <p>
       <a href={release.notesUrl} target="_blank" rel="noopener noreferrer">

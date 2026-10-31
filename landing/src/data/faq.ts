@@ -1,3 +1,5 @@
+import { release } from './release';
+
 export const faqItems = [
   {
     id: 'permissions',
@@ -20,8 +22,7 @@ export const faqItems = [
   {
     id: 'availability',
     question: '지금 다운로드할 수 있나요?',
-    answer:
-      '네. Homebrew 또는 공증된 ZIP으로 0.1.0을 설치할 수 있습니다. Apple Silicon과 macOS 15 이상을 지원하는 초기 배포본입니다. Intel Mac용 파일은 아직 제공하지 않습니다.',
+    answer: `네. Homebrew 또는 공증된 ZIP으로 ${release.version}을 설치할 수 있습니다. Apple Silicon과 macOS ${release.minimumMacOS} 이상을 지원합니다. Intel Mac용 파일은 아직 제공하지 않습니다.`,
   },
   {
     id: 'subscription',

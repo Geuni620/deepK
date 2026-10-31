@@ -1,6 +1,6 @@
 # deepK 랜딩페이지
 
-deepK 앱과 같은 저장소에서 랜딩페이지를 관리하는 영역이다. 선택한 Playful Bear 디자인을 메인 페이지에 적용하고, 공개한 0.1.0 앱의 Homebrew 설치와 ZIP 다운로드를 연결했다. 기존 18개 디자인·반응형·체험 예시는 `/designs/`에 보존했다. 실제 웹 번역 API·분석 도구·운영 배포는 연결하지 않았다. 앱 설치 파일은 이 저장소의 GitHub Releases와 `Geuni620/homebrew-tap`에서 배포한다.
+deepK 앱과 같은 저장소에서 랜딩페이지를 관리하는 영역이다. 선택한 Playful Bear 디자인을 메인 페이지에 적용하고, 0.1.1 앱의 Homebrew 설치와 ZIP 다운로드를 연결한다. 기존 18개 디자인·반응형·체험 예시는 `/designs/`에 보존했다. 실제 웹 번역 API·분석 도구·운영 배포는 연결하지 않았다. 앱 설치 파일은 이 저장소의 GitHub Releases와 `Geuni620/homebrew-tap`에서 배포한다.
 
 ## 디렉터리와 책임
 
