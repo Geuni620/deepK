@@ -1,12 +1,17 @@
+---
+import { useMessages, type Locale } from '../../i18n';
+interface Props {
+  locale?: Locale;
+}
+const { locale = 'ko' } = Astro.props;
+const t = useMessages(locale).promises;
+---
+
 <section id="privacy" class="px-6 py-24">
   <div class="mx-auto max-w-6xl">
-    <h2 class="text-center font-playful text-3xl md:text-4xl">곰이 지키는 세 가지 약속</h2>
+    <h2 class="text-center font-playful text-3xl md:text-4xl">{t.title}</h2>
     <div class="mt-12 grid gap-6 md:grid-cols-3">
-      {[
-        ['⌘', '쓰던 구독 그대로', 'Codex 또는 Claude Code의 구독 로그인을 사용해요.'],
-        ['↗', '필요한 번역만 곁에', '작은 창에서 확인하고 원문을 이어 읽어요.'],
-        ['↩', '제자리로 돌려 줘요', '다 읽으면 원래 작업으로 돌아가고, 삽입은 직접 선택해요.'],
-      ].map(([mark, title, copy], index) => (
+      {t.items.map(([mark, title, copy], index) => (
         <article
           class:list={[
             'rounded-[28px] border-2 border-ink p-8 shadow-[4px_5px_0_#302a20]',

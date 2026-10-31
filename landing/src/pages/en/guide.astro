@@ -1,0 +1,132 @@
+---
+import DocumentLayout from '../../layouts/DocumentLayout.astro';
+import InstallOptions from '../../components/shared/InstallOptions.astro';
+import { release } from '../../data/release';
+---
+
+<DocumentLayout
+  route="guide"
+  locale="en"
+  title="Install deepK on your Mac"
+  description="From installing the app to connecting your AI account and granting permissions. Set it up once, and you can translate right from the sentence you are reading."
+>
+  <section id="install">
+    <h2>1. Install the app</h2>
+    <p>
+      deepK requires an Apple Silicon Mac with macOS {release.minimumMacOS} or later. There is no
+      Intel Mac build yet.
+    </p>
+    <div class="mt-6 rounded-2xl border border-line bg-surface p-6">
+      <InstallOptions guideLink={false} locale="en" />
+    </div>
+    <p>
+      If you downloaded the ZIP, unzip it and move <code>deepK.app</code> to your Applications
+      folder. The app is notarized, so you do not need to turn off macOS security settings or remove
+      the quarantine attribute.
+    </p>
+  </section>
+  <section>
+    <h2>2. Sign in to the AI account you will use</h2>
+    <p>
+      deepK translates through the Codex CLI or Claude Code installed on your Mac. Install the one
+      you want to use by following its official guide, and sign in with your subscription on this
+      Mac.
+    </p>
+    <ul>
+      <li>
+        <a
+          href="https://developers.openai.com/codex/cli/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Official Codex CLI install guide ↗
+        </a>
+      </li>
+      <li>
+        <a
+          href="https://code.claude.com/docs/en/quickstart"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Official Claude Code quickstart ↗
+        </a>
+      </li>
+    </ul>
+    <p>
+      After launching deepK, choose a provider in Settings from the menu bar and check the
+      connection. Subscription fees and usage limits follow the provider's terms.
+    </p>
+  </section>
+  <section>
+    <h2>3. Allow macOS permissions</h2>
+    <p>
+      The deepK app is currently in Korean. In its settings, open 일반 (General) → 권한
+      (Permissions) and click <strong>설정 열기…</strong> (Open Settings…) next to the permission
+      you need. System Settings opens to that pane with a small guide window. Drag the deepK icon
+      from the guide window into the list and turn on the switch. If deepK is already in the list,
+      just turn on the switch.
+    </p>
+    <ul>
+      <li>
+        <strong>Input Monitoring:</strong> needed to detect pressing ⌘C twice.
+      </li>
+      <li>
+        <strong>Accessibility:</strong> needed to insert a translation where you were typing.
+      </li>
+    </ul>
+    <p>
+      If pressing ⌘C twice is still not detected after you allow it, click
+      <strong>감시 다시 연결</strong> (Reconnect Monitoring) on the same screen, or reopen deepK
+      with
+      <strong>앱 다시 열기…</strong> (Reopen App…). If you moved over from an earlier development
+      build and the switch is on but deepK is still not ready, you may need to re-register the
+      permission for the installed deepK.
+    </p>
+  </section>
+  <section>
+    <h2>4. Select a sentence and press ⌘C twice</h2>
+    <p>
+      In the app you are reading, select a sentence and press the copy shortcut twice in a row. Read
+      the result in the small translation window, then copy it or insert it where you were typing if
+      you need to. You can also type text in directly to translate it. Translating on a double copy
+      is on by default, and you can turn it off in Settings.
+    </p>
+  </section>
+  <section>
+    <h2>Updating and removing</h2>
+    <p>
+      If you installed with Homebrew, quit deepK and run the commands below. They update the app
+      once a new version is published.
+    </p>
+    <pre><code>brew update
+brew upgrade --cask Geuni620/tap/deepk</code></pre>
+    <p>
+      To remove the app, use the command below. The CLI you installed separately and its login stay
+      as they are.
+    </p>
+    <pre><code>brew uninstall --cask Geuni620/tap/deepk</code></pre>
+    <p>
+      If you installed from the ZIP, replace or delete the app in your Applications folder. Starting
+      with 0.1.1, the app is named <code>deepK.app</code>. If the older <code>DeepK.app</code> is
+      still there, do not run both; delete the old one.
+    </p>
+  </section>
+  <section>
+    <h2>About the current release</h2>
+    <p>
+      {release.version} separates permissions for the development and released apps, unifies the app
+      name, and improves reconnecting the shortcut monitor. Signing, Apple notarization, and keeping
+      Input Monitoring after an update on this Mac have been checked. The full flow on other Macs
+      and real keyboard triggering and insertion in this version have not been verified yet.
+    </p>
+    <p>
+      <a href={release.notesUrl} target="_blank" rel="noopener noreferrer">
+        Release notes ↗
+      </a>{' '}
+      ·{' '}
+      <a href={`${release.repositoryUrl}/issues`} target="_blank" rel="noopener noreferrer">
+        Report an issue ↗
+      </a>
+    </p>
+  </section>
+</DocumentLayout>

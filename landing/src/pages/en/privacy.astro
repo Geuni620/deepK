@@ -1,0 +1,71 @@
+---
+import DocumentLayout from '../../layouts/DocumentLayout.astro';
+import { release } from '../../data/release';
+---
+
+<DocumentLayout
+  route="privacy"
+  locale="en"
+  title="Privacy and translation data"
+  description={`What deepK ${release.version} sends when it translates, and what it keeps on your Mac.`}
+>
+  <section>
+    <h2>Source text is sent to the AI provider you choose</h2>
+    <p>
+      deepK uses the official CLI installed on your Mac to send the translation instructions and the
+      source text to the Codex or Claude Code provider. How the provider handles and retains that
+      information follows your account and the service's policies.
+    </p>
+    <p>
+      With Codex, the global instructions in <code>~/.codex/AGENTS.md</code> on your Mac may be
+      included in requests if that file exists. Do not put sensitive information in your global
+      instructions.
+    </p>
+  </section>
+  <section>
+    <h2>Translations stay in memory for a short time</h2>
+    <p>
+      Successful translations are kept in app memory for up to 32 items and 5 minutes. They are
+      cleared when the app restarts. Anything you copy or insert into another app follows that app
+      and the macOS clipboard.
+    </p>
+  </section>
+  <section>
+    <h2>Check sensitive text before translating</h2>
+    <p>
+      Some content that password managers mark as a sensitive copy is blocked. deepK cannot protect
+      copies that are marked late or not marked at all, or text pasted directly into the translation
+      window.
+    </p>
+    <p>
+      Before sending, check that the text does not contain passwords, tokens, confidential company
+      information, or other people's personal information.
+    </p>
+  </section>
+  <section>
+    <h2>External connections on this site</h2>
+    <p>
+      The home and setup pages do not have a feature that takes or sends text to translate, and no
+      analytics tools are connected. The translation window on the home page plays prepared examples
+      inside your browser. Fonts are requested from Google Fonts, and download and issue links go to
+      GitHub.
+    </p>
+  </section>
+  <section>
+    <h2>Reporting issues and third-party notices</h2>
+    <p>
+      When you report an issue, please describe the steps to reproduce it without source text,
+      credentials, or personal information. You do not need to attach real source text or login
+      files.
+    </p>
+    <p>
+      <a href={`${release.repositoryUrl}/issues`} target="_blank" rel="noopener noreferrer">
+        Report an issue ↗
+      </a>{' '}
+      ·{' '}
+      <a href={release.noticesUrl} target="_blank" rel="noopener noreferrer">
+        Third-party notices ↗
+      </a>
+    </p>
+  </section>
+</DocumentLayout>

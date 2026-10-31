@@ -21,11 +21,11 @@ document.addEventListener('click', async (event) => {
     const label = installCopy.querySelector('[data-copy-label]');
     try {
       await navigator.clipboard.writeText(installCopy.dataset.copyInstall);
-      if (label) label.textContent = '복사됨';
-      if (status) status.textContent = '터미널에 붙여넣어 실행하세요.';
+      if (label) label.textContent = installCopy.dataset.copyDone ?? '복사됨';
+      if (status) status.textContent = installCopy.dataset.copySuccess ?? '';
     } catch {
-      if (label) label.textContent = '복사';
-      if (status) status.textContent = '명령어를 직접 선택해 복사해 주세요.';
+      if (label) label.textContent = installCopy.dataset.copyDefault ?? '복사';
+      if (status) status.textContent = installCopy.dataset.copyFailure ?? '';
     }
     return;
   }

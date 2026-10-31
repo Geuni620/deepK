@@ -1,0 +1,17 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import ProductLanding from '../../components/ProductLanding.astro';
+import { routes, useMessages } from '../../i18n';
+const t = useMessages('en');
+---
+
+<PageLayout
+  title={t.meta.homeTitle}
+  description={t.meta.homeDescription}
+  theme="playful"
+  indexable
+  locale="en"
+  alternates={routes.home}
+>
+  <ProductLanding locale="en" />
+</PageLayout>
