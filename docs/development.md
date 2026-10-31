@@ -117,6 +117,8 @@ defaults delete com.deepk.app codexExecutablePath
 
 기본으로 개발 앱(`com.deepk.app.dev`)에만 CLI 경로를 저장한다. 설치된 배포 앱에 이 경로를 명시적으로 지정하려면 `./scripts/setup-claude.sh --installed`를 사용한다.
 
+CLI 파일도 `.build/claude-runtime/<앱 식별자>/`에 따로 설치한다. 개발용 준비가 배포 앱의 CLI 파일을 덮어쓰지 않도록 설정 도메인과 설치 경로를 함께 분리한다. 예전 공용 경로는 자동 삭제하지 않으며, 다시 준비한 앱만 새 전용 경로로 이동한다.
+
 이 스크립트는 `.build/claude-runtime`에 CLI 2.1.278을 설치하고 deepK의 실행 파일 경로만 저장한다. 스크립트를 실행하지 않았다면 deepK는 `CLAUDE_EXECUTABLE`·`CLAUDE_CLI_PATH`, `~/.local/bin/claude`(자동 업데이트되는 전역 CLI), `~/.npm-global/bin/claude`, `/opt/homebrew/bin/claude`, `/usr/local/bin/claude`, `/usr/bin/claude`, PATH 순서로 찾아 처음 실행할 수 있는 CLI를 사용한다. deepK를 다시 실행한 뒤 설정에서 Claude Code를 선택한다. 기존 Claude 구독 로그인은 공식 CLI가 관리하며 `auth status`로 claude.ai 구독 인증을 확인한다. 번역 창을 쓰는 동안(최근 30분 활동)은 약 25초마다 백그라운드에서 다시 확인하고, 30초 안에 시작해 성공한 확인이 있을 때만 요청한다. 매 번역에서 CLI가 보고한 인증 출처도 구독인지 확인하며 다르면 즉시 중단하고 다시 확인한다. API 계정이나 인증 불명 상태에서는 요청하지 않는다. 로그인되지 않았다면 앱 전용 CLI 경로로 `auth login`을 실행한다. 토큰을 직접 복사할 필요는 없다.
 
 번역마다 CLI를 새로 띄우지 않도록 stream-json 모드의 Claude Code 프로세스 하나를 미리 띄워 두고 한 번만 쓴 뒤 교체한다. 약 250MB를 쓰며 최근 30분 동안 번역 창을 쓰지 않았거나 10분이 지나면 정리하고, 제공자 변경·연결 해제·잠자기·종료 때도 정리한다. 번역문은 도착하는 대로 화면에 이어서 표시한다. 같은 모델·프롬프트를 쓰고 번역마다 새 프로세스라 이전 번역이 문맥에 섞이지 않는다. 문제가 있으면 `defaults write com.deepk.app claudeTransport oneShotJSON` 후 재실행해 기존 방식(매 번역 auth status + 단발 실행)으로 되돌린다.

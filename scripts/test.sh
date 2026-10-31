@@ -3,6 +3,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 python3 "$SCRIPT_DIR/test-build-identity.py"
+python3 "$SCRIPT_DIR/test-setup-claude.py"
 bash "$SCRIPT_DIR/test-format-regressions.sh"
 TEST_DIR="$(mktemp -d /private/tmp/deepk-unit-test.XXXXXX)"
 # 결과 창을 컴파일하는 대상은 모두 이 파일들을 함께 쓴다.

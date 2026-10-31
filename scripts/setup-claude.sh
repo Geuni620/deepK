@@ -7,7 +7,7 @@ case "${1:-}" in
   --installed) APP_DOMAIN=com.deepk.app ;;
   *) echo "사용법: ./scripts/setup-claude.sh [--installed] (기본: deepK Dev)" >&2; exit 2 ;;
 esac
-RUNTIME_DIR="${PROJECT_ROOT}/.build/claude-runtime"
+RUNTIME_DIR="${PROJECT_ROOT}/.build/claude-runtime/${APP_DOMAIN}"
 case "$(uname -m)" in
   arm64) platform=darwin-arm64 ;;
   x86_64) platform=darwin-x64 ;;
