@@ -32,7 +32,7 @@ brew install --cask Geuni620/tap/deepk
 
 **Direct download**
 
-Download `deepK-distribution-*.zip` from the [latest release](https://github.com/Geuni620/deepK/releases/latest), unzip it, and move `DeepK.app` to your Applications folder. The app is signed with a Developer ID and notarized by Apple. Each release includes a `.sha256` file you can use to verify the download.
+Download `deepK-distribution-*.zip` from the [latest release](https://github.com/Geuni620/deepK/releases/latest), unzip it, and move `deepK.app` to your Applications folder. The app is signed with a Developer ID and notarized by Apple. Each release includes a `.sha256` file you can use to verify the download.
 
 ```sh
 shasum -a 256 deepK-distribution-*.zip
@@ -43,8 +43,8 @@ After installing, install [Codex CLI](docs/development.md#codex-cli-준비) or [
 **Update and uninstall**
 
 - Homebrew: quit the app, then run `brew update && brew upgrade --cask Geuni620/tap/deepk`
-- Direct download: replace the app with `DeepK.app` from the new release
-- Uninstall: `brew uninstall --cask Geuni620/tap/deepk`, or delete `DeepK.app` from Applications
+- Direct download: replace the app from the new release. Builds after this change use `deepK.app`; avoid running it alongside the older `DeepK.app`.
+- Uninstall: `brew uninstall --cask Geuni620/tap/deepk`, or delete `deepK.app` (formerly `DeepK.app`) from Applications
 
 ## Status
 
@@ -62,7 +62,7 @@ deepK is in its first public release. Translation speed depends on the provider,
 3. Select text in another app and press ⌘C twice. You can also type text directly.
 4. Review the translation, then copy or insert it. Quit from the menu or with ⌘Q.
 
-Double-copy translation is on by default in a new install and can be turned off in Settings. If the app path changes because of a new checkout or signing method, you may need to grant macOS permissions again.
+Double-copy translation is on by default in a new install and can be turned off in Settings. If monitoring is disconnected, use “감시 다시 연결” (Reconnect monitoring) under Settings → General → Permissions. Source builds appear as `deepK Dev`, with macOS permissions and app preferences separate from the installed deepK.
 
 ## What is sent, and security limits
 
@@ -85,7 +85,7 @@ cd deepK
 ./scripts/build-and-run.sh
 ```
 
-The script quits any running deepK, then builds, signs, and launches it. Any open translation is not preserved. To build only, use `./scripts/build.sh`.
+The script quits only a running `deepK Dev`, then builds, signs, and launches the development app. It leaves the installed deepK running. An open translation in the development app is not preserved. To build only, use `./scripts/build.sh`.
 
 - [Set up Codex CLI](docs/development.md#codex-cli-준비)
 - [Set up Claude Code](docs/development.md#claude-code-준비): the app's install script needs Node.js and npm.

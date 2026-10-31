@@ -32,7 +32,7 @@ brew install --cask Geuni620/tap/deepk
 
 **직접 내려받기**
 
-[최신 릴리스](https://github.com/Geuni620/deepK/releases/latest)에서 `deepK-distribution-*.zip`을 내려받아 압축을 풀고 `DeepK.app`을 응용 프로그램 폴더로 옮깁니다. Developer ID로 서명하고 Apple 공증을 받은 앱입니다. 함께 올린 `.sha256` 파일로 내려받은 파일을 확인할 수 있습니다.
+[최신 릴리스](https://github.com/Geuni620/deepK/releases/latest)에서 `deepK-distribution-*.zip`을 내려받아 압축을 풀고 `deepK.app`을 응용 프로그램 폴더로 옮깁니다. Developer ID로 서명하고 Apple 공증을 받은 앱입니다. 함께 올린 `.sha256` 파일로 내려받은 파일을 확인할 수 있습니다.
 
 ```sh
 shasum -a 256 deepK-distribution-*.zip
@@ -43,8 +43,8 @@ shasum -a 256 deepK-distribution-*.zip
 **업데이트와 삭제**
 
 - Homebrew: 앱을 종료한 뒤 `brew update && brew upgrade --cask Geuni620/tap/deepk`
-- 직접 내려받기: 새 릴리스의 `DeepK.app`으로 교체
-- 삭제: `brew uninstall --cask Geuni620/tap/deepk` 또는 응용 프로그램 폴더에서 `DeepK.app` 삭제
+- 직접 내려받기: 새 릴리스의 앱으로 교체. 이 변경 이후 배포 이름은 `deepK.app`이며, 이전 릴리스의 `DeepK.app`과 중복으로 실행하지 않습니다.
+- 삭제: `brew uninstall --cask Geuni620/tap/deepk` 또는 응용 프로그램 폴더에서 `deepK.app`(이전 릴리스는 `DeepK.app`) 삭제
 
 ## 현재 상태
 
@@ -62,7 +62,7 @@ shasum -a 256 deepK-distribution-*.zip
 3. 다른 앱에서 텍스트를 선택하고 ⌘C를 두 번 누릅니다. 직접 입력으로도 번역할 수 있습니다.
 4. 번역문을 확인한 뒤 복사하거나 삽입합니다. 앱 종료는 메뉴의 종료 또는 ⌘Q입니다.
 
-새 설치에서는 두 번 복사 자동 번역이 켜져 있습니다. 설정에서 끌 수 있습니다. 새 checkout이나 서명 방식으로 앱 경로가 바뀌면 macOS 권한을 다시 등록해야 할 수 있습니다.
+새 설치에서는 두 번 복사 자동 번역이 켜져 있습니다. 설정에서 끌 수 있습니다. 입력 감시가 연결되지 않으면 설정 → 일반 → 권한의 ‘감시 다시 연결’로 확인할 수 있습니다. 소스에서 실행하는 개발 앱은 `deepK Dev`로 표시되며, 설치된 deepK와 권한·앱 설정이 분리됩니다.
 
 ## 보내는 정보와 보안 한계
 

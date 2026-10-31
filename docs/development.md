@@ -51,7 +51,7 @@ git pull --ff-only
 ./scripts/build-and-run.sh
 ```
 
-스크립트는 macOS 15 이상·전체 Xcode·Swift 6 환경을 확인하고, 실행 중인 deepK를 정상 종료한 뒤 빌드·서명·실행한다. 종료되지 않거나 빌드가 실패하면 중단한다. 기존 설정과 로그인은 삭제하지 않지만 열려 있던 번역창 내용은 유지되지 않는다. 다른 폴더에서도 스크립트의 절대 경로로 실행할 수 있다. 같은 checkout 경로를 계속 사용하면 권한에 등록할 앱 경로도 유지된다.
+스크립트는 macOS 15 이상·전체 Xcode·Swift 6 환경을 확인하고, 실행 중인 deepK Dev만 정상 종료한 뒤 빌드·서명·실행한다. 설치된 deepK는 유지한다. 개발 앱이 종료되지 않거나 빌드가 실패하면 중단한다. 기존 설정과 로그인은 삭제하지 않지만 개발 앱에 열려 있던 번역창 내용은 유지되지 않는다. 다른 폴더에서도 스크립트의 절대 경로로 실행할 수 있다. 같은 checkout 경로를 계속 사용하면 권한에 등록할 앱 경로도 유지된다.
 
 다른 Mac에서는 사용할 Codex CLI 또는 Claude Code를 별도로 설치하고 해당 Mac에서 구독 로그인해야 한다. Claude 전용 설치는 아래 `setup-claude.sh`를 사용한다. 실행 파일이나 로그인 정보는 Git에 포함되지 않는다. 두 권한도 Mac마다 처음 허용해야 하며, 개발 인증서가 없으면 재빌드 후 권한 재등록이 필요할 수 있다. 이 스크립트는 소스에서 로컬 빌드하는 방식이며 공증된 배포 패키지를 만들지 않는다.
 
@@ -60,7 +60,7 @@ Codex CLI는 아래 [Codex CLI 준비](#codex-cli-준비)의 순서로 찾는다
 빌드만 하려면 `./scripts/build.sh`를 사용한다. 종료한 앱만 다시 열 때는 다음 명령으로 충분하다.
 
 ```sh
-open .build/DerivedData/Build/Products/Debug/DeepK.app
+open ".build/DerivedData/Build/Products/Debug/deepK Dev.app"
 ```
 
 Xcode에서는 `DeepK.xcodeproj`를 열고 `DeepK` scheme을 실행한다. 스크립트는 빌드 후 이 Mac의 Apple Development 인증서가 있으면 서명해 권한 식별자를 유지한다. DEEPK_SIGNING_IDENTITY로 인증서를 지정할 수도 있다. 인증서가 없으면 임시 서명 상태로 남고 재빌드 후 권한 재허용이 필요할 수 있다. 공개 배포·공증은 범위 밖이다.
@@ -70,7 +70,7 @@ Xcode에서는 `DeepK.xcodeproj`를 열고 `DeepK` scheme을 실행한다. 스�
 ## 처음 사용할 때
 
 1. 메뉴 막대에서 deepK를 열고 설정에서 기본 제공자를 선택한다. Codex/Luna는 ChatGPT로 로그인한 Codex CLI를 사용한다. Claude Code는 아래 앱 전용 CLI 준비 후 Claude 구독 로그인을 사용한다. ‘연결 확인’으로 선택한 제공자의 상태를 확인하며 별도 API 키 과금으로 전환하지 않는다.
-2. deepK 설정의 권한 요청 버튼을 누르고 macOS 시스템 설정에서 입력 모니터링을 허용한다. 원래 위치 삽입에는 접근성도 필요하다. 목록에 없다면 시스템 설정의 추가 버튼으로 위 빌드 결과의 `DeepK.app`을 선택한다. macOS가 재실행을 요구하면 앱을 다시 연다.
+2. deepK Dev 설정의 권한 요청 버튼을 누르고 macOS 시스템 설정에서 입력 모니터링을 허용한다. 원래 위치 삽입에는 접근성도 필요하다. 목록에 없다면 시스템 설정의 추가 버튼으로 위 빌드 결과의 `deepK Dev.app`을 선택한다. macOS가 재실행을 요구하면 앱을 다시 연다.
 3. 설정의 다시 확인을 누른다. 준비된 상태에서 다른 앱의 텍스트를 선택하고 ⌘C를 두 번 누르면 자동 번역한다. 한 번 복사는 그대로 동작한다.
 4. 결과 복사는 클립보드에 번역문을 넣는다. 삽입은 지원하는 편집 가능한 원래 위치에서만 별도 클릭으로 실행한다. 실패한 경우 내용 변경을 확인하고 복사를 사용한다.
 
@@ -100,11 +100,13 @@ Codex CLI 0.155.0 이상이 필요하다. `npm install -g @openai/codex`, `brew 
 
 Codex 업데이트로 번역이 깨지면 검증된 버전을 직접 지정해 되돌린다. 경로는 새 app-server를 띄울 때 읽으므로 앱을 재실행할 필요는 없다. 이미 연결된 상태라면 설정에서 '연결 해제 → 연결 확인'으로 새 프로세스를 띄워야 다시 탐색한다.
 
+아래 `defaults` 예시는 개발 앱 `deepK Dev`용(`com.deepk.app.dev`)이다. 설치된 배포 앱 `deepK`의 설정을 바꾸려는 경우에만 도메인을 `com.deepk.app`으로 지정한다. 이 문서의 나머지 `defaults` 예시도 같은 기준이다.
+
 ```sh
 # 지정
-defaults write com.deepk.app codexExecutablePath -string "$HOME/.nvm/versions/node/v24.18.0/bin/codex"
+defaults write com.deepk.app.dev codexExecutablePath -string "$HOME/.nvm/versions/node/v24.18.0/bin/codex"
 # 해제(자동 탐색으로 복귀)
-defaults delete com.deepk.app codexExecutablePath
+defaults delete com.deepk.app.dev codexExecutablePath
 ```
 
 ## Claude Code 준비
@@ -115,9 +117,13 @@ defaults delete com.deepk.app codexExecutablePath
 ./scripts/setup-claude.sh
 ```
 
+기본으로 개발 앱(`com.deepk.app.dev`)에만 CLI 경로를 저장한다. 설치된 배포 앱에 이 경로를 명시적으로 지정하려면 `./scripts/setup-claude.sh --installed`를 사용한다.
+
+CLI 파일도 `.build/claude-runtime/<앱 식별자>/`에 따로 설치한다. 개발용 준비가 배포 앱의 CLI 파일을 덮어쓰지 않도록 설정 도메인과 설치 경로를 함께 분리한다. 예전 공용 경로는 자동 삭제하지 않으며, 다시 준비한 앱만 새 전용 경로로 이동한다.
+
 이 스크립트는 `.build/claude-runtime`에 CLI 2.1.278을 설치하고 deepK의 실행 파일 경로만 저장한다. 스크립트를 실행하지 않았다면 deepK는 `CLAUDE_EXECUTABLE`·`CLAUDE_CLI_PATH`, `~/.local/bin/claude`(자동 업데이트되는 전역 CLI), `~/.npm-global/bin/claude`, `/opt/homebrew/bin/claude`, `/usr/local/bin/claude`, `/usr/bin/claude`, PATH 순서로 찾아 처음 실행할 수 있는 CLI를 사용한다. deepK를 다시 실행한 뒤 설정에서 Claude Code를 선택한다. 기존 Claude 구독 로그인은 공식 CLI가 관리하며 `auth status`로 claude.ai 구독 인증을 확인한다. 번역 창을 쓰는 동안(최근 30분 활동)은 약 25초마다 백그라운드에서 다시 확인하고, 30초 안에 시작해 성공한 확인이 있을 때만 요청한다. 매 번역에서 CLI가 보고한 인증 출처도 구독인지 확인하며 다르면 즉시 중단하고 다시 확인한다. API 계정이나 인증 불명 상태에서는 요청하지 않는다. 로그인되지 않았다면 앱 전용 CLI 경로로 `auth login`을 실행한다. 토큰을 직접 복사할 필요는 없다.
 
-번역마다 CLI를 새로 띄우지 않도록 stream-json 모드의 Claude Code 프로세스 하나를 미리 띄워 두고 한 번만 쓴 뒤 교체한다. 약 250MB를 쓰며 최근 30분 동안 번역 창을 쓰지 않았거나 10분이 지나면 정리하고, 제공자 변경·연결 해제·잠자기·종료 때도 정리한다. 번역문은 도착하는 대로 화면에 이어서 표시한다. 같은 모델·프롬프트를 쓰고 번역마다 새 프로세스라 이전 번역이 문맥에 섞이지 않는다. 문제가 있으면 `defaults write com.deepk.app claudeTransport oneShotJSON` 후 재실행해 기존 방식(매 번역 auth status + 단발 실행)으로 되돌린다.
+번역마다 CLI를 새로 띄우지 않도록 stream-json 모드의 Claude Code 프로세스 하나를 미리 띄워 두고 한 번만 쓴 뒤 교체한다. 약 250MB를 쓰며 최근 30분 동안 번역 창을 쓰지 않았거나 10분이 지나면 정리하고, 제공자 변경·연결 해제·잠자기·종료 때도 정리한다. 번역문은 도착하는 대로 화면에 이어서 표시한다. 같은 모델·프롬프트를 쓰고 번역마다 새 프로세스라 이전 번역이 문맥에 섞이지 않는다. 문제가 있으면 `defaults write com.deepk.app.dev claudeTransport oneShotJSON` 후 재실행해 기존 방식(매 번역 auth status + 단발 실행)으로 되돌린다.
 
 2026-10-03 같은 세션 교차 측정(Haiku 4.5, CLI 2.1.287, 10개 표본 × 3회)에서 기존 방식은 단문 p50 약 2.3–2.7초, 문단 2.5–2.7초, 긴 글 3.7–4.7초였다. 미리 띄운 프로세스는 단문 약 0.8–1.1초, 문단 1.0–1.3초, 긴 글 2.0–3.5초였고 첫 글자는 약 0.6–0.8초에 표시됐다. 차이는 CLI 기동·종료 비용(번역당 약 1.5초 → 약 0.04초)이며 출력 품질은 같은 기준으로 차이가 없었다. 단문 기준으로 90초·300초 쉰 뒤에도 약 0.9–1.1초였고, 직전 번역 직후 연속 요청(교체 프로세스 기동 중)은 약 1.4–1.8초, 대기 프로세스 없이 매번 띄우는 경우도 약 1.3–1.7초였다. 엔진 단독 측정이며 앱 전체 지연과 1초 목표 달성은 별도로 확인한다. [Claude 비교 결과](../benchmarks/runs/20261003-haiku-warm-spare-ab.json), [사용 패턴별 결과](../benchmarks/runs/20261003-haiku-warm-spare-usage.json). 현재 기본값 Haiku 5.5의 대기 프로세스 지연(2026-10-08, CLI 2.1.293, 20개 표본, 프롬프트 보강 후 p50 약 0.86초, p90 약 1.32초)은 [비교 결과](../benchmarks/haiku-45-vs-55-summary.md)를 따른다.
 
@@ -149,7 +155,7 @@ Claude에는 `DISABLE_AUTOUPDATER=1`·`CLAUDE_CODE_DISABLE_TERMINAL_TITLE=1`도 
 
 ## 검증 명령
 
-`./scripts/test.sh`는 로직·가짜 통신 서버 테스트다. 시간에 민감한 기존 테스트(`TranslationResultTextViewTests`의 "a newly attached proxy receives the current hint", 전송 시간 초과 테스트)는 부하가 크면 실패할 수 있으므로 한 번 다시 실행해 확인하고, 첫 실패와 재실행 결과를 함께 기록한다. `DEEPK_RUN_LIVE_TRANSLATION_TESTS=1 ./scripts/test-incremental-live.sh`는 실제 Codex·Claude 구독으로 증분 번역을 확인하며 합성 요청 최대 6건의 쿼터를 사용한다. `DEEPK_RUN_LIVE_BENCHMARK=1 ./scripts/benchmark-claude.sh`는 Claude 경로를 실제 구독으로 교차 측정하며 쿼터를 사용한다. `--dry-run`은 요청 없이 일정만 출력한다. `DEEPK_RUN_LIVE_BENCHMARK=1 ./scripts/benchmark-codex-speed.sh`는 Codex 경로를 기준선(`DEEPK_BASELINE_REF`, 기본 PR #42)·Fast 끔·Fast 켬으로 교차 측정하며 쿼터를 사용한다(`--codex <경로>` 또는 `CODEX_EXECUTABLE`로 세 비교군의 실행 파일을 고정하며 검증에 실패하면 다른 Codex로 넘어가지 않고 멈춘다. 모델은 `--model`이 없으면 앱 설정의 Codex 모델을 쓴다. `--dry-run`은 컴파일과 일정 출력만). `./scripts/capture-codex-request.sh`는 실제 `~/.codex` 설정과 deepK의 `thread/start` config로 요청 본문을 로컬 가짜 서버에 캡처해 크기·메모리·스킬·goal 도구·사용자 입력 도구·configWarning·계층·`config.toml` 변경을 검사하며 쿼터를 쓰지 않는다. `--model`이 없으면 앱 설정의 Codex 모델로, 기본 모델과 다르면 기본 모델도 함께 캡처한다. `DEEPK_RUN_GUI_TESTS=1 ./scripts/test-input.sh`는 전용 창에서 한글 조합과 주입된 OS 키 이벤트를 검증한다. `DEEPK_RUN_GUI_TESTS=1 ./scripts/test-mac-session.sh`는 실행 중인 deepK와 전용 창 사이의 복귀·삽입을 검증한다. 후자의 두 검사는 GUI 및 호스트 권한이 필요하며 실제 하드웨어 키보드·앱 자체 권한 검증을 대체하지 않는다. 입력 테스트를 실행할 때 다른 두 번 복사 도구의 동시 반응에 주의한다.
+`./scripts/test.sh`는 로직·가짜 통신 서버 테스트다. 시간에 민감한 기존 테스트(`TranslationResultTextViewTests`의 "a newly attached proxy receives the current hint", 전송 시간 초과 테스트)는 부하가 크면 실패할 수 있으므로 한 번 다시 실행해 확인하고, 첫 실패와 재실행 결과를 함께 기록한다. `DEEPK_RUN_LIVE_TRANSLATION_TESTS=1 ./scripts/test-incremental-live.sh`는 실제 Codex·Claude 구독으로 증분 번역을 확인하며 합성 요청 최대 6건의 쿼터를 사용한다. `DEEPK_RUN_LIVE_BENCHMARK=1 ./scripts/benchmark-claude.sh`는 Claude 경로를 실제 구독으로 교차 측정하며 쿼터를 사용한다. `--dry-run`은 요청 없이 일정만 출력한다. `DEEPK_RUN_LIVE_BENCHMARK=1 ./scripts/benchmark-codex-speed.sh`는 Codex 경로를 기준선(`DEEPK_BASELINE_REF`, 기본 PR #42)·Fast 끔·Fast 켬으로 교차 측정하며 쿼터를 사용한다(`--codex <경로>` 또는 `CODEX_EXECUTABLE`로 세 비교군의 실행 파일을 고정하며 검증에 실패하면 다른 Codex로 넘어가지 않고 멈춘다. 모델은 `--model`이 없으면 앱 설정의 Codex 모델을 쓴다. `--dry-run`은 컴파일과 일정 출력만). `./scripts/capture-codex-request.sh`는 실제 `~/.codex` 설정과 deepK의 `thread/start` config로 요청 본문을 로컬 가짜 서버에 캡처해 크기·메모리·스킬·goal 도구·사용자 입력 도구·configWarning·계층·`config.toml` 변경을 검사하며 쿼터를 쓰지 않는다. `--model`이 없으면 앱 설정의 Codex 모델로, 기본 모델과 다르면 기본 모델도 함께 캡처한다. `DEEPK_RUN_GUI_TESTS=1 ./scripts/test-input.sh`는 전용 창에서 한글 조합과 주입된 OS 키 이벤트를 검증한다. `DEEPK_RUN_GUI_TESTS=1 ./scripts/test-mac-session.sh`는 실행 중인 `deepK Dev`와 전용 창 사이의 복귀·삽입을 검증한다. 설치된 배포 앱을 대상으로 할 때만 `--installed`를 붙인다. `./scripts/test-mac-session.sh --print-target`으로 GUI를 열지 않고 대상을 확인할 수 있다. 후자의 두 검사는 GUI 및 호스트 권한이 필요하며 실제 하드웨어 키보드·앱 자체 권한 검증을 대체하지 않는다. 입력 테스트를 실행할 때 다른 두 번 복사 도구의 동시 반응에 주의한다.
 
 요청을 보내지 않는 도구도 있다. `./scripts/lint-benchmark-outputs.sh <표본.json> <결과.json>…`은 저장된 벤치마크 출력에 번역 출력 검사기(`TranslationOutputLint`, 앱에는 아직 연결하지 않음)를 돌린다. `swift scripts/dump-pasteboard.swift <폴더> [이름]`은 현재 클립보드의 타입과 `.string`·`public.html`을 읽기만 해서 저장한다.
 
@@ -183,11 +189,15 @@ Claude에는 `DISABLE_AUTOUPDATER=1`·`CLAUDE_CODE_DISABLE_TERMINAL_TITLE=1`도 
 
 자동 테스트는 GUI 창을 열지 않는다. 수동 GUI 검증용 입력 호스트는 환경 변수와 실행 인자를 모두 요구하며, 작은 창에 목적을 표시하고 30초 후 종료한다. 에이전트가 사용자 화면에서 이 검증 창을 자동 반복 실행하지 않는다.
 
-권한 스위치가 켜져 있어도 개발 중 서명 방식이 바뀌면 macOS의 기존 허용 기록과 실제 앱이 일치하지 않을 수 있다. deepK에서 키 입력 감시가 시작되지 않고 이 불일치가 확인된 경우, 앱을 종료한 뒤 입력 모니터링·손쉬운 사용의 기존 deepK 항목을 삭제하고 현재 `DeepK.app`을 다시 추가해 허용한다. 단순 스위치 상태와 실제 키 이벤트 수신 가능 상태를 구분한다.
+Debug 빌드는 `deepK Dev`(`com.deepk.app.dev`), 배포용 Release는 `deepK`(`com.deepk.app`)로 권한과 앱 설정을 따로 보관한다. 개발 실행 스크립트는 실행 중인 개발 앱만 종료한다. 개발 앱의 권한을 설정하거나 촬영할 때 설치된 deepK의 항목을 초기화하지 않는다. 개발 앱은 처음 한 번 별도로 권한을 허용해야 하며, `defaults`로 개발 앱 설정을 바꿀 때는 아래 예시의 `com.deepk.app` 대신 `com.deepk.app.dev`를 쓴다. CLI 자체의 구독 로그인은 제공자의 공유 계정을 그대로 사용한다.
+
+`package-release.sh --local`로 만든 공증하지 않은 테스트 패키지도 `deepK Dev` 식별자를 사용한다. 배포 모드만 기존 `com.deepk.app`을 사용한다.
+
+권한 스위치와 현재 프로세스의 실제 감시 연결은 다를 수 있다. 권한 팝오버의 ‘감시 다시 연결’은 이벤트 탭을 다시 만들고 준비 상태를 검증한 결과를 표시한다. 허용 직후에도 실패하면 ‘앱 다시 열기…’에서 번역 내용이 사라진다는 안내를 확인한 뒤 재실행할 수 있다. 예전 Debug 빌드가 배포 앱과 같은 식별자로 권한을 등록했던 Mac은 기존 기록의 서명 불일치가 남을 수 있다. 이 경우 현재 설치 앱으로 권한을 한 번 다시 등록해야 할 수 있으며, 식별자 분리가 이미 어긋난 OS 기록을 자동으로 고치지는 않는다. 일반 배포 버전 간 업데이트에서 권한이 유지되는지는 같은 배포 서명의 실제 앱으로 별도 검증한다.
 
 ## 번역 결과 검사
 
-모델이 원문을 그대로 돌려주면 한 번 다시 요청한다. 스트리밍 중에 알아차리면 남은 응답을 기다리지 않고 바로 끊는다. 다시 요청한 답도 원문 그대로면 경고와 함께 보여 주고 캐시하지 않는다. 한국어 결과에 섞인 한자는 한글 독음으로 바꾼다(确保 → 확보). 문제가 있으면 `defaults write com.deepk.app outputEchoRetry -bool false`(다시 요청 끔)나 `outputHanjaRepair -bool false`(한자 치환 끔) 후 재실행한다. 판정 기준과 로그 형식은 [실행 중 번역 결과 검사](../plans/runtime-output-check.md)에 있다.
+모델이 원문을 그대로 돌려주면 한 번 다시 요청한다. 스트리밍 중에 알아차리면 남은 응답을 기다리지 않고 바로 끊는다. 다시 요청한 답도 원문 그대로면 경고와 함께 보여 주고 캐시하지 않는다. 한국어 결과에 섞인 한자는 한글 독음으로 바꾼다(确保 → 확보). 문제가 있으면 `defaults write com.deepk.app.dev outputEchoRetry -bool false`(다시 요청 끔)나 `outputHanjaRepair -bool false`(한자 치환 끔) 후 재실행한다. 판정 기준과 로그 형식은 [실행 중 번역 결과 검사](../plans/runtime-output-check.md)에 있다.
 
 
 ## 베타 버전 식별

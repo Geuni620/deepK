@@ -1,11 +1,14 @@
 import AppKit
 @main struct SessionSmoke {
  @MainActor static func main() {
+  let identifier = ProcessInfo.processInfo.environment["DEEPK_SESSION_TEST_APP_IDENTIFIER"] ?? "com.deepk.app.dev"
+  guard ["com.deepk.app.dev", "com.deepk.app"].contains(identifier) else { print("Unsupported session test app identifier"); exit(2) }
+  if CommandLine.arguments.contains("--print-target") { print(identifier); return }
   let app = NSApplication.shared
-  Task { @MainActor in await run(); exit(0) }
+  Task { @MainActor in await run(identifier: identifier); exit(0) }
   app.run()
  }
- @MainActor static func run() async {
+ @MainActor static func run(identifier: String) async {
   guard let host = NSWorkspace.shared.runningApplications.first(where: { $0.localizedName == "deepk-test-host" }) else { print("Fixture missing"); exit(1) }
   host.activate(options: [.activateAllWindows])
   try? await Task.sleep(for: .milliseconds(500))
@@ -16,7 +19,7 @@ import AppKit
   case .success(let session):
    print("Captured fixture: \(session.application.name), readable value: \(session.capturedValue != nil)")
    print("Captured original selection: \(session.selectedText == "Please keep the original window open.")")
-   guard let app = NSRunningApplication.runningApplications(withBundleIdentifier: "com.deepk.app").first else { print("Launch deepK before this integration test"); exit(1) }
+   guard let app = NSRunningApplication.runningApplications(withBundleIdentifier: identifier).first else { print("Launch \(identifier) before this integration test"); exit(1) }
    app.activate(options: [.activateAllWindows])
    try? await Task.sleep(for:.milliseconds(250))
    guard NSWorkspace.shared.frontmostApplication?.processIdentifier == app.processIdentifier else { print("deepK activation failed"); exit(1) }

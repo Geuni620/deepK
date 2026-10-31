@@ -1,5 +1,19 @@
 #!/usr/bin/env bash
 set -euo pipefail
+DEEPK_SESSION_TEST_APP_IDENTIFIER=com.deepk.app.dev
+PRINT_TARGET=0
+for argument in "$@"; do
+  case "$argument" in
+    --installed) DEEPK_SESSION_TEST_APP_IDENTIFIER=com.deepk.app ;;
+    --print-target) PRINT_TARGET=1 ;;
+    *) echo "Usage: $0 [--installed] [--print-target]" >&2; exit 2 ;;
+  esac
+done
+export DEEPK_SESSION_TEST_APP_IDENTIFIER
+if [[ "$PRINT_TARGET" == 1 ]]; then
+  printf '%s\n' "$DEEPK_SESSION_TEST_APP_IDENTIFIER"
+  exit 0
+fi
 if [[ "${DEEPK_RUN_GUI_TESTS:-}" != "1" ]]; then
   echo "GUI verification opens temporary windows. Run explicitly with DEEPK_RUN_GUI_TESTS=1." >&2
   exit 2

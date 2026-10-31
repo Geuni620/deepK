@@ -50,6 +50,7 @@ struct PermissionPresentationTests {
         app.closeSettingsWindow()
         precondition(!app.showsCodeStylePicker, "설정 창을 닫으면 다음에는 탭으로 연다")
         settingsViewsAreWired(app)
+        shortcutRecoveryUsesActualReadiness(app)
         escapeOrder(app)
         displaySettingsAreSaved(app)
         settingsWindowSizes(app)
@@ -63,6 +64,29 @@ struct PermissionPresentationTests {
         hoverIsTrackedWhileInactive()
         resultTextIsParsedOncePerResult()
         print("Permission presentation, disabled shortcut and footer checks passed")
+    }
+
+    @MainActor private static func shortcutRecoveryUsesActualReadiness(_ app: AppModel) {
+        app.shortcutEnabled = true
+        app.shortcutReady = false
+        app.inputMonitoringAllowed = true
+        precondition(app.canReconnectShortcut, "사전 권한 조회만 성공해도 실제 감시가 없으면 복구 동작을 제공한다")
+        app.reconnectShortcut()
+        let connected = app.shortcutReady
+        app.refreshPermissionStatus()
+        precondition(app.shortcutReady == connected, "다시 연결 결과는 실제 이벤트 탭 검증과 같아야 한다")
+        if connected {
+            precondition(app.shortcutRecoveryMessage?.hasPrefix("입력 감시가 연결됐습니다") == true)
+            precondition(!app.canReconnectShortcut)
+        } else {
+            precondition(app.shortcutRecoveryMessage?.hasPrefix("입력 감시를 연결하지 못했습니다") == true,
+                         "연결 실패를 성공으로 표시하지 않는다")
+            precondition(app.canReconnectShortcut)
+        }
+        app.shortcutEnabled = false
+        app.reconnectShortcut()
+        precondition(!app.shortcutReady && !app.canReconnectShortcut && app.shortcutRecoveryMessage == nil,
+                     "사용자가 끈 감시를 복구 동작이 켜지 않는다")
     }
 
     /// The window as it opens with nothing translated: the result pane is empty.

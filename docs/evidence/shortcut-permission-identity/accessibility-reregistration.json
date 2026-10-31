@@ -1,0 +1,34 @@
+{
+  "verified_at": "2026-10-31T11:22:46.520352+00:00",
+  "version": "0.1.1",
+  "build": "19",
+  "identifier": "com.deepk.app",
+  "app_unchanged": true,
+  "operation": "tccutil reset Accessibility com.deepk.app, then add /Applications/deepK.app in System Settings",
+  "reason": "existing Accessibility requirement allowed an earlier Apple Development signature",
+  "accessibility_before": {
+    "allowed": true,
+    "matches_installed_signature": false,
+    "status": -67050
+  },
+  "accessibility_after": {
+    "allowed": true,
+    "matches_installed_signature": true,
+    "status": 0
+  },
+  "input_monitor_before_and_after": {
+    "allowed": true,
+    "matches_installed_signature": true,
+    "status": 0,
+    "record_unchanged": true
+  },
+  "all_other_accessibility_and_input_records_unchanged": true,
+  "other_records_compared": 28,
+  "app_ui": {
+    "input_monitoring": "ready",
+    "accessibility": "ready",
+    "summary": "ready"
+  },
+  "physical_keyboard_retest": "not performed for 0.1.1",
+  "insertion_retest": "not performed"
+}

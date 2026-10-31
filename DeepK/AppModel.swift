@@ -78,10 +78,16 @@ final class AppModel: NSObject, NSWindowDelegate {
     }
 
     var permissionConnectionHelp: String {
-        "시스템 설정의 허용 여부와 현재 실행 중인 앱의 연결 상태는 다를 수 있습니다. 이미 허용했다면 앱을 다시 열어 주세요. 계속 연결되지 않으면 기존 deepK 항목을 현재 앱으로 다시 등록해 주세요."
+        "현재 앱의 입력 감시가 연결되지 않았습니다. ‘감시 다시 연결’을 눌러 주세요. 권한을 방금 허용했다면 앱을 다시 열어야 할 수 있습니다."
     }
 
+    var canReconnectShortcut: Bool { shortcutEnabled && !shortcutReady }
+
+    var shortcutRecoveryMessage: String?
+
     @ObservationIgnored private var window: NSWindow?
+    /// 시스템 설정 권한 화면 옆에 앱 아이콘을 끌어다 놓는 안내를 띄운다.
+    @ObservationIgnored private let permissionGuide = PermissionGuideController()
     /// Set once by `presentSettingsWindow`; the tests give it an offscreen window instead.
     @ObservationIgnored var settingsWindow: NSWindow?
     /// The screen area the settings window stays inside. Replaced in tests, whose window is offscreen.
@@ -1190,6 +1196,7 @@ final class AppModel: NSObject, NSWindowDelegate {
     }
 
     func restartShortcut() {
+        shortcutRecoveryMessage = nil
         refreshPermissionStatus()
         loginItemController.refresh()
         monitor.stop()
@@ -1208,6 +1215,15 @@ final class AppModel: NSObject, NSWindowDelegate {
         updateShortcutMenu()
     }
 
+    /// 권한 스위치 추정 대신 실제 이벤트 탭을 다시 만들고 준비 상태를 검증한다.
+    func reconnectShortcut() {
+        restartShortcut()
+        guard shortcutEnabled else { return }
+        shortcutRecoveryMessage = shortcutReady
+            ? "입력 감시가 연결됐습니다. 다른 앱에서 ⌘C를 두 번 눌러 확인해 주세요."
+            : "입력 감시를 연결하지 못했습니다. 현재 앱의 권한을 확인하고, 이미 허용했다면 앱을 다시 열어 주세요."
+    }
+
     private func clearShortcutFailureFeedback() {
         if let shortcutFailureFeedback, feedback == shortcutFailureFeedback { feedback = "" }
         shortcutFailureFeedback = nil
@@ -1215,7 +1231,7 @@ final class AppModel: NSObject, NSWindowDelegate {
 
     private func updateShortcutMenu() {
         shortcutMenuItem?.title = shortcutMessage
-        statusItem?.button?.toolTip = "deepK · \(shortcutMessage)"
+        statusItem?.button?.toolTip = "\(AppIdentity.displayName) · \(shortcutMessage)"
         statusItem?.button?.image = menuBarImage()
     }
 
@@ -1247,12 +1263,53 @@ final class AppModel: NSObject, NSWindowDelegate {
 
     func openInputMonitoringSettings() {
         prepareForSystemPermissionUI()
-        NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_ListenEvent")!)
+        permissionGuide.present(.inputMonitoring) { [weak self] _ in
+            self?.inputMonitoringGranted()
+        }
     }
 
     func openAccessibilitySettings() {
         prepareForSystemPermissionUI()
-        NSWorkspace.shared.open(InvocationSession.accessibilitySettingsURL)
+        permissionGuide.present(.accessibility) { [weak self] _ in
+            self?.refreshPermissionStatus()
+        }
+    }
+
+    /// 허용 직후에는 실행 중인 프로세스에 키 입력이 전달되지 않을 수 있어,
+    /// 감시가 연결되지 않으면 앱을 다시 열도록 제안한다.
+    private func inputMonitoringGranted() {
+        restartShortcut()
+        guard shortcutEnabled, !shortcutReady else { return }
+        confirmShortcutRelaunch()
+    }
+
+    func confirmShortcutRelaunch() {
+        let alert = NSAlert()
+        alert.messageText = "\(AppIdentity.displayName)를 다시 여시겠어요?"
+        alert.informativeText = "권한을 허용한 뒤에도 입력 감시가 연결되지 않으면 재실행이 필요할 수 있습니다. 현재 번역 창의 내용은 유지되지 않습니다."
+        alert.addButton(withTitle: "다시 열기")
+        alert.addButton(withTitle: "나중에")
+        NSApp.activate(ignoringOtherApps: true)
+        if alert.runModal() == .alertFirstButtonReturn { relaunch() }
+    }
+
+    /// 현재 프로세스가 끝난 뒤 같은 앱 번들을 다시 연다. 경로는 셸 인자로 넘겨 따옴표 처리를 피한다.
+    func relaunch() {
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/bin/sh")
+        process.arguments = [
+            "-c",
+            "while /bin/kill -0 \"$1\" 2>/dev/null; do /bin/sleep 0.1; done; /usr/bin/open \"$0\"",
+            Bundle.main.bundleURL.path,
+            String(ProcessInfo.processInfo.processIdentifier),
+        ]
+        do {
+            try process.run()
+        } catch {
+            feedback = "deepK를 다시 열지 못했습니다. 직접 다시 열어 주세요"
+            return
+        }
+        NSApp.terminate(nil)
     }
 
     func openLoginItemSettings() {
@@ -1304,7 +1361,7 @@ final class AppModel: NSObject, NSWindowDelegate {
                 contentRect: NSRect(x: 0, y: 0, width: 420, height: 264),
                 styleMask: [.titled, .closable, .resizable, .miniaturizable], backing: .buffered, defer: false
             )
-            panel.title = "deepK"
+            panel.title = AppIdentity.displayName
             panel.minSize = WindowPresentation.smallSize
             panel.appearance = NSAppearance(named: .aqua)
             panel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
@@ -1377,7 +1434,7 @@ final class AppModel: NSObject, NSWindowDelegate {
     private func installMenu() {
         let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
         item.button?.image = menuBarImage()
-        item.button?.setAccessibilityLabel("deepK")
+        item.button?.setAccessibilityLabel(AppIdentity.displayName)
         let menu = NSMenu()
         let status = NSMenuItem(title: shortcutMessage, action: #selector(openSettings), keyEquivalent: "")
         status.target = self
@@ -1394,7 +1451,7 @@ final class AppModel: NSObject, NSWindowDelegate {
 
         menu.addItem(.separator())
         shortcutMenuItem = status
-        for (title, action) in [("deepK 열기", #selector(openFromMenu)), ("설정", #selector(openSettings)), ("종료", #selector(quit))] {
+        for (title, action) in [("\(AppIdentity.displayName) 열기", #selector(openFromMenu)), ("설정", #selector(openSettings)), ("종료", #selector(quit))] {
             let menuItem = NSMenuItem(title: title, action: action, keyEquivalent: "")
             menuItem.target = self
             menu.addItem(menuItem)
@@ -1420,7 +1477,7 @@ final class AppModel: NSObject, NSWindowDelegate {
             // 번역 탭은 Codex에서 다섯 행(제공자 둘·모델·Fast·복사 형식)이라 그 높이에 맞춘다.
             let settings = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 340, height: 376),
                                     styleMask: [.titled, .closable, .fullSizeContentView], backing: .buffered, defer: false)
-            settings.title = "deepK 설정"
+            settings.title = "\(AppIdentity.displayName) 설정"
             settings.titleVisibility = .hidden
             settings.titlebarAppearsTransparent = true
             settings.isMovableByWindowBackground = true

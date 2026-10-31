@@ -10,7 +10,7 @@
 ./scripts/package-release.sh --local
 ```
 
-기본 후보 버전은 `0.1.0`, CPU는 `arm64`(Apple Silicon)다. `--version 0.1.0 --arch arm64`로 지정할 수 있다. Intel(`x86_64`)·Universal 옵션은 제공하지만 별도 실제 검증 전에는 지원 완료로 안내하지 않는다.
+기본 후보 버전은 `VERSION` 파일의 `0.1.1`, CPU는 `arm64`(Apple Silicon)다. `--version 0.1.1 --arch arm64`로 지정할 수 있다. Intel(`x86_64`)·Universal 옵션은 제공하지만 별도 실제 검증 전에는 지원 완료로 안내하지 않는다.
 
 Release 빌드 결과를 `dist/release/<버전>/<CPU>/<모드>/<커밋>/`에 패키징한다. ZIP, SHA-256 체크섬, 빌드 정보를 담은 manifest가 생성되며 기존 결과는 덮어쓰지 않는다. 로컬 패키지는 ad-hoc 임시 서명으로 구분한다. 기존 Debug 앱을 바꾸거나 실행 중인 deepK를 종료하지 않는다. 산출물 경로와 로컬 모드 표시는 스크립트 출력에서 확인한다.
 
@@ -31,7 +31,7 @@ DEEPK_NOTARY_PROFILE='deepk-notary' \
 ## 사용자의 설치·업데이트
 
 1. 게시된 버전의 지원 macOS·CPU를 확인하고 ZIP과 체크섬을 내려받는다.
-2. ZIP을 풀어 `DeepK.app`을 `/Applications`에 설치한다. 업데이트할 때는 기존 deepK를 종료한 뒤 앱을 교체한다.
+2. ZIP을 풀어 `deepK.app`을 `/Applications`에 설치한다. 이전 릴리스의 이름은 `DeepK.app`이었다. 업데이트할 때는 기존 deepK를 종료한 뒤 앱을 교체한다. 개발 앱은 `deepK Dev.app`이며 배포 앱의 권한과 설정을 공유하지 않는다.
 3. 번역할 제공자의 CLI를 설치하고 해당 Mac에서 구독 로그인한다. deepK 설정에서 제공자를 선택하고 연결을 확인한다. 다른 Mac의 토큰이나 개발 checkout의 CLI 경로를 복사하지 않는다.
 4. 입력 모니터링과 손쉬운 사용에 설치한 앱을 허용한다. 서명 방식이 바뀐 개발용 앱에서 이전할 때는 기존 권한 등록을 갱신해야 할 수 있다.
 5. 다른 앱에서 문장을 선택해 ⌘C 두 번으로 번역하고, 복사·복귀·명시적 삽입을 확인한다.
