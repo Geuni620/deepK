@@ -116,7 +116,7 @@ export const variants = [
     name: 'Playful Bear',
     hero: 'playful',
     theme: 'playful',
-    headline: ['모르는 문장? ⌘C ⌘C 하면', '곰이 읽어 줘요.'],
+    headline: ['모르는 문장? ⌘C ⌘C 하면', '쿼카가 읽어 줘요.'],
     description: '영어든 한국어든, 고른 문장만 작은 창에 번역해 주는 Mac 메뉴 막대 친구.',
     sections: ['promises', 'how', 'faq'],
   },
