@@ -10,7 +10,7 @@
 ./scripts/package-release.sh --local
 ```
 
-기본 후보 버전은 `0.1.0`, CPU는 `arm64`(Apple Silicon)다. `--version 0.1.0 --arch arm64`로 지정할 수 있다. Intel(`x86_64`)·Universal 옵션은 제공하지만 별도 실제 검증 전에는 지원 완료로 안내하지 않는다.
+기본 후보 버전은 `VERSION` 파일의 `0.1.1`, CPU는 `arm64`(Apple Silicon)다. `--version 0.1.1 --arch arm64`로 지정할 수 있다. Intel(`x86_64`)·Universal 옵션은 제공하지만 별도 실제 검증 전에는 지원 완료로 안내하지 않는다.
 
 Release 빌드 결과를 `dist/release/<버전>/<CPU>/<모드>/<커밋>/`에 패키징한다. ZIP, SHA-256 체크섬, 빌드 정보를 담은 manifest가 생성되며 기존 결과는 덮어쓰지 않는다. 로컬 패키지는 ad-hoc 임시 서명으로 구분한다. 기존 Debug 앱을 바꾸거나 실행 중인 deepK를 종료하지 않는다. 산출물 경로와 로컬 모드 표시는 스크립트 출력에서 확인한다.
 
