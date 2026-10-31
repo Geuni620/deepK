@@ -1,14 +1,17 @@
 ---
+import { useMessages, type Locale } from '../../i18n';
 interface Props {
   compact?: boolean;
+  locale?: Locale;
 }
-const { compact = false } = Astro.props;
+const { compact = false, locale = 'ko' } = Astro.props;
+const t = useMessages(locale).nav;
 ---
 
 <a
   href="#top"
   class="inline-flex shrink-0 items-center gap-2.5 font-bold tracking-tight"
-  aria-label="deepK 처음으로"
+  aria-label={t.brand}
 >
   <img
     src="/brand/deepk-icon.png"

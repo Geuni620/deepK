@@ -6,99 +6,93 @@ import HowItWorks from './sections/HowItWorks.astro';
 import Subscription from './sections/Subscription.astro';
 import Faq from './sections/Faq.astro';
 import InstallOptions from './shared/InstallOptions.astro';
+import AnimatedTranslationWindow from './shared/AnimatedTranslationWindow.astro';
 import { getVariant, selectedVariantId } from '../data/variants';
 import { release } from '../data/release';
+import { routes, useMessages, type Locale } from '../i18n';
+interface Props {
+  locale?: Locale;
+}
+const { locale = 'ko' } = Astro.props;
+const t = useMessages(locale);
+const otherLocale: Locale = locale === 'ko' ? 'en' : 'ko';
 const variant = getVariant(selectedVariantId);
 ---
 
 <div class="bg-accent">
   <SiteNav
     playful
+    locale={locale}
+    alternate={{ href: routes.home[otherLocale], locale: otherLocale }}
     links={[
-      { href: '#how', label: '사용법' },
-      { href: '#subscription', label: '쓰던 구독으로' },
-      { href: '#faq', label: '궁금한 점' },
+      { href: '#how', label: t.nav.how },
+      { href: '#subscription', label: t.nav.subscription },
+      { href: '#faq', label: t.nav.faq },
     ]}
   />
 </div>
 <main id="main-content">
-  <PlayfulHero variant={variant} production />
-  <PromisesSection />
-  <HowItWorks />
+  <PlayfulHero variant={variant} production locale={locale} />
+  <PromisesSection locale={locale} />
+  <HowItWorks locale={locale} />
   <section id="app" class="border-t border-line bg-tint px-6 py-20 md:py-28">
     <div class="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[.8fr_1.2fr] lg:gap-20">
       <div>
-        <p class="font-mono text-xs text-muted">작은 창, 이어지는 생각</p>
+        <p class="font-mono text-xs text-muted">{t.app.eyebrow}</p>
         <h2 class="mt-5 font-playful text-3xl leading-[1.4] tracking-tight md:text-4xl">
-          번역은 잠깐,
+          {t.app.title[0]}
           <br />
-          하던 일은 그대로.
+          {t.app.title[1]}
         </h2>
-        <p class="mt-6 max-w-md text-sm leading-8 text-muted">
-          읽던 문장을 작은 창에서 확인하세요. 번역문을 복사하거나, 직접 선택해 원래 입력 위치에 넣을
-          수 있어요.
-        </p>
+        <p class="mt-6 max-w-md text-sm leading-8 text-muted">{t.app.body}</p>
         <a
-          href="/guide/"
+          href={routes.guide[locale]}
           class="mt-6 inline-flex min-h-11 items-center gap-3 font-semibold underline underline-offset-4"
         >
-          처음 설치하는 분을 위한 안내 <span aria-hidden="true">↗</span>
+          {t.app.guideLink} <span aria-hidden="true">↗</span>
         </a>
       </div>
-      <figure>
-        <img
-          src="/screenshots/translation-result.png"
-          alt="deepK 앱에서 영문 원문 아래에 한국어 번역을 표시하고 복사하는 화면"
-          width="840"
-          height="584"
-          loading="lazy"
-          decoding="async"
-          class="w-full rounded-[24px] border-2 border-ink bg-white shadow-[5px_6px_0_#302a20]"
-        />
-        <figcaption class="mt-5 text-center text-xs leading-6 text-muted">
-          실제 Mac 앱의 번역 화면 예시입니다.
-        </figcaption>
-      </figure>
+      <AnimatedTranslationWindow locale={locale} />
     </div>
   </section>
-  <Subscription />
+  <Subscription locale={locale} />
   <section id="install" class="scroll-mt-8 bg-accent px-6 py-20 md:py-28">
     <div class="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2 lg:gap-20">
       <div>
         <span class="inline-flex rounded-full border border-ink/20 px-3 py-1.5 font-mono text-[11px]">
-          v{release.version} · 초기 배포
+          {t.install.badge(release.version)}
         </span>
         <h2 class="mt-6 font-playful text-4xl leading-[1.3] tracking-tight md:text-5xl">
-          곰을 Mac으로
+          {t.install.title[0]}
           <br />
-          데려오세요.
+          {t.install.title[1]}
         </h2>
         <p class="mt-5 text-sm leading-8 text-muted">
-          Apple Silicon · macOS {release.minimumMacOS} 이상
+          {t.install.requirement(release.minimumMacOS)}
           <br />
-          Developer ID 서명과 Apple 공증을 거친 앱입니다.
+          {t.install.notarized}
         </p>
       </div>
       <div class="rounded-[28px] border-2 border-ink bg-page p-6 shadow-[5px_6px_0_#302a20] md:p-8">
-        <InstallOptions />
+        <InstallOptions locale={locale} />
       </div>
     </div>
   </section>
-  <Faq tone="playful" />
+  <Faq tone="playful" locale={locale} />
 </main>
 <footer class="border-t border-line px-6 py-8">
   <div class="mx-auto flex max-w-6xl flex-col justify-between gap-6 text-xs leading-7 text-muted sm:flex-row sm:items-center">
     <a href="#top" class="text-base font-bold text-ink">
       deepK <span class="ml-2 text-xs font-normal text-muted">© 2026</span>
     </a>
-    <nav aria-label="추가 안내" class="flex flex-wrap gap-x-6 gap-y-2">
-      <a href="/guide/">설치 안내</a>
-      <a href="/privacy/">개인정보 안내</a>
+    <nav aria-label={t.layout.footerNav} class="flex flex-wrap gap-x-6 gap-y-2">
+      <a href={routes.guide[locale]}>{t.footer.guide}</a>
+      <a href={routes.privacy[locale]}>{t.footer.privacy}</a>
       <a href={release.notesUrl} target="_blank" rel="noopener noreferrer">
-        릴리스 노트 ↗
+        {t.footer.notes}
       </a>
       <a href={`${release.repositoryUrl}/issues`} target="_blank" rel="noopener noreferrer">
-        문제 제보 ↗
+        {t.footer.issues}
       </a>
     </nav>
   </div>

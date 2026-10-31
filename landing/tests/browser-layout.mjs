@@ -8,7 +8,16 @@ async function browser_layout(page) {
   const results = [];
   for (const width of [1440, 768, 390]) {
     await page.setViewportSize({ width, height: 900 });
-    for (const path of ['/', '/designs/', '/guide/', '/privacy/', ...paths]) {
+    for (const path of [
+      '/',
+      '/en/',
+      '/designs/',
+      '/guide/',
+      '/en/guide/',
+      '/privacy/',
+      '/en/privacy/',
+      ...paths,
+    ]) {
       const response = await page.goto(origin + path);
       if (response.status() !== 200) throw new Error(path + ': HTTP ' + response.status());
       const result = await page.evaluate(() => ({

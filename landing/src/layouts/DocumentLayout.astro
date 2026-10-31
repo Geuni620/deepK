@@ -1,24 +1,48 @@
 ---
 import PageLayout from './PageLayout.astro';
+import { routes, useMessages, type Locale, type RouteName } from '../i18n';
 interface Props {
   title: string;
   description: string;
+  locale?: Locale;
+  route: RouteName;
 }
-const { title, description } = Astro.props;
+const { title, description, locale = 'ko', route } = Astro.props;
+const t = useMessages(locale);
+const otherLocale: Locale = locale === 'ko' ? 'en' : 'ko';
+const other = useMessages(otherLocale);
+const home = routes.home[locale];
 ---
 
-<PageLayout title={title} description={description} indexable>
+<PageLayout
+  title={title}
+  description={description}
+  indexable
+  locale={locale}
+  alternates={routes[route]}
+>
   <header
     id="top"
     class="mx-auto flex max-w-4xl items-center justify-between gap-6 border-b border-line px-6 py-6"
   >
-    <a href="/" class="inline-flex items-center gap-3 text-xl font-bold">
+    <a href={home} class="inline-flex items-center gap-3 text-xl font-bold">
       <img src="/brand/deepk-icon.png" alt="" width="34" height="34" class="rounded-xl" />
       deepK
     </a>
-    <a href="/" class="inline-flex min-h-11 items-center text-xs text-muted">
-      ← 메인으로
-    </a>
+    <div class="flex items-center gap-5">
+      <a
+        href={routes[route][otherLocale]}
+        hreflang={other.htmlLang}
+        lang={other.htmlLang}
+        aria-label={`${t.layout.switchLanguage}: ${other.languageName}`}
+        class="inline-flex min-h-11 items-center text-xs font-semibold text-muted hover:text-ink"
+      >
+        {other.languageName}
+      </a>
+      <a href={home} class="inline-flex min-h-11 items-center text-xs text-muted">
+        {t.layout.backToMain}
+      </a>
+    </div>
   </header>
   <main id="main-content" class="mx-auto max-w-3xl px-6 py-16 md:py-24">
     <h1 class="text-4xl leading-[1.35] font-bold tracking-tight md:text-5xl">{title}</h1>
@@ -28,10 +52,10 @@ const { title, description } = Astro.props;
     </div>
   </main>
   <footer class="mx-auto flex max-w-4xl flex-wrap justify-between gap-4 border-t border-line px-6 py-8 text-xs leading-7 text-muted">
-    <a href="/">© 2026 deepK</a>
-    <nav aria-label="추가 안내" class="flex gap-6">
-      <a href="/guide/">설치 안내</a>
-      <a href="/privacy/">개인정보 안내</a>
+    <a href={home}>© 2026 deepK</a>
+    <nav aria-label={t.layout.footerNav} class="flex gap-6">
+      <a href={routes.guide[locale]}>{t.footer.guide}</a>
+      <a href={routes.privacy[locale]}>{t.footer.privacy}</a>
     </nav>
   </footer>
 </PageLayout>

@@ -2,12 +2,15 @@
 import '../styles/global.css';
 import InstallDialog from '../components/shared/InstallDialog.astro';
 import type { Theme } from '../data/variants';
+import { defaultLocale, locales, useMessages, type Locale } from '../i18n';
 interface Props {
   title: string;
   theme?: Theme;
   previewName?: string;
   description?: string;
   indexable?: boolean;
+  locale?: Locale;
+  alternates?: Record<Locale, string>;
 }
 const {
   title,
@@ -15,32 +18,48 @@ const {
   previewName,
   description = 'deepK 랜딩페이지의 디자인과 예시 사용 흐름을 비교하는 화면입니다.',
   indexable = false,
+  locale = defaultLocale,
+  alternates,
 } = Astro.props;
+const t = useMessages(locale);
+const alternateLinks =
+  indexable && alternates && Astro.site
+    ? [
+        ...locales.map((code) => ({
+          hreflang: useMessages(code).htmlLang,
+          href: new URL(alternates[code], Astro.site),
+        })),
+        { hreflang: 'x-default', href: new URL(alternates[defaultLocale], Astro.site) },
+      ]
+    : [];
 const canonical = indexable && Astro.site ? new URL(Astro.url.pathname, Astro.site) : undefined;
 const socialImage = Astro.site ? new URL('/brand/deepk-icon.png', Astro.site) : undefined;
 ---
 
 <!doctype html>
-<html lang="ko">
+<html lang={t.htmlLang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="robots" content={indexable ? 'index,follow' : 'noindex,nofollow'} />
     <meta name="description" content={description} />
     <meta property="og:type" content="website" />
-    <meta property="og:locale" content="ko_KR" />
+    <meta property="og:locale" content={t.ogLocale} />
     <meta property="og:site_name" content="deepK" />
     <meta property="og:title" content={`${title} · deepK`} />
     <meta property="og:description" content={description} />
     {canonical && <link rel="canonical" href={canonical} />}
     {canonical && <meta property="og:url" content={canonical} />}
+    {alternateLinks.map((link) => (
+      <link rel="alternate" hreflang={link.hreflang} href={link.href} />
+    ))}
     {socialImage && <meta property="og:image" content={socialImage} />}
     <meta name="twitter:card" content="summary" />
     <link rel="icon" href="/brand/deepk-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Noto+Serif+KR:wght@400;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Noto+Serif+KR:wght@400;600;700&display=block"
       rel="stylesheet"
     />
     <title>{title} · deepK</title>
@@ -56,7 +75,7 @@ const socialImage = Astro.site ? new URL('/brand/deepk-icon.png', Astro.site) : 
         href="#main-content"
         class="sr-only z-50 rounded-lg bg-ink px-5 py-3 text-page focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
       >
-        본문으로 바로가기
+        {t.layout.skipLink}
       </a>
     )}
     {previewName && (
@@ -71,7 +90,7 @@ const socialImage = Astro.site ? new URL('/brand/deepk-icon.png', Astro.site) : 
       </div>
     )}
     <slot />
-    <InstallDialog />
+    <InstallDialog locale={locale} />
     <script>
       import '../scripts/preview-actions';
     </script>

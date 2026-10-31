@@ -1,11 +1,21 @@
 ---
 import Brand from './Brand.astro';
 import PrimaryAction from './PrimaryAction.astro';
+import { useMessages, type Locale } from '../../i18n';
 interface Props {
   playful?: boolean;
   links?: { href: string; label: string }[];
+  locale?: Locale;
+  alternate?: { href: string; locale: Locale };
 }
-const { playful = false, links = [{ href: '#demo', label: '직접 체험' }] } = Astro.props;
+const {
+  playful = false,
+  links = [{ href: '#demo', label: '직접 체험' }],
+  locale = 'ko',
+  alternate,
+} = Astro.props;
+const t = useMessages(locale);
+const alternateMessages = alternate && useMessages(alternate.locale);
 ---
 
 <header
@@ -15,13 +25,26 @@ const { playful = false, links = [{ href: '#demo', label: '직접 체험' }] } =
     playful && 'bg-accent',
   ]}
 >
-  <Brand />
-  <nav aria-label="페이지 탐색" class="hidden items-center gap-7 text-sm text-muted md:flex">
+  <Brand locale={locale} />
+  <nav aria-label={t.nav.label} class="hidden items-center gap-7 text-sm text-muted md:flex">
     {links.map((link) => (
       <a href={link.href} class="hover:text-ink">
         {link.label}
       </a>
     ))}
   </nav>
-  <PrimaryAction label="Mac용 받기" dark />
+  <div class="flex items-center gap-4 sm:gap-6">
+    {alternate && alternateMessages && (
+      <a
+        href={alternate.href}
+        hreflang={alternateMessages.htmlLang}
+        lang={alternateMessages.htmlLang}
+        aria-label={`${t.layout.switchLanguage}: ${alternateMessages.languageName}`}
+        class="inline-flex min-h-11 items-center text-sm font-semibold text-muted hover:text-ink"
+      >
+        {alternateMessages.languageName}
+      </a>
+    )}
+    <PrimaryAction label={t.nav.getMac} dark locale={locale} />
+  </div>
 </header>

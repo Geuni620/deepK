@@ -3,13 +3,14 @@ import type { Variant } from '../../data/variants';
 interface Props {
   variant: Variant;
   align?: 'center' | 'left';
+  badge?: string;
 }
-const { variant, align = 'center' } = Astro.props;
+const { variant, align = 'center', badge = '⌘ macOS 메뉴 막대 번역기' } = Astro.props;
 ---
 
 <div class:list={[align === 'center' ? 'mx-auto max-w-5xl text-center' : 'max-w-3xl']}>
   <p class="mb-6 inline-flex rounded-full bg-tint px-4 py-2 font-mono text-[11px] font-semibold tracking-wide">
-    ⌘ macOS 메뉴 막대 번역기
+    {badge}
   </p>
   <h1
     class:list={[
