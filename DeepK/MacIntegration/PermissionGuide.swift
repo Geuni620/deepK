@@ -44,14 +44,14 @@ final class PermissionGuideController {
     private var kind: PermissionGuideKind?
     private var onGranted: ((PermissionGuideKind) -> Void)?
     private var startedAt = Date.distantPast
-    private var sawSettingsWindow = false
+    private var lifecycle = PermissionGuideLifecycle()
 
     func present(_ kind: PermissionGuideKind, onGranted: @escaping (PermissionGuideKind) -> Void) {
         dismiss()
         self.kind = kind
         self.onGranted = onGranted
         startedAt = Date()
-        sawSettingsWindow = false
+        lifecycle = PermissionGuideLifecycle()
         panel = makePanel(for: kind)
         NSWorkspace.shared.open(kind.settingsURL)
         timer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { [weak self] _ in
@@ -76,18 +76,22 @@ final class PermissionGuideController {
             callback?(kind)
             return
         }
-        guard NSRunningApplication.runningApplications(withBundleIdentifier: Self.settingsBundleIdentifier).first != nil
-        else {
-            if sawSettingsWindow || Date().timeIntervalSince(startedAt) > Self.settingsAppearTimeout { dismiss() }
+        let settings = Self.settingsWindowFrames()
+        switch lifecycle.update(
+            hasSettingsWindow: settings.exists,
+            isSettingsWindowVisible: settings.visibleFrame != nil,
+            waitExpired: Date().timeIntervalSince(startedAt) > Self.settingsAppearTimeout
+        ) {
+        case .dismiss:
+            dismiss()
             return
-        }
-        guard let settingsFrame = Self.frontmostSettingsWindowFrame() else {
-            // 다른 앱으로 옮겨 가면 안내만 숨기고, 설정으로 돌아오면 다시 보인다.
+        case .hide:
             panel.orderOut(nil)
-            if !sawSettingsWindow, Date().timeIntervalSince(startedAt) > Self.settingsAppearTimeout { dismiss() }
             return
+        case .show:
+            break
         }
-        sawSettingsWindow = true
+        guard let settingsFrame = settings.visibleFrame else { return }
         let center = CGPoint(x: settingsFrame.midX, y: settingsFrame.midY)
         let screen = NSScreen.screens.first { $0.frame.contains(center) } ?? NSScreen.main
         let target = PermissionGuideLayout.panelFrame(
@@ -99,24 +103,27 @@ final class PermissionGuideController {
         if !panel.isVisible { panel.orderFrontRegardless() }
     }
 
-    /// 앞에 있는 시스템 설정 창의 AppKit 좌표. 창 경계는 화면 기록 권한 없이 조회된다.
-    private static func frontmostSettingsWindowFrame() -> CGRect? {
-        guard let app = NSWorkspace.shared.frontmostApplication,
-              app.bundleIdentifier == settingsBundleIdentifier,
-              let info = CGWindowListCopyWindowInfo([.optionOnScreenOnly, .excludeDesktopElements], kCGNullWindowID)
-                as? [[String: Any]],
-              let primaryScreen = NSScreen.screens.first
-        else { return nil }
-        let windows = info.compactMap { window -> (layer: Int, bounds: CGRect)? in
+    /// 모든 설정 창의 존재와, 지금 안내를 붙일 수 있는 앞쪽 창을 구분한다.
+    /// 최소화·다른 앱/Space로 이동은 숨김이며 실제 창 닫기는 안내 종료다.
+    private static func settingsWindowFrames() -> (exists: Bool, visibleFrame: CGRect?) {
+        guard let app = NSRunningApplication.runningApplications(withBundleIdentifier: settingsBundleIdentifier).first,
+              let info = CGWindowListCopyWindowInfo([.excludeDesktopElements], kCGNullWindowID) as? [[String: Any]]
+        else { return (false, nil) }
+        let windows = info.compactMap { window -> (layer: Int, bounds: CGRect, onscreen: Bool)? in
             guard (window[kCGWindowOwnerPID as String] as? pid_t) == app.processIdentifier,
                   let layer = window[kCGWindowLayer as String] as? Int,
                   let boundsDictionary = window[kCGWindowBounds as String] as? NSDictionary,
                   let bounds = CGRect(dictionaryRepresentation: boundsDictionary as CFDictionary)
             else { return nil }
-            return (layer, bounds)
+            return (layer, bounds, window[kCGWindowIsOnscreen as String] as? Bool ?? false)
         }
-        guard let bounds = PermissionGuideLayout.mainWindowBounds(windows) else { return nil }
-        return PermissionGuideLayout.appKitFrame(fromWindowBounds: bounds, primaryScreenHeight: primaryScreen.frame.height)
+        guard PermissionGuideLayout.mainWindowBounds(windows.map { ($0.layer, $0.bounds) }) != nil
+        else { return (false, nil) }
+        guard NSWorkspace.shared.frontmostApplication?.processIdentifier == app.processIdentifier,
+              let bounds = PermissionGuideLayout.mainWindowBounds(windows.filter(\.onscreen).map { ($0.layer, $0.bounds) }),
+              let primaryScreen = NSScreen.screens.first
+        else { return (true, nil) }
+        return (true, PermissionGuideLayout.appKitFrame(fromWindowBounds: bounds, primaryScreenHeight: primaryScreen.frame.height))
     }
 
     private func makePanel(for kind: PermissionGuideKind) -> NSPanel {
