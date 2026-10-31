@@ -100,11 +100,13 @@ Codex CLI 0.155.0 이상이 필요하다. `npm install -g @openai/codex`, `brew 
 
 Codex 업데이트로 번역이 깨지면 검증된 버전을 직접 지정해 되돌린다. 경로는 새 app-server를 띄울 때 읽으므로 앱을 재실행할 필요는 없다. 이미 연결된 상태라면 설정에서 '연결 해제 → 연결 확인'으로 새 프로세스를 띄워야 다시 탐색한다.
 
+아래 `defaults` 예시는 개발 앱 `deepK Dev`용(`com.deepk.app.dev`)이다. 설치된 배포 앱 `deepK`의 설정을 바꾸려는 경우에만 도메인을 `com.deepk.app`으로 지정한다. 이 문서의 나머지 `defaults` 예시도 같은 기준이다.
+
 ```sh
 # 지정
-defaults write com.deepk.app codexExecutablePath -string "$HOME/.nvm/versions/node/v24.18.0/bin/codex"
+defaults write com.deepk.app.dev codexExecutablePath -string "$HOME/.nvm/versions/node/v24.18.0/bin/codex"
 # 해제(자동 탐색으로 복귀)
-defaults delete com.deepk.app codexExecutablePath
+defaults delete com.deepk.app.dev codexExecutablePath
 ```
 
 ## Claude Code 준비
@@ -121,7 +123,7 @@ CLI 파일도 `.build/claude-runtime/<앱 식별자>/`에 따로 설치한다. �
 
 이 스크립트는 `.build/claude-runtime`에 CLI 2.1.278을 설치하고 deepK의 실행 파일 경로만 저장한다. 스크립트를 실행하지 않았다면 deepK는 `CLAUDE_EXECUTABLE`·`CLAUDE_CLI_PATH`, `~/.local/bin/claude`(자동 업데이트되는 전역 CLI), `~/.npm-global/bin/claude`, `/opt/homebrew/bin/claude`, `/usr/local/bin/claude`, `/usr/bin/claude`, PATH 순서로 찾아 처음 실행할 수 있는 CLI를 사용한다. deepK를 다시 실행한 뒤 설정에서 Claude Code를 선택한다. 기존 Claude 구독 로그인은 공식 CLI가 관리하며 `auth status`로 claude.ai 구독 인증을 확인한다. 번역 창을 쓰는 동안(최근 30분 활동)은 약 25초마다 백그라운드에서 다시 확인하고, 30초 안에 시작해 성공한 확인이 있을 때만 요청한다. 매 번역에서 CLI가 보고한 인증 출처도 구독인지 확인하며 다르면 즉시 중단하고 다시 확인한다. API 계정이나 인증 불명 상태에서는 요청하지 않는다. 로그인되지 않았다면 앱 전용 CLI 경로로 `auth login`을 실행한다. 토큰을 직접 복사할 필요는 없다.
 
-번역마다 CLI를 새로 띄우지 않도록 stream-json 모드의 Claude Code 프로세스 하나를 미리 띄워 두고 한 번만 쓴 뒤 교체한다. 약 250MB를 쓰며 최근 30분 동안 번역 창을 쓰지 않았거나 10분이 지나면 정리하고, 제공자 변경·연결 해제·잠자기·종료 때도 정리한다. 번역문은 도착하는 대로 화면에 이어서 표시한다. 같은 모델·프롬프트를 쓰고 번역마다 새 프로세스라 이전 번역이 문맥에 섞이지 않는다. 문제가 있으면 `defaults write com.deepk.app claudeTransport oneShotJSON` 후 재실행해 기존 방식(매 번역 auth status + 단발 실행)으로 되돌린다.
+번역마다 CLI를 새로 띄우지 않도록 stream-json 모드의 Claude Code 프로세스 하나를 미리 띄워 두고 한 번만 쓴 뒤 교체한다. 약 250MB를 쓰며 최근 30분 동안 번역 창을 쓰지 않았거나 10분이 지나면 정리하고, 제공자 변경·연결 해제·잠자기·종료 때도 정리한다. 번역문은 도착하는 대로 화면에 이어서 표시한다. 같은 모델·프롬프트를 쓰고 번역마다 새 프로세스라 이전 번역이 문맥에 섞이지 않는다. 문제가 있으면 `defaults write com.deepk.app.dev claudeTransport oneShotJSON` 후 재실행해 기존 방식(매 번역 auth status + 단발 실행)으로 되돌린다.
 
 2026-10-03 같은 세션 교차 측정(Haiku 4.5, CLI 2.1.287, 10개 표본 × 3회)에서 기존 방식은 단문 p50 약 2.3–2.7초, 문단 2.5–2.7초, 긴 글 3.7–4.7초였다. 미리 띄운 프로세스는 단문 약 0.8–1.1초, 문단 1.0–1.3초, 긴 글 2.0–3.5초였고 첫 글자는 약 0.6–0.8초에 표시됐다. 차이는 CLI 기동·종료 비용(번역당 약 1.5초 → 약 0.04초)이며 출력 품질은 같은 기준으로 차이가 없었다. 단문 기준으로 90초·300초 쉰 뒤에도 약 0.9–1.1초였고, 직전 번역 직후 연속 요청(교체 프로세스 기동 중)은 약 1.4–1.8초, 대기 프로세스 없이 매번 띄우는 경우도 약 1.3–1.7초였다. 엔진 단독 측정이며 앱 전체 지연과 1초 목표 달성은 별도로 확인한다. [Claude 비교 결과](../benchmarks/runs/20261003-haiku-warm-spare-ab.json), [사용 패턴별 결과](../benchmarks/runs/20261003-haiku-warm-spare-usage.json). 현재 기본값 Haiku 5.5의 대기 프로세스 지연(2026-10-08, CLI 2.1.293, 20개 표본, 프롬프트 보강 후 p50 약 0.86초, p90 약 1.32초)은 [비교 결과](../benchmarks/haiku-45-vs-55-summary.md)를 따른다.
 
@@ -195,7 +197,7 @@ Debug 빌드는 `deepK Dev`(`com.deepk.app.dev`), 배포용 Release는 `deepK`(`
 
 ## 번역 결과 검사
 
-모델이 원문을 그대로 돌려주면 한 번 다시 요청한다. 스트리밍 중에 알아차리면 남은 응답을 기다리지 않고 바로 끊는다. 다시 요청한 답도 원문 그대로면 경고와 함께 보여 주고 캐시하지 않는다. 한국어 결과에 섞인 한자는 한글 독음으로 바꾼다(确保 → 확보). 문제가 있으면 `defaults write com.deepk.app outputEchoRetry -bool false`(다시 요청 끔)나 `outputHanjaRepair -bool false`(한자 치환 끔) 후 재실행한다. 판정 기준과 로그 형식은 [실행 중 번역 결과 검사](../plans/runtime-output-check.md)에 있다.
+모델이 원문을 그대로 돌려주면 한 번 다시 요청한다. 스트리밍 중에 알아차리면 남은 응답을 기다리지 않고 바로 끊는다. 다시 요청한 답도 원문 그대로면 경고와 함께 보여 주고 캐시하지 않는다. 한국어 결과에 섞인 한자는 한글 독음으로 바꾼다(确保 → 확보). 문제가 있으면 `defaults write com.deepk.app.dev outputEchoRetry -bool false`(다시 요청 끔)나 `outputHanjaRepair -bool false`(한자 치환 끔) 후 재실행한다. 판정 기준과 로그 형식은 [실행 중 번역 결과 검사](../plans/runtime-output-check.md)에 있다.
 
 
 ## 베타 버전 식별
