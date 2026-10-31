@@ -1,13 +1,17 @@
 ---
 import PageLayout from '../layouts/PageLayout.astro';
 import ProductLanding from '../components/ProductLanding.astro';
+import { routes, useMessages } from '../i18n';
+const t = useMessages('ko');
 ---
 
 <PageLayout
-  title="복사 두 번으로 이어가는 Mac 번역"
-  description="읽던 문장을 선택하고 ⌘C를 두 번. deepK는 기존 AI 구독으로 한국어와 영어를 번역하는 Mac 메뉴 막대 앱입니다. Homebrew 또는 공증된 ZIP으로 설치하세요."
+  title={t.meta.homeTitle}
+  description={t.meta.homeDescription}
   theme="playful"
   indexable
+  locale="ko"
+  alternates={routes.home}
 >
-  <ProductLanding />
+  <ProductLanding locale="ko" />
 </PageLayout>

@@ -2,6 +2,8 @@
 set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+python3 "$SCRIPT_DIR/test-build-identity.py"
+python3 "$SCRIPT_DIR/test-setup-claude.py"
 bash "$SCRIPT_DIR/test-format-regressions.sh"
 TEST_DIR="$(mktemp -d /private/tmp/deepk-unit-test.XXXXXX)"
 # 결과 창을 컴파일하는 대상은 모두 이 파일들을 함께 쓴다.
@@ -207,6 +209,16 @@ swiftc -swift-version 6 -warnings-as-errors -module-cache-path "$TEST_DIR/cache"
   "$PROJECT_ROOT/DeepK/MacIntegration/WindowPresentation.swift" \
   "$PROJECT_ROOT/DeepKTests/WindowPresentationTests.swift" -o "$TEST_DIR/WindowPresentation"
 "$TEST_DIR/WindowPresentation"
+
+swiftc -swift-version 6 -warnings-as-errors -module-cache-path "$TEST_DIR/cache" \
+  "$PROJECT_ROOT/DeepK/MacIntegration/PermissionGuideLayout.swift" \
+  "$PROJECT_ROOT/DeepKTests/PermissionGuideLayoutTests.swift" -o "$TEST_DIR/PermissionGuideLayout"
+"$TEST_DIR/PermissionGuideLayout"
+
+swiftc -swift-version 6 -warnings-as-errors -module-cache-path "$TEST_DIR/cache" \
+  "$PROJECT_ROOT/DeepK/MacIntegration/PermissionGuideLifecycle.swift" \
+  "$PROJECT_ROOT/DeepKTests/PermissionGuideLifecycleTests.swift" -o "$TEST_DIR/PermissionGuideLifecycle"
+"$TEST_DIR/PermissionGuideLifecycle"
 
 swiftc -swift-version 6 -warnings-as-errors -module-cache-path "$TEST_DIR/cache" \
   "$PROJECT_ROOT/DeepK/Settings/LoginItemController.swift" \

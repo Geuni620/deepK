@@ -32,7 +32,7 @@ brew install --cask Geuni620/tap/deepk
 
 **Direct download**
 
-Download `deepK-distribution-*.zip` from the [latest release](https://github.com/Geuni620/deepK/releases/latest), unzip it, and move `DeepK.app` to your Applications folder. The app is signed with a Developer ID and notarized by Apple. Each release includes a `.sha256` file you can use to verify the download.
+Download `deepK-distribution-*.zip` from the [latest release](https://github.com/Geuni620/deepK/releases/latest), unzip it, and move `deepK.app` to your Applications folder. The app is signed with a Developer ID and notarized by Apple. Each release includes a `.sha256` file you can use to verify the download.
 
 ```sh
 shasum -a 256 deepK-distribution-*.zip
@@ -43,12 +43,12 @@ After installing, install [Codex CLI](docs/development.md#codex-cli-준비) or [
 **Update and uninstall**
 
 - Homebrew: quit the app, then run `brew update && brew upgrade --cask Geuni620/tap/deepk`
-- Direct download: replace the app with `DeepK.app` from the new release
-- Uninstall: `brew uninstall --cask Geuni620/tap/deepk`, or delete `DeepK.app` from Applications
+- Direct download: replace the app from the new release. Starting with 0.1.1 the app is named `deepK.app`; do not run it alongside the older `DeepK.app`.
+- Uninstall: `brew uninstall --cask Geuni620/tap/deepk`, or delete `deepK.app` (formerly `DeepK.app`) from Applications
 
 ## Status
 
-deepK is in its first public release. Translation speed depends on the provider, model, and input.
+deepK is in an early release stage. Translation speed depends on the provider, model, and input.
 
 - Text input with automatic translation, automatic or manual language direction
 - Results that keep code blocks, inline code, and links, with copy
@@ -57,21 +57,21 @@ deepK is in its first public release. Translation speed depends on the provider,
 
 ## First run
 
-deepK lives only in the menu bar. Launching it does not show a Dock icon or a window; it only adds an icon to the menu bar at the top right of the screen.
+deepK lives in the menu bar. Launching it does not add a Dock icon; it adds an icon to the menu bar at the top right of the screen. On first launch, if the shortcut permission is not ready yet, the Settings window opens once.
 
-1. Open deepK from Applications, or run `open /Applications/DeepK.app` in Terminal, then find the deepK icon in the menu bar.
+1. Open deepK from Applications, or run `open /Applications/deepK.app` in Terminal, then find the deepK icon in the menu bar.
 2. Open Settings from the menu bar, choose Codex or Claude Code, and check the connection.
-3. Allow Input Monitoring in macOS System Settings. Inserting back into the original app also needs Accessibility permission. If it still does not work after you allow a permission, quit deepK and launch it again.
+3. In Settings → General → Permissions, click “설정 열기…” (Open Settings…) for Input Monitoring. Drag the deepK icon from the guide window that opens into the System Settings list and turn on the switch. Allow Accessibility, which is needed to insert back into the original app, the same way.
 4. Select text in another app and press ⌘C twice. You can also type text directly.
 5. Review the translation, then copy or insert it. Quit from the menu or with ⌘Q.
 
-Double-copy translation is on by default in a new install and can be turned off in Settings. If the app path changes because of a new checkout or signing method, you may need to grant macOS permissions again.
+Double-copy translation is on by default in a new install and can be turned off in Settings. If monitoring is still not connected after you allow the permission, use “감시 다시 연결” (Reconnect monitoring) or “앱 다시 열기…” (Reopen app…) under Settings → General → Permissions. Source builds appear as `deepK Dev`, with macOS permissions and app preferences separate from the installed deepK.
 
 **If nothing appears after launch**
 
 - With many menu bar icons, the deepK icon can be hidden behind the notch or other icons. Hide or rearrange some menu bar icons and look again.
-- A deepK built from source and the released app share the bundle ID `com.deepk.app`. If another copy is already running, `open -a DeepK` only activates that copy instead of launching the new one. Check which path is running with `pgrep -fl DeepK`, quit the other copy from its menu, then run `open /Applications/DeepK.app` again.
-- macOS may register permissions separately for each copy of the app. If System Settings lists more than one deepK, turn on permissions for the copy you actually use.
+- If the older `DeepK.app` from a previous release is still installed, do not run it alongside the new `deepK.app`. Check which app is running with `pgrep -ifl deepk`, quit the old one from its menu, then delete it.
+- If System Settings lists more than one deepK, turn on permissions for `/Applications/deepK.app`, the one you actually use. The development app appears separately as `deepK Dev`.
 
 ## What is sent, and security limits
 
@@ -94,7 +94,7 @@ cd deepK
 ./scripts/build-and-run.sh
 ```
 
-The script quits any running deepK, then builds, signs, and launches it. This also quits the released deepK, which uses the same bundle ID. Any open translation is not preserved. To build only, use `./scripts/build.sh`.
+The script quits only a running `deepK Dev`, then builds, signs, and launches the development app. It leaves the installed deepK running. An open translation in the development app is not preserved. To build only, use `./scripts/build.sh`.
 
 - [Set up Codex CLI](docs/development.md#codex-cli-준비)
 - [Set up Claude Code](docs/development.md#claude-code-준비): the app's install script needs Node.js and npm.

@@ -5,6 +5,7 @@ import { release } from '../data/release';
 ---
 
 <DocumentLayout
+  route="guide"
   title="Mac에 deepK 설치하기"
   description="앱 설치부터 AI 계정 연결과 권한 설정까지. 처음 한 번 준비하면 읽던 문장에서 바로 번역을 시작할 수 있어요."
 >
@@ -18,7 +19,7 @@ import { release } from '../data/release';
       <InstallOptions guideLink={false} />
     </div>
     <p>
-      ZIP으로 받았다면 압축을 풀고 <code>DeepK.app</code>을 응용 프로그램 폴더로 옮깁니다. 공증된
+      ZIP으로 받았다면 압축을 풀고 <code>deepK.app</code>을 응용 프로그램 폴더로 옮깁니다. 공증된
       앱이므로 macOS 보안 설정을 끄거나 격리 속성을 지울 필요는 없습니다.
     </p>
   </section>
@@ -55,7 +56,11 @@ import { release } from '../data/release';
   </section>
   <section>
     <h2>3. macOS 권한을 허용하세요</h2>
-    <p>시스템 설정 → 개인정보 보호 및 보안에서 설치한 deepK의 권한을 확인합니다.</p>
+    <p>
+      deepK 설정 → 일반 → 권한에서 필요한 권한의 <strong>설정 열기…</strong>를 누르면 시스템 설정의
+      해당 화면과 안내 창이 함께 열립니다. 안내 창의 deepK 아이콘을 목록으로 끌어다 놓고 스위치를
+      켜세요. 목록에 이미 있으면 스위치만 켜면 됩니다.
+    </p>
     <ul>
       <li>
         <strong>입력 모니터링:</strong> ⌘C를 두 번 누르는 동작을 감지할 때 필요합니다.
@@ -65,15 +70,18 @@ import { release } from '../data/release';
       </li>
     </ul>
     <p>
-      개발용 앱을 쓰다가 배포본으로 바꾸면 기존 권한 등록을 갱신해야 할 수 있습니다. 권한을 바꾼 뒤
-      macOS가 다시 실행하라고 안내하면 앱을 종료하고 다시 엽니다.
+      허용한 뒤에도 ⌘C 두 번이 감지되지 않으면 같은 화면의 <strong>감시 다시 연결</strong>을
+      누르거나 <strong>앱 다시 열기…</strong>로 deepK를 다시 엽니다. 이전 개발용 앱에서 넘어왔는데
+      스위치가 켜져 있어도 준비되지 않으면, 설치한 deepK를 대상으로 권한 등록을 갱신해야 할 수
+      있습니다.
     </p>
   </section>
   <section>
     <h2>4. 문장을 고르고 ⌘C를 두 번</h2>
     <p>
       읽던 앱에서 문장을 선택하고 복사 단축키를 연달아 두 번 누릅니다. 작은 번역 창에서 결과를 읽고,
-      필요하면 복사하거나 원래 입력 위치에 삽입하세요. 직접 입력으로도 번역할 수 있습니다.
+      필요하면 복사하거나 원래 입력 위치에 삽입하세요. 직접 입력으로도 번역할 수 있습니다. 두 번
+      복사 자동 번역은 처음부터 켜져 있으며 설정에서 끌 수 있습니다.
     </p>
   </section>
   <section>
@@ -89,13 +97,18 @@ brew upgrade --cask Geuni620/tap/deepk</code></pre>
       유지됩니다.
     </p>
     <pre><code>brew uninstall --cask Geuni620/tap/deepk</code></pre>
-    <p>ZIP으로 설치했다면 응용 프로그램 폴더에서 앱을 교체하거나 삭제하면 됩니다.</p>
+    <p>
+      ZIP으로 설치했다면 응용 프로그램 폴더에서 앱을 교체하거나 삭제하면 됩니다. 0.1.1부터 앱 이름이{' '}
+      <code>deepK.app</code>입니다. 이전 릴리스의 <code>DeepK.app</code>이 남아 있으면 함께 실행하지
+      말고 삭제하세요.
+    </p>
   </section>
   <section>
     <h2>현재 배포본에 대해</h2>
     <p>
-      0.1.0은 초기 배포본입니다. 서명·Apple 공증과 Homebrew 설치를 확인했으며, 다른 Mac에서의 전체
-      사용 흐름과 새 버전으로의 업데이트 검증은 아직 남아 있습니다.
+      {release.version}은 개발·배포 앱의 권한을 분리하고 앱 이름과 감시 재연결을 정비한
+      업데이트입니다. 서명·Apple 공증과 이 Mac에서의 업데이트 후 입력 모니터링 유지를 확인했습니다.
+      다른 Mac에서의 전체 사용 흐름과 이 버전의 실제 키보드 호출·삽입 검증은 아직 남아 있습니다.
     </p>
     <p>
       <a href={release.notesUrl} target="_blank" rel="noopener noreferrer">

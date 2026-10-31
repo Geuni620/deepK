@@ -19,11 +19,15 @@ struct FinalSettingsView: View {
         }
     }
 
-    @State private var app = AppModel.shared
+    @State private var app: AppModel
     @State private var tab: Tab = .general
     @State private var showPermissions = false
     @State private var confirmCodexLogout = false
     @State private var installInstructionsProvider: TranslationProvider?
+
+    init(app: AppModel = .shared) {
+        _app = State(initialValue: app)
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -152,7 +156,7 @@ struct FinalSettingsView: View {
 
             permissionRow
                 .popover(isPresented: $showPermissions, arrowEdge: .trailing) {
-                    permissionPopover
+                    permissionPopover.onAppear { refreshPermissionStatus() }
                 }
 
             Divider().padding(.horizontal, 20)
@@ -199,7 +203,7 @@ struct FinalSettingsView: View {
         .accessibilityLabel("권한 \(permissionSummary.title)")
     }
 
-    private var permissionPopover: some View {
+    var permissionPopover: some View {
         VStack(alignment: .leading, spacing: 0) {
             Text("권한")
                 .font(.system(size: 13, weight: .semibold))
@@ -219,12 +223,34 @@ struct FinalSettingsView: View {
                 settingsAction: accessibilitySettingsAction
             )
 
+            if app.canReconnectShortcut {
+                Divider()
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("입력 감시 연결 안 됨")
+                        .font(.system(size: 11, weight: .medium))
+                    HStack {
+                        Button("감시 다시 연결", action: app.reconnectShortcut)
+                        Button("앱 다시 열기…", action: app.confirmShortcutRelaunch)
+                    }
+                    .controlSize(.small)
+                }
+                .padding(.top, 10)
+            }
+
+            if let message = app.shortcutRecoveryMessage {
+                Text(message)
+                    .font(.system(size: 11))
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.top, 10)
+                    .accessibilityIdentifier("shortcut-recovery-result")
+            }
+
             if !app.shortcutEnabled {
                 Text("자동 번역이 꺼져 있으면 입력 모니터링을 사용하지 않습니다.")
                     .font(.system(size: 11))
                     .foregroundStyle(Color(nsColor: .secondaryLabelColor))
                     .padding(.top, 10)
-            } else if permissionSummary != .ready {
+            } else if !app.shortcutReady && app.shortcutRecoveryMessage == nil {
                 Text(app.permissionConnectionHelp)
                     .font(.system(size: 11))
                     .foregroundStyle(Color(nsColor: .secondaryLabelColor))
@@ -234,7 +260,6 @@ struct FinalSettingsView: View {
         }
         .padding(16)
         .frame(width: 282, alignment: .leading)
-        .onAppear { refreshPermissionStatus() }
     }
 
     private func permissionDetailRow(
@@ -583,9 +608,9 @@ struct FinalSettingsView: View {
         var title: String {
             switch self {
             case .ready: "준비됨"
-            case .oneNeeded: "1개 권한 확인 필요"
-            case .twoNeeded: "2개 권한 확인 필요"
-            case .unknown: "확인 필요"
+            case .oneNeeded: "1개 연결 확인 필요"
+            case .twoNeeded: "2개 연결 확인 필요"
+            case .unknown: "감시 연결 확인 필요"
             }
         }
 
@@ -676,11 +701,11 @@ struct FinalSettingsView: View {
 
             찾는 순서: 지정 경로 → CODEX_EXECUTABLE·CODEX_CLI_PATH → Homebrew·npm 전역·~/.local/bin·Volta·Bun·nvm(모든 Node 버전) → PATH → ChatGPT 앱 내장 CLI. 같은 단계에서는 가장 높은 버전을 씁니다.
 
-            경로 지정: defaults write com.deepk.app codexExecutablePath -string <경로>
-            지정 해제: defaults delete com.deepk.app codexExecutablePath
+            경로 지정: defaults write \(AppIdentity.bundleIdentifier) codexExecutablePath -string <경로>
+            지정 해제: defaults delete \(AppIdentity.bundleIdentifier) codexExecutablePath
             """
         case .claude:
-            "Claude Code를 설치하고 scripts/setup-claude.sh로 앱 전용 CLI를 준비한 뒤 연결 확인을 눌러 주세요."
+            "Claude Code를 설치하고 scripts/setup-claude.sh\(AppIdentity.bundleIdentifier == "com.deepk.app" ? " --installed" : "")로 앱 전용 CLI를 준비한 뒤 연결 확인을 눌러 주세요."
         }
     }
 
@@ -752,10 +777,10 @@ struct FinalSettingsView: View {
         let version = info?["CFBundleShortVersionString"] as? String
         let build = info?["CFBundleVersion"] as? String
         switch (version?.isEmpty == false, build?.isEmpty == false) {
-        case (true, true): return "deepK \(version!) (\(build!))"
-        case (true, false): return "deepK \(version!)"
-        case (false, true): return "deepK 빌드 \(build!)"
-        default: return "deepK 개발 버전"
+        case (true, true): return "\(AppIdentity.displayName) \(version!) (\(build!))"
+        case (true, false): return "\(AppIdentity.displayName) \(version!)"
+        case (false, true): return "\(AppIdentity.displayName) 빌드 \(build!)"
+        default: return "\(AppIdentity.displayName) 개발 버전"
         }
     }
 }

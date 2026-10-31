@@ -1,6 +1,12 @@
 ---
 import InstallOptions from './InstallOptions.astro';
 import { release } from '../../data/release';
+import { useMessages, type Locale } from '../../i18n';
+interface Props {
+  locale?: Locale;
+}
+const { locale = 'ko' } = Astro.props;
+const t = useMessages(locale).installDialog;
 ---
 
 <dialog
@@ -9,23 +15,19 @@ import { release } from '../../data/release';
   class="fixed inset-0 m-auto max-h-[90dvh] w-[min(520px,calc(100%_-_32px))] overflow-y-auto rounded-3xl border-2 border-line bg-page p-6 text-ink shadow-2xl sm:p-8"
 >
   <div class="mb-6 flex items-center justify-between gap-4">
-    <span class="text-xs font-semibold tracking-wide text-muted">
-      deepK {release.version} · 초기 배포
-    </span>
+    <span class="text-xs font-semibold tracking-wide text-muted">{t.badge(release.version)}</span>
     <button
       type="button"
       data-close-install
-      aria-label="설치 안내 닫기"
+      aria-label={t.close}
       class="min-h-11 min-w-11 rounded-full text-xl"
     >
       ×
     </button>
   </div>
   <h2 id="install-heading" class="text-2xl font-bold tracking-tight">
-    Mac에 deepK 설치하기
+    {t.title}
   </h2>
-  <p class="mt-3 mb-7 text-sm leading-7 text-muted">
-    편한 방법으로 설치하고, 쓰던 AI 계정을 연결하세요.
-  </p>
-  <InstallOptions />
+  <p class="mt-3 mb-7 text-sm leading-7 text-muted">{t.body}</p>
+  <InstallOptions locale={locale} />
 </dialog>

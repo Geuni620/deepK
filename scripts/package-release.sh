@@ -57,7 +57,7 @@ plist_value() {
 
 validate_app_metadata() {
   local app_path="$1"
-  local executable_path="${app_path}/Contents/MacOS/DeepK"
+  local executable_path="${app_path}/Contents/MacOS/${APP_PRODUCT_NAME}"
   local plist_path="${app_path}/Contents/Info.plist"
   local actual_arches plist_version plist_bundle_id plist_minimum_os plist_build_number
 
@@ -82,8 +82,12 @@ validate_app_metadata() {
   [[ "$plist_build_number" == "$BUILD_NUMBER" ]] \
     || fail "앱 빌드 번호가 요청한 값과 다릅니다."
   plist_bundle_id="$(plist_value CFBundleIdentifier "$plist_path")"
-  [[ "$plist_bundle_id" == com.deepk.app ]] \
+  [[ "$plist_bundle_id" == "$APP_BUNDLE_IDENTIFIER" ]] \
     || fail "앱 bundle identifier가 deepK 계약과 다릅니다: $plist_bundle_id"
+  [[ "$(plist_value CFBundleName "$plist_path")" == "$APP_DISPLAY_NAME" \
+    && "$(plist_value CFBundleDisplayName "$plist_path")" == "$APP_DISPLAY_NAME" \
+    && "$(plist_value CFBundleExecutable "$plist_path")" == "$APP_PRODUCT_NAME" ]] \
+    || fail "앱·표시·실행 파일 이름이 현재 배포 모드와 다릅니다."
   plist_minimum_os="$(plist_value LSMinimumSystemVersion "$plist_path")"
   if [[ -z "$plist_minimum_os" ]]; then
     plist_minimum_os="$(plist_value MinimumOSVersion "$plist_path")"
@@ -205,8 +209,18 @@ if [[ "$MODE" == distribution && "$DIRTY" == true ]]; then
   fail "배포 모드는 깨끗한 Git 작업 트리에서만 실행할 수 있습니다. 로컬 변경을 먼저 정리하세요."
 fi
 
+APP_BUNDLE_IDENTIFIER=com.deepk.app
+APP_DISPLAY_NAME=deepK
+APP_PRODUCT_NAME=deepK
+if [[ "$MODE" == local ]]; then
+  # 공증하지 않은 로컬 패키지도 설치된 배포 앱의 권한을 덮어쓰지 않는다.
+  APP_BUNDLE_IDENTIFIER=com.deepk.app.dev
+  APP_DISPLAY_NAME="deepK Dev"
+  APP_PRODUCT_NAME="deepK Dev"
+fi
+
 RELEASE_BUILD_ROOT="${PROJECT_ROOT}/.build/release"
-DERIVED_DATA_PATH="${RELEASE_BUILD_ROOT}/DerivedData"
+DERIVED_DATA_PATH="${RELEASE_BUILD_ROOT}/DerivedData-${MODE}"
 OUTPUT_PARENT="${PROJECT_ROOT}/dist/release/${VERSION}/${ARCH}/${MODE}"
 OUTPUT_DIR="${OUTPUT_PARENT}/${ARTIFACT_SHA}"
 ARTIFACT_BASE="deepK-${MODE}-${VERSION}-${ARCH}-${ARTIFACT_SHA}"
@@ -228,6 +242,11 @@ XCODEBUILD_ARGS=(
   "MACOSX_DEPLOYMENT_TARGET=${MINIMUM_MACOS}"
   "MARKETING_VERSION=${VERSION}"
   "CURRENT_PROJECT_VERSION=${BUILD_NUMBER}"
+  "PRODUCT_BUNDLE_IDENTIFIER=${APP_BUNDLE_IDENTIFIER}"
+  "INFOPLIST_KEY_CFBundleDisplayName=${APP_DISPLAY_NAME}"
+  "INFOPLIST_KEY_CFBundleName=${APP_DISPLAY_NAME}"
+  "PRODUCT_NAME=${APP_PRODUCT_NAME}"
+  PRODUCT_MODULE_NAME=DeepK
   CODE_SIGNING_ALLOWED=NO
   CODE_SIGNING_REQUIRED=NO
   CODE_SIGN_IDENTITY=
@@ -248,15 +267,15 @@ esac
 printf 'Release 빌드 중: version=%s arch=%s mode=%s\n' "$VERSION" "$ARCH" "$MODE"
 xcodebuild "${XCODEBUILD_ARGS[@]}" build
 
-APP_PATH="${DERIVED_DATA_PATH}/Build/Products/Release/DeepK.app"
+APP_PATH="${DERIVED_DATA_PATH}/Build/Products/Release/${APP_PRODUCT_NAME}.app"
 [[ -d "$APP_PATH" ]] || fail "Release 앱을 찾을 수 없습니다: $APP_PATH"
-[[ -x "$APP_PATH/Contents/MacOS/DeepK" ]] \
-  || fail "Release 실행 파일을 찾을 수 없습니다: $APP_PATH/Contents/MacOS/DeepK"
+[[ -x "$APP_PATH/Contents/MacOS/$APP_PRODUCT_NAME" ]] \
+  || fail "Release 실행 파일을 찾을 수 없습니다: $APP_PATH/Contents/MacOS/$APP_PRODUCT_NAME"
 validate_app_metadata "$APP_PATH"
 python3 "$SCRIPT_DIR/check-app-bundle.py" "$APP_PATH" \
   || fail "앱에 로컬 인증정보나 앱 밖을 가리키는 링크가 포함되어 있습니다."
 
-STAGED_APP="${STAGING_DIR}/DeepK.app"
+STAGED_APP="${STAGING_DIR}/${APP_PRODUCT_NAME}.app"
 ditto "$APP_PATH" "$STAGED_APP"
 
 NOTARY_RESULT=""
@@ -316,7 +335,7 @@ CREATED_AT="$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
 cat > "$MANIFEST_FILE" <<MANIFEST
 {
   "app": "deepK",
-  "bundle_identifier": "com.deepk.app",
+  "bundle_identifier": "${APP_BUNDLE_IDENTIFIER}",
   "version": "${VERSION}",
   "build_number": "${BUILD_NUMBER}",
   "commit": "${SOURCE_COMMIT}",

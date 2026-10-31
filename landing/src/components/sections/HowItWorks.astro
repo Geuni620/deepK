@@ -1,17 +1,17 @@
 ---
-const steps = [
-  { n: '01', title: '선택', copy: '읽다가 막힌 문장을 고릅니다.' },
-  { n: '02', title: '⌘C, 그리고 한 번 더', copy: '평소처럼 복사하고, 한 번 더 누릅니다.' },
-  { n: '03', title: '읽기 계속', copy: '작은 창에서 읽고 원래 문서로 돌아갑니다.' },
-];
+import { useMessages, type Locale } from '../../i18n';
+interface Props {
+  locale?: Locale;
+}
+const { locale = 'ko' } = Astro.props;
+const t = useMessages(locale).how;
+const steps = t.steps;
 ---
 
 <section id="how" class="border-t border-line px-6 py-20 md:py-28">
   <div class="mx-auto max-w-6xl">
-    <p class="font-mono text-xs text-muted">/ how it works</p>
-    <h2 class="mt-5 text-3xl leading-tight font-bold tracking-[-.045em] md:text-5xl">
-      창을 오가지 않아도 됩니다.
-    </h2>
+    <p class="font-mono text-xs text-muted">{t.eyebrow}</p>
+    <h2 class="mt-5 text-3xl leading-tight font-bold tracking-[-.045em] md:text-5xl">{t.title}</h2>
     <div class="mt-14 grid gap-10 md:grid-cols-3">
       {steps.map((step) => (
         <article class="border-t border-line pt-5">

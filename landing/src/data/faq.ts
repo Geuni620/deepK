@@ -1,4 +1,13 @@
-export const faqItems = [
+import type { Locale } from '../i18n';
+import { release } from './release';
+
+export interface FaqItem {
+  id: string;
+  question: string;
+  answer: string;
+}
+
+const ko: FaqItem[] = [
   {
     id: 'permissions',
     question: '어떤 권한이 필요한가요?',
@@ -20,8 +29,7 @@ export const faqItems = [
   {
     id: 'availability',
     question: '지금 다운로드할 수 있나요?',
-    answer:
-      '네. Homebrew 또는 공증된 ZIP으로 0.1.0을 설치할 수 있습니다. Apple Silicon과 macOS 15 이상을 지원하는 초기 배포본입니다. Intel Mac용 파일은 아직 제공하지 않습니다.',
+    answer: `네. Homebrew 또는 공증된 ZIP으로 ${release.version}을 설치할 수 있습니다. Apple Silicon과 macOS ${release.minimumMacOS} 이상을 지원합니다. Intel Mac용 파일은 아직 제공하지 않습니다.`,
   },
   {
     id: 'subscription',
@@ -33,6 +41,47 @@ export const faqItems = [
     id: 'update',
     question: '다음 버전은 어떻게 업데이트하나요?',
     answer:
-      'Homebrew로 설치했다면 앱을 종료한 뒤 brew update와 brew upgrade --cask Geuni620/tap/deepk를 실행하세요. ZIP으로 설치했다면 새 파일의 앱으로 교체하면 됩니다.',
+      'Homebrew로 설치했다면 앱을 종료한 뒤 brew update와 brew upgrade --cask Geuni620/tap/deepk를 실행하세요. ZIP으로 설치했다면 새 파일의 deepK.app으로 교체하세요. 이전 이름의 DeepK.app은 함께 실행하지 말고 삭제하세요.',
   },
-] as const;
+];
+
+const en: FaqItem[] = [
+  {
+    id: 'permissions',
+    question: 'Which permissions does it need?',
+    answer:
+      'Input Monitoring to detect the double copy, and Accessibility to insert text back where you were typing.',
+  },
+  {
+    id: 'provider',
+    question: 'Where does the translation happen?',
+    answer:
+      'deepK sends the text to the provider you chose, through the Codex CLI or Claude Code you are signed in to.',
+  },
+  {
+    id: 'privacy',
+    question: 'Does it keep what I translate?',
+    answer:
+      'Results stay in memory for up to 32 items and 5 minutes, and are cleared when the app restarts. The source text is sent to the AI provider you selected. With Codex, your global instructions may be sent as well. See the privacy page for details.',
+  },
+  {
+    id: 'availability',
+    question: 'Can I download it now?',
+    answer: `Yes. You can install ${release.version} with Homebrew or a notarized ZIP. It supports Apple Silicon and macOS ${release.minimumMacOS} or later. There is no Intel Mac build yet.`,
+  },
+  {
+    id: 'subscription',
+    question: 'Can I translate right after installing?',
+    answer:
+      'You also need to install Codex CLI or Claude Code and sign in with your subscription on that Mac. Then choose a provider in deepK settings and check the connection. The provider subscription terms and usage limits still apply.',
+  },
+  {
+    id: 'update',
+    question: 'How do I update to the next version?',
+    answer:
+      'If you installed with Homebrew, quit the app and run brew update, then brew upgrade --cask Geuni620/tap/deepk. If you used the ZIP, replace it with deepK.app from the new file. Do not run the older DeepK.app alongside it; delete it.',
+  },
+];
+
+export const faqItemsByLocale: Record<Locale, FaqItem[]> = { ko, en };
+export const faqItems = ko;

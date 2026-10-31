@@ -1,11 +1,15 @@
 ---
-import { faqItems } from '../../data/faq';
+import { faqItemsByLocale } from '../../data/faq';
+import { useMessages, type Locale } from '../../i18n';
 import '../../styles/faq.css';
 
 interface Props {
   tone?: 'plain' | 'playful';
+  locale?: Locale;
 }
-const { tone = 'plain' } = Astro.props;
+const { tone = 'plain', locale = 'ko' } = Astro.props;
+const t = useMessages(locale).faq;
+const faqItems = faqItemsByLocale[locale];
 ---
 
 <section id="faq" data-faq data-tone={tone} class="px-6 py-20 md:py-28">
@@ -16,7 +20,7 @@ const { tone = 'plain' } = Astro.props;
         tone === 'playful' ? 'text-center font-playful' : 'font-bold',
       ]}
     >
-      {tone === 'playful' ? '궁금한 거 있어요?' : '자주 묻는 질문'}
+      {tone === 'playful' ? t.playfulTitle : t.plainTitle}
     </h2>
     <div class="faq-list">
       {faqItems.map((item) => (

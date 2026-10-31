@@ -1,13 +1,15 @@
 ---
+import { routes, type Locale } from '../../i18n';
 interface Props {
   label?: string;
   dark?: boolean;
+  locale?: Locale;
 }
-const { label = 'Mac용 설치 안내', dark = false } = Astro.props;
+const { label = 'Mac용 설치 안내', dark = false, locale = 'ko' } = Astro.props;
 ---
 
 <a
-  href="/guide/#install"
+  href={`${routes.guide[locale]}#install`}
   data-install-info
   class:list={[
     'inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 text-sm font-semibold transition-colors',

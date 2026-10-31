@@ -101,7 +101,7 @@ export const examples: Example[] = [
     slug: 'playful-bear',
     nodeId: 'LI9te',
     title: 'Playful Bear',
-    summary: '곰 아이콘과 가벼운 말투가 전면에',
+    summary: '쿼카 아이콘과 가벼운 말투가 전면에',
     width: 1440,
     kind: 'design',
     variant: 'playful-bear',
