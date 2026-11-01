@@ -607,13 +607,15 @@ public actor CodexTranslationClient {
     }
 
     private func makeTranslationThread(model: String, fastServiceTier: Bool, account: Account,
-                                       generation: UInt64) async throws -> PreparedThread {
+                                       generation: UInt64,
+                                       baseInstructions: String = CodexTranslationClient.translationBaseInstructions,
+                                       developerInstructions: String = CodexTranslationClient.translationDeveloperInstructions) async throws -> PreparedThread {
         let workingDirectory = try requireWorkingDirectory()
         let createdAt = prewarmClock.now
         let response = try await request(method: "thread/start", params: .object([
             "cwd": .string(workingDirectory.path), "ephemeral": .bool(true), "model": .string(model),
-            "baseInstructions": .string(Self.translationBaseInstructions),
-            "developerInstructions": .string(Self.translationDeveloperInstructions),
+            "baseInstructions": .string(baseInstructions),
+            "developerInstructions": .string(developerInstructions),
             "serviceTier": .string(Self.serviceTier(fast: fastServiceTier)), "approvalPolicy": .string("never"),
             "sandbox": .string("read-only"), "config": translationConfig
         ]), timeout: configuration.requestTimeout, retainThreadOnCancellation: true)
@@ -972,6 +974,67 @@ public actor CodexTranslationClient {
             preservedLiteralCount: literalPlan.count
         )
         return translation
+    }
+
+    /// Answers a follow-up question about a translation in its own ephemeral thread, with the same isolation as a
+    /// translation (no tools, read-only sandbox, no network) but the caller's instructions. Never the standby thread,
+    /// so the translation path, its prewarm and cache are untouched. The prompt carries the whole conversation.
+    public func answer(
+        prompt: String,
+        instructions: String,
+        model requestedModel: String? = nil,
+        fastServiceTier: Bool = false,
+        onPartialText: (@Sendable (String) -> Void)? = nil
+    ) async throws -> String {
+        guard !prompt.isEmpty else { throw ClientError.invalidInput("The question must not be empty.") }
+        try Task.checkCancellation()
+        let hadAuthenticatedConnection = didInitialize && account != nil
+        try await connect()
+        if hadAuthenticatedConnection { try await refreshAccountForTranslation() }
+
+        let selectedModel = try selectModel(requestedModel, from: try await listModels())
+        let generation = transportGeneration
+        guard let verifiedAccount = account, !systemAsleep else { throw CancellationError() }
+        let thread = try await makeTranslationThread(model: selectedModel.model, fastServiceTier: fastServiceTier,
+                                                     account: verifiedAccount, generation: generation,
+                                                     baseInstructions: "Answer the reader's question about the passage.",
+                                                     developerInstructions: instructions)
+        let threadID = thread.id
+        var activeTurnID: String?
+        defer {
+            if let activeTurnID { retireTurn(activeTurnID) }
+            Task { [weak self] in await self?.unsubscribeThread(threadID: threadID, generation: generation) }
+        }
+        try Task.checkCancellation()
+        guard generation == transportGeneration, !systemAsleep else { throw CancellationError() }
+
+        var turnParams: [String: JSONValue] = [
+            "threadId": .string(threadID),
+            "input": .array([.object(["type": .string("text"), "text": .string(Self.guardingSkillMentions(prompt))])]),
+            "model": .string(selectedModel.model),
+            "serviceTierForTurn": .string(Self.serviceTier(fast: fastServiceTier)),
+            "approvalPolicy": .string("never"),
+            "sandboxPolicy": .object(["type": .string("readOnly"), "networkAccess": .bool(false)])
+        ]
+        if let effort = minimumReasoningEffort(for: selectedModel) { turnParams["effort"] = .string(effort) }
+
+        let turnResponse = try await request(method: "turn/start", params: .object(turnParams),
+                                             timeout: configuration.requestTimeout, interruptTurnOnCancellationIn: threadID)
+        guard let turnID = turnID(from: turnResponse) else {
+            throw ClientError.malformedResponse("turn/start did not return a turn id")
+        }
+        activeTurnID = turnID
+        if let onPartialText {
+            let forward: @Sendable (String) -> Void = { onPartialText(Self.restoringSkillMentions($0)) }
+            streamHandlers[turnID] = forward
+            if let text = agentMessageDeltas[turnID], !text.isEmpty { forward(text) }
+        }
+        let completedTurn = try await withTaskCancellationHandler(operation: {
+            try await waitForTurnCompletion(threadID: threadID, turnID: turnID, generation: generation)
+        }, onCancel: {
+            Task { await self.interruptTurn(threadID: threadID, turnID: turnID, generation: generation) }
+        })
+        return Self.restoringSkillMentions(try finalTranslation(from: completedTurn, turnID: turnID))
     }
 
     public func disconnect() {

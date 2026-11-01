@@ -1242,6 +1242,38 @@ public actor ClaudeTranslationClient {
         return outcome.text
     }
 
+    /// Answers a follow-up question about a translation with the caller's system prompt. One-shot JSON with the
+    /// translation's isolation flags (no tools, MCP, settings or saved session), never a standby stream process,
+    /// so the translation path is untouched. The prompt carries the whole conversation.
+    public func answer(prompt: String, instructions: String, model requestedModel: String? = nil) async throws -> String {
+        guard !prompt.isEmpty else { throw ClientError.invalidInput("The question must not be empty.") }
+        let entry = clock.now
+        try Task.checkCancellation()
+        noteActivity()
+        defer { noteActivity() }
+        if !didConnect { try await connect() }
+        let epoch = connectionEpoch
+        let model = requestedModel?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let selectedModel = model?.isEmpty == false ? model! : Self.defaultModel
+        if freshProof(maxAge: configuration.subscriptionProofMaxAge, notBefore: entry) == nil {
+            _ = try await requireFreshSubscriptionProof(maxAge: configuration.subscriptionProofMaxAge, entry: entry, epoch: epoch)
+        }
+        guard epoch == connectionEpoch, didConnect else { throw CancellationError() }
+        let result = try await runWithTimeout(
+            arguments: printArguments(model: selectedModel, formatArguments: ["--output-format", "json"], systemPrompt: instructions),
+            input: Data(prompt.utf8),
+            // An answer is longer than a translation of the same passage.
+            timeout: max(configuration.translationTimeout, 180),
+            operation: "답변 대기"
+        )
+        do {
+            return try decodeTranslation(from: result, requestedModel: selectedModel)
+        } catch ClientError.authenticationRequired(let message) {
+            invalidateProof()
+            throw ClientError.authenticationRequired(message)
+        }
+    }
+
     /// 기존 `--output-format json` 경로다. 비상 스위치와 stream 실패 시 fallback으로 쓴다.
     private func translateWithOneShot(
         prompt: String,
@@ -2208,14 +2240,14 @@ public actor ClaudeTranslationClient {
         )
     }
 
-    private func printArguments(model: String, formatArguments: [String]) -> [String] {
+    private func printArguments(model: String, formatArguments: [String], systemPrompt: String = ClaudeTranslationClient.systemPrompt) -> [String] {
         ["-p", "--safe-mode"]
             + formatArguments
             + [
                 "--no-session-persistence",
                 "--setting-sources", "",
                 "--settings", "{\"forceLoginMethod\":\"claudeai\",\"alwaysThinkingEnabled\":false}",
-                "--system-prompt", Self.systemPrompt,
+                "--system-prompt", systemPrompt,
                 "--strict-mcp-config",
                 "--mcp-config", "{\"mcpServers\":{}}",
                 "--tools", "",

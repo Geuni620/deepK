@@ -67,11 +67,11 @@ struct TranslationView: View {
                 }.padding(.horizontal, TranslationLayout.textInset(expanded: true)).frame(width: (width - 1) / 2)
             } else {
                 HStack(spacing: 10) {
-                    Picker("언어 방향", selection: Binding(get: { store.direction }, set: { model.changeDirection($0) })) {
-                        Text("자동 · 한국어 ↔ English").tag(TranslationDirection.automatic)
-                        Text("English → 한국어").tag(TranslationDirection.englishToKorean)
-                        Text("한국어 → English").tag(TranslationDirection.koreanToEnglish)
-                    }.labelsHidden().controlSize(.small).fixedSize()
+                    Menu {
+                        directionOptions
+                    } label: { Text(compactDirectionTitle) }
+                    .menuStyle(.borderlessButton).fixedSize()
+                    .accessibilityLabel("언어 방향")
                     Spacer(minLength: 4)
                     windowControls(expanded: false)
                 }.padding(.horizontal, TranslationLayout.textInset(expanded: false))
@@ -80,27 +80,55 @@ struct TranslationView: View {
     }
 
     private var sourceLanguageTitle: String {
-        switch store.direction {
-        case .englishToKorean: "English"
-        case .koreanToEnglish: "한국어"
-        case .automatic: "자동 · \(store.displayedSourceLanguage == .korean ? "한국어" : (store.displayedSourceLanguage == nil ? "원문" : "English"))"
-        }
+        if let source = store.direction.source { return source.displayName }
+        return "자동 · \(store.displayedSourceLanguage?.displayName ?? "원문")"
     }
 
     private var targetLanguageTitle: String {
-        switch store.direction {
-        case .englishToKorean: "한국어"
-        case .koreanToEnglish: "English"
-        case .automatic: store.displayedTargetLanguage.map { $0 == .korean ? "한국어" : "English" } ?? "번역"
+        if let source = store.direction.source { return store.direction.target(for: source).displayName }
+        return store.displayedTargetLanguage?.displayName ?? "번역"
+    }
+
+    /// The small window's one label: `자동 · 日本語 → 한국어`, or `자동 감지` before a language is known.
+    private var compactDirectionTitle: String {
+        if let source = store.direction.source { return "\(source.displayName) → \(store.direction.target(for: source).displayName)" }
+        guard let source = store.displayedSourceLanguage, let target = store.displayedTargetLanguage else { return "자동 감지" }
+        return "자동 · \(source.displayName) → \(target.displayName)"
+    }
+
+    /// 자동 감지, then the source languages to fix (each but Korean goes to Korean), then where Korean goes.
+    @ViewBuilder private var directionOptions: some View {
+        let koreanTarget = model.koreanTarget
+        checkItem("자동 감지", isOn: store.direction.isAutomatic) {
+            model.changeDirection(TranslationDirection(source: nil, koreanTarget: koreanTarget))
+        }
+        Divider()
+        Section("원문 언어 고정") {
+            checkItem("한국어 → \(koreanTarget.displayName)", isOn: store.direction.source == .korean) {
+                model.changeDirection(TranslationDirection(source: .korean, koreanTarget: koreanTarget))
+            }
+            ForEach(TranslationLanguage.common, id: \.self) { sourceItem($0) }
+            Menu("다른 언어") {
+                ForEach(TranslationLanguage.others, id: \.self) { sourceItem($0) }
+            }
+        }
+        Divider()
+        Menu("한국어를 번역할 언어 · \(koreanTarget.displayName)") {
+            ForEach(TranslationLanguage.allCases.filter { $0 != .korean }, id: \.self) { language in
+                checkItem(language.displayName, isOn: koreanTarget == language) { model.changeKoreanTarget(language) }
+            }
         }
     }
 
-    private var directionOptions: some View {
-        Group {
-            Button("자동 · 한국어 ↔ English") { model.changeDirection(.automatic) }
-            Button("English → 한국어") { model.changeDirection(.englishToKorean) }
-            Button("한국어 → English") { model.changeDirection(.koreanToEnglish) }
+    private func sourceItem(_ language: TranslationLanguage) -> some View {
+        checkItem("\(language.displayName) → 한국어", isOn: store.direction.source == language) {
+            model.changeDirection(TranslationDirection(source: language, koreanTarget: model.koreanTarget))
         }
+    }
+
+    /// A menu row with a check mark.
+    private func checkItem(_ title: String, isOn: Bool, perform: @escaping @MainActor () -> Void) -> some View {
+        Toggle(title, isOn: Binding(get: { isOn }, set: { _ in perform() }))
     }
 
     private func windowControls(expanded: Bool) -> some View {
@@ -152,7 +180,8 @@ private struct ResultPane: View {
     var body: some View {
         let content = store.resultContent
         TranslationResultTextView(content: content, lineSpacing: expanded ? 6 : 3, display: model.resultDisplay, proxy: scrollProxy,
-                                  menuActions: [wholeDocumentRetranslation])
+                                  menuActions: model.followUpEnabled ? [wholeDocumentRetranslation, askAboutSelection]
+                                      : [wholeDocumentRetranslation])
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .overlay(alignment: .topLeading) {
                 if !presence.showsText(content) { EmptyResultStatus(model: model) }
@@ -161,6 +190,14 @@ private struct ResultPane: View {
             .padding(.top, expanded ? 20 : 10)
             // The bottom matches the source pane's, so both panes end on one line above the divider.
             .padding(.bottom, expanded ? 12 : 10)
+    }
+
+    /// Opens the follow-up window with the selected words quoted, or without a quote when nothing is selected.
+    private var askAboutSelection: ResultMenuAction {
+        ResultMenuAction(title: "이 부분 묻기",
+                         isEnabled: { [model] in model.canAskFollowUp },
+                         perform: { [model] in model.openFollowUp() },
+                         performWithSelection: { [model] in model.openFollowUp(quote: $0) })
     }
 
     /// In the result text's own right-click menu (a SwiftUI `.contextMenu` would never open over the text).
@@ -177,8 +214,47 @@ private struct EmptyResultStatus: View {
 
     var body: some View {
         if let line = TranslationFooterState(model: model, resultShowsText: false, newContentBelow: false).pane {
-            ResultPaneStatus(line: line)
+            VStack(alignment: .leading, spacing: 10) {
+                ResultPaneStatus(line: line)
+                if model.store.status == .error(.unsupportedLanguage), model.store.direction.isAutomatic {
+                    UndecidedLanguagePicker(store: model.store)
+                }
+            }
         }
+    }
+}
+
+/// When the source language is not decided: the likely languages as chips, the rest in a menu. A pick holds for
+/// this source only.
+private struct UndecidedLanguagePicker: View {
+    let store: TranslationStore
+
+    var body: some View {
+        let candidates = store.undecidedLanguageCandidates
+        HStack(spacing: 6) {
+            ForEach(candidates, id: \.self) { language in
+                Button(language.displayName) { store.translateSource(as: language) }
+                    .buttonStyle(LanguageChipStyle())
+            }
+            Menu {
+                ForEach(TranslationLanguage.allCases.filter { !candidates.contains($0) }, id: \.self) { language in
+                    Button(language.displayName) { store.translateSource(as: language) }
+                }
+            } label: { Text(candidates.isEmpty ? "원문 언어 고르기…" : "다른 언어…") }
+            .menuStyle(.borderlessButton).menuIndicator(.hidden).fixedSize()
+            .buttonStyle(LanguageChipStyle())
+        }
+        .font(.system(size: 12))
+    }
+}
+
+private struct LanguageChipStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .foregroundStyle(Color(nsColor: .labelColor))
+            .padding(.horizontal, 10).frame(height: 22)
+            .background(.black.opacity(configuration.isPressed ? 0.12 : 0.06), in: Capsule())
+            .contentShape(Capsule())
     }
 }
 
@@ -235,6 +311,11 @@ private struct FooterBar: View {
             statusSlot(state)
             if let action = state.action { actionButton(action) }
             HStack(spacing: 8) {
+                if model.canAskFollowUp {
+                    Button("묻기") { model.openFollowUp() }
+                        .buttonStyle(PillButtonStyle(prominent: false))
+                        .help("이 번역에 대해 묻기 · ⌘L")
+                }
                 if model.canInsert {
                     Button("삽입") { Task { await model.insertResult() } }
                         .buttonStyle(PillButtonStyle(prominent: false))

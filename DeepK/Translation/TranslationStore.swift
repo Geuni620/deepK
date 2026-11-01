@@ -2,25 +2,106 @@ import Foundation
 import NaturalLanguage
 import Observation
 
+/// Raw values are `NLLanguage` codes, so a recognized language maps by its code. The prompt names a language by the same code.
 public enum TranslationLanguage: String, CaseIterable, Codable, Sendable {
     case english = "en"
     case korean = "ko"
+    case japanese = "ja"
+    case simplifiedChinese = "zh-Hans"
+    case traditionalChinese = "zh-Hant"
+    case german = "de"
+    case french = "fr"
+    case spanish = "es"
+    case portuguese = "pt"
+    case italian = "it"
+    case russian = "ru"
+    case vietnamese = "vi"
+
+    /// Each language in its own script, as language menus usually list them.
+    public var displayName: String {
+        switch self {
+        case .english: "English"
+        case .korean: "한국어"
+        case .japanese: "日本語"
+        case .simplifiedChinese: "中文(简体)"
+        case .traditionalChinese: "中文(繁體)"
+        case .german: "Deutsch"
+        case .french: "Français"
+        case .spanish: "Español"
+        case .portuguese: "Português"
+        case .italian: "Italiano"
+        case .russian: "Русский"
+        case .vietnamese: "Tiếng Việt"
+        }
+    }
+
+    /// The top of the language menu. The rest are under '다른 언어'.
+    public static let common: [TranslationLanguage] = [.english, .japanese, .simplifiedChinese, .german, .french, .spanish]
+    public static var others: [TranslationLanguage] { allCases.filter { $0 != .korean && !common.contains($0) } }
+
+    /// Short English is often ranked below another language written in the same letters.
+    fileprivate var writesLatinLetters: Bool {
+        switch self {
+        case .english, .german, .french, .spanish, .portuguese, .italian, .vietnamese: true
+        case .korean, .japanese, .simplifiedChinese, .traditionalChinese, .russian: false
+        }
+    }
 }
 
-public enum TranslationDirection: String, CaseIterable, Codable, Sendable {
-    case automatic = "auto"
-    case englishToKorean = "en-ko"
-    case koreanToEnglish = "ko-en"
+/// Korean becomes `koreanTarget`; every other language becomes Korean. `source` nil detects the source language.
+/// Equal directions translate alike: a fixed non-Korean source ignores `koreanTarget`, so it compares by `rawValue`.
+public struct TranslationDirection: RawRepresentable, Hashable, Codable, Sendable {
+    public let source: TranslationLanguage?
+    public let koreanTarget: TranslationLanguage
+
+    public init(source: TranslationLanguage?, koreanTarget: TranslationLanguage = .english) {
+        self.source = source
+        self.koreanTarget = koreanTarget == .korean ? .english : koreanTarget
+    }
+
+    public static let automatic = TranslationDirection(source: nil)
+    public static let englishToKorean = TranslationDirection(source: .english)
+    public static let koreanToEnglish = TranslationDirection(source: .korean)
+
+    /// `auto` and `en-ko`/`ko-en` keep the values saved before more languages; `auto>ja` is automatic with Korean → 日本語.
+    public var rawValue: String {
+        guard let source else { return koreanTarget == .english ? "auto" : "auto>\(koreanTarget.rawValue)" }
+        return "\(source.rawValue)-\(target(for: source).rawValue)"
+    }
+
+    public init?(rawValue: String) {
+        if rawValue == "auto" { self = .automatic; return }
+        if rawValue.hasPrefix("auto>") {
+            guard let target = TranslationLanguage(rawValue: String(rawValue.dropFirst(5))), target != .korean else { return nil }
+            self.init(source: nil, koreanTarget: target)
+            return
+        }
+        // Codes contain '-' (zh-Hans), so the split is where both sides are codes.
+        for source in TranslationLanguage.allCases where rawValue.hasPrefix(source.rawValue + "-") {
+            guard let target = TranslationLanguage(rawValue: String(rawValue.dropFirst(source.rawValue.count + 1))),
+                  (source == .korean) != (target == .korean) else { continue }
+            self.init(source: source, koreanTarget: source == .korean ? target : .english)
+            return
+        }
+        return nil
+    }
+
+    public static func == (lhs: Self, rhs: Self) -> Bool { lhs.rawValue == rhs.rawValue }
+    public func hash(into hasher: inout Hasher) { hasher.combine(rawValue) }
+
+    public var isAutomatic: Bool { source == nil }
+
+    public func target(for source: TranslationLanguage) -> TranslationLanguage {
+        source == .korean ? koreanTarget : .korean
+    }
+
+    /// The same source rule with Korean translated into `target`.
+    public func withKoreanTarget(_ target: TranslationLanguage) -> TranslationDirection {
+        TranslationDirection(source: source, koreanTarget: target)
+    }
 
     fileprivate var fixedLanguages: (source: TranslationLanguage, target: TranslationLanguage)? {
-        switch self {
-        case .automatic:
-            nil
-        case .englishToKorean:
-            (.english, .korean)
-        case .koreanToEnglish:
-            (.korean, .english)
-        }
+        source.map { ($0, target(for: $0)) }
     }
 }
 
@@ -137,7 +218,7 @@ public enum TranslationStoreError: Error, Equatable, LocalizedError, Sendable {
         case let .inputTooLong(limit):
             "원문은 최대 \(limit)자까지 입력할 수 있습니다."
         case .unsupportedLanguage:
-            "영어 또는 한국어 원문만 자동으로 감지할 수 있습니다."
+            "원문 언어를 정하지 못했어요."
         case .engineUnavailable:
             "번역 엔진이 연결되지 않았습니다."
         case .timedOut:
@@ -241,6 +322,10 @@ public final class TranslationStore {
     public private(set) var latestResult: TranslationResult?
     public private(set) var status: TranslationStatus
     public private(set) var direction: TranslationDirection = .automatic
+    /// The reader's pick for this source when detection could not decide. Automatic direction only;
+    /// a new copy, an emptied source or another direction drops it.
+    public private(set) var sourceLanguageOverride: TranslationLanguage?
+    @ObservationIgnored private var likelyLanguagesMemo: (source: String, languages: [TranslationLanguage])?
     public private(set) var engineReady: Bool
     public private(set) var inputVersion: UInt64 = 0
     public private(set) var isComposing = false
@@ -591,6 +676,7 @@ public final class TranslationStore {
         guard self.direction != direction else { return }
 
         self.direction = direction
+        sourceLanguageOverride = nil
         requiresRetranslation = false
         inputVersion &+= 1
         invalidateResultAndWork(.reset)
@@ -602,6 +688,35 @@ public final class TranslationStore {
         } else {
             scheduleAutomaticRequest()
         }
+    }
+
+    /// Translates the current source as `language`, for a source whose language was not decided.
+    public func translateSource(as language: TranslationLanguage) {
+        guard direction.isAutomatic, sourceLanguageOverride != language else { return }
+
+        sourceLanguageOverride = language
+        requiresRetranslation = false
+        inputVersion &+= 1
+        // A click, not typing: no debounce.
+        nextRequestAfter = clock.now
+        invalidateResultAndWork(.reset)
+
+        guard validateSourceForScheduling() else { return }
+
+        if isComposing {
+            status = engineReady ? .waiting : .disconnected
+        } else {
+            scheduleAutomaticRequest()
+        }
+    }
+
+    /// The languages to offer while the source language is not decided; empty otherwise.
+    public var undecidedLanguageCandidates: [TranslationLanguage] {
+        guard status == .error(.unsupportedLanguage) else { return [] }
+        if let memo = likelyLanguagesMemo, memo.source == sourceText { return memo.languages }
+        let languages = Self.likelyLanguages(in: IncrementalTranslationPlanner.proseOutsideFences(sourceText))
+        likelyLanguagesMemo = (sourceText, languages)
+        return languages
     }
 
     /// 선택 변경을 준비한다. 이전 결과를 지우거나 새 요청을 시작하지 않는다.
@@ -665,6 +780,7 @@ public final class TranslationStore {
 
         retryNeedsWholeDocument = false
         sourceText = text
+        if IncrementalTranslationPlanner.isBlankSource(text) { sourceLanguageOverride = nil }
         self.isComposing = isComposing
         requiresRetranslation = false
         inputVersion &+= 1
@@ -724,6 +840,7 @@ public final class TranslationStore {
         guard requiresRetranslation || !isSameActiveOrCompletedSnapshot(input: text, markup: source.markup) else { return }
 
         retryNeedsWholeDocument = false
+        if sourceText != text { sourceLanguageOverride = nil }
         sourceText = text
         isComposing = false
         requiresRetranslation = false
@@ -1059,9 +1176,9 @@ public final class TranslationStore {
         guard prose.contains(where: \.isLetter) else { return false }
         let recognizer = NLLanguageRecognizer()
         recognizer.processString(prose)
-        let other: TranslationLanguage = language == .english ? .korean : .english
-        guard let top = recognizer.languageHypotheses(withMaximum: 1).max(by: { $0.value < $1.value }) else { return false }
-        return top.key.rawValue == other.rawValue && top.value >= 0.8
+        guard let top = recognizer.languageHypotheses(withMaximum: 1).max(by: { $0.value < $1.value }),
+              let other = TranslationLanguage(rawValue: top.key.rawValue) else { return false }
+        return other != language && top.value >= 0.8
     }
 
     private func restoreCompletedDocument() -> Bool {
@@ -1150,31 +1267,38 @@ public final class TranslationStore {
 
         if documentMatchesSelection, let document { return (document.basis.sourceLanguage, document.basis.targetLanguage) }
 
-        switch Self.detectedLanguage(in: sourceText) {
-        case .english:
-            return (.english, .korean)
-        case .korean:
-            return (.korean, .english)
-        case nil:
-            return nil
-        }
+        guard let source = sourceLanguageOverride ?? Self.detectedLanguage(in: sourceText) else { return nil }
+        return (source, direction.target(for: source))
     }
 
-    /// The recognizer can rank short English and table-heavy prose below another Latin language.
-    /// Accept English only as a substantial alternative to an uncertain result. Do not constrain
-    /// the recognizer to the supported pair: that would silently accept unrelated languages.
-    private static func detectedLanguage(in text: String) -> TranslationLanguage? {
+    /// The recognizer can rank short English and table-heavy prose below another Latin language
+    /// ("I smell fear" → Norwegian). Accept English only as a substantial alternative to an uncertain result
+    /// in Latin letters. Do not constrain the recognizer to the supported languages: that would silently accept
+    /// unrelated ones.
+    static func detectedLanguage(in text: String) -> TranslationLanguage? {
         let recognizer = NLLanguageRecognizer()
         recognizer.processString(text)
         guard let dominant = recognizer.dominantLanguage else { return nil }
-        if let supported = TranslationLanguage(rawValue: dominant.rawValue) { return supported }
+        let supported = TranslationLanguage(rawValue: dominant.rawValue)
+        if supported == .english || supported?.writesLatinLetters == false { return supported }
 
         let hypotheses = recognizer.languageHypotheses(withMaximum: 8)
-        guard (hypotheses[dominant] ?? 1) < 0.8, (hypotheses[.english] ?? 0) >= 0.2 else { return nil }
+        guard (hypotheses[dominant] ?? 1) < 0.8, (hypotheses[.english] ?? 0) >= 0.2 else { return supported }
         let prose = IncrementalTranslationPlanner.proseOutsideFences(text)
         let letters = prose.unicodeScalars.filter { $0.properties.isAlphabetic }
-        guard !letters.isEmpty, letters.allSatisfy({ $0.isASCII && CharacterSet.letters.contains($0) }) else { return nil }
+        guard !letters.isEmpty, letters.allSatisfy({ $0.isASCII && CharacterSet.letters.contains($0) }) else { return supported }
         return .english
+    }
+
+    /// Supported languages the recognizer finds likely, most likely first: what the reader picks from when
+    /// the source language is not decided (Привет мир ranks Kazakh first). A near-zero hypothesis is noise
+    /// (Norwegian also lists German and Vietnamese), not a suggestion.
+    static func likelyLanguages(in text: String, limit: Int = 3) -> [TranslationLanguage] {
+        let recognizer = NLLanguageRecognizer()
+        recognizer.processString(text)
+        return recognizer.languageHypotheses(withMaximum: 12).filter { $0.value >= 0.05 }.sorted { $0.value > $1.value }
+            .compactMap { TranslationLanguage(rawValue: $0.key.rawValue) }
+            .prefix(limit).map { $0 }
     }
 
     private func startRequest(
