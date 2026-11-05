@@ -38,6 +38,7 @@ DEEPK_NOTARY_PROFILE='deepk-notary' \
 
 ## 게시 전 확인
 
+- 배포물에 MIT의 저작권·허가 전문(`LICENSE`)과 Unicode 제3자 고지(`THIRD-PARTY-NOTICES.txt`)를 함께 제공한다. 이미지·외부 자료의 범위는 [라이선스 안내](licensing.md)를 확인한다.
 - 공증 Accepted, 서명·티켓·Gatekeeper 검증 결과를 확인한다.
 - 버전·커밋·CPU·최소 OS와 체크섬이 실제 파일에 일치해야 한다.
 - 새 Mac에서 설치·로그인·권한·단축키·번역·삽입 및 업데이트 후 설정 유지를 검증한다.
