@@ -10,6 +10,14 @@ import { release } from '../../data/release';
   description={`What deepK ${release.version} sends when it translates, and what it keeps on your Mac.`}
 >
   <section>
+    <h2>The deepK operator does not collect translation content</h2>
+    <p>
+      deepK provides no feature for its operator to collect, store, or view your source text,
+      images, recognized text, or translations. User content is excluded from analytics and
+      automatic diagnostic reports, and no translation history is sent to the operator.
+    </p>
+  </section>
+  <section>
     <h2>Source text is sent to the AI provider you choose</h2>
     <p>
       deepK uses the official CLI installed on your Mac to send the translation instructions and the
@@ -56,11 +64,20 @@ import { release } from '../../data/release';
     <p>
       When you report an issue, please describe the steps to reproduce it without source text,
       credentials, or personal information. You do not need to attach real source text or login
-      files.
+      files. Send vulnerability details through private vulnerability reporting rather than public
+      issues.
     </p>
     <p>
       <a href={`${release.repositoryUrl}/issues`} target="_blank" rel="noopener noreferrer">
         Report an issue ↗
+      </a>{' '}
+      ·{' '}
+      <a
+        href={`${release.repositoryUrl}/security/advisories/new`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Report a vulnerability privately ↗
       </a>{' '}
       ·{' '}
       <a href={release.noticesUrl} target="_blank" rel="noopener noreferrer">

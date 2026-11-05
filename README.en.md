@@ -77,6 +77,8 @@ Double-copy translation is on by default in a new install and can be turned off 
 
 deepK sends the translation instructions and your source text to the provider you selected. It uses the official CLI you signed in to and never switches automatically to another provider or to API-key billing. Credentials, local environment files, and signing keys are not part of this repository.
 
+deepK provides no feature for its operator to collect, store, or view your source text, images, recognized text, or translations. User content is excluded from analytics and automatic diagnostic reports, and no translation history is sent to the operator. The AI provider's handling and retention follow your account and that service's policies.
+
 - **Codex global instructions:** if `~/.codex/AGENTS.md` exists, its contents are included in requests. Do not put company secrets or tokens in that file. Project instructions and skill blocking do not remove this global file.
 - **Sensitive copies:** copies that a password manager marks as concealed or transient are rejected. Copies that are marked late or not marked at all, and text pasted directly into the source field, are not protected. Testing against specific password managers is still pending.
 - **Translation cache:** successful results are kept in memory for up to 32 entries and 5 minutes, and cleared when the app restarts.
@@ -136,6 +138,14 @@ The test tools need `rg` and Python 3. The development fixture server checks als
 
 This repository starts from the current source with a new Git history. PR numbers and commit references in older development documents belong to the earlier private history.
 
+## License
+
+Original deepK code and documentation are provided under the [MIT License](LICENSE). Images, design material, and third-party text, data, and dependencies are separate; see the [license scope](docs/licensing.md#english).
+
 ## Third-party data
 
-The Hanja reading table includes Unicode Unihan data. The full Unicode License v3 text is kept in the [third-party notices](THIRD-PARTY-NOTICES.txt) and the [data source](DeepK/Translation/HanjaReadingData.swift). The reuse license for the project as a whole has not been decided yet.
+The Hanja reading table includes Unicode Unihan data. The full Unicode License v3 text is kept in the [third-party notices](THIRD-PARTY-NOTICES.txt) and the [data source](DeepK/Translation/HanjaReadingData.swift).
+
+## Bug and security reports
+
+Use [GitHub Issues](https://github.com/Geuni620/deepK/issues) for ordinary bugs and feature requests, and [private vulnerability reporting](https://github.com/Geuni620/deepK/security/advisories/new) for security vulnerabilities. Do not post vulnerability details, real source text, tokens, or login files in public issues. See the [security policy](SECURITY.md#private-vulnerability-reports) for report details and support scope.
