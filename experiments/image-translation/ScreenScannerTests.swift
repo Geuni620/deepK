@@ -1,4 +1,4 @@
-#if DEEPK_IMAGE_TRANSLATION_POC
+#if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
 import AppKit
 
 @MainActor enum ScreenScannerTests {
@@ -39,6 +39,7 @@ import AppKit
         print("PASS: scanner geometry and offscreen drag confirmation; no live screen capture")
     }
 
+    #if DEEPK_IMAGE_TRANSLATION_POC
     static func liveTranslation() async {
         guard ProcessInfo.processInfo.environment["DEEPK_IMAGE_POC_LIVE"] == "1" else {
             fputs("Set DEEPK_IMAGE_POC_LIVE=1 for a synthetic screen-image subscription request.\n", stderr); exit(64)
@@ -62,6 +63,7 @@ import AppKit
             fputs("FAIL: synthetic screen-image translation path (no content or paths logged)\n", stderr); exit(1)
         }
     }
+    #endif
     private static func expect(_ value: Bool, _ label: String) { if !value { fputs("FAIL: \(label)\n", stderr); exit(1) } }
 }
 #endif

@@ -25,6 +25,9 @@ for configuration, identifier, name in [
     assert settings["PRODUCT_BUNDLE_IDENTIFIER"] == identifier, settings["PRODUCT_BUNDLE_IDENTIFIER"]
     assert settings["INFOPLIST_KEY_CFBundleDisplayName"] == name, settings["INFOPLIST_KEY_CFBundleDisplayName"]
     assert settings["PRODUCT_NAME"] == name, settings["PRODUCT_NAME"]
+    flags = settings.get("SWIFT_ACTIVE_COMPILATION_CONDITIONS", "").split()
+    assert "DEEPK_IMAGE_TRANSLATION" in flags, (configuration, flags)
+    assert "DEEPK_IMAGE_TRANSLATION_POC" not in flags, (configuration, flags)
     app = args.debug_app if configuration == "Debug" else args.release_app
     if app is not None:
         info = plistlib.loads((app / "Contents/Info.plist").read_bytes())

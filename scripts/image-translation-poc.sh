@@ -82,12 +82,8 @@ while IFS= read -r path; do APP_SOURCES+=("$PROJECT_ROOT/$path"); done < <(cd "$
 xcrun swiftc -swift-version 6 -warnings-as-errors -O -whole-module-optimization -num-threads 2 -parse-as-library \
   -target "$(uname -m)-apple-macosx15.0" -module-cache-path "$BUILD_ROOT/cache" \
   -D DEEPK_IMAGE_TRANSLATION_POC "${APP_SOURCES[@]}" \
-  "$POC_ROOT/ImageTranslationCore.swift" "$POC_ROOT/ImageTranslationTests.swift" \
-  "$POC_ROOT/ImagePOCIntegration.swift" \
-  "$POC_ROOT/ScreenScanner.swift" "$POC_ROOT/ScreenScannerTests.swift" \
-  "$POC_ROOT/NativeImageInput.swift" "$POC_ROOT/NaturalImageRenderer.swift" \
-  "$POC_ROOT/ImageRegionBatch.swift" "$POC_ROOT/ClipboardImageImport.swift" \
-  "$POC_ROOT/SelectionTextLayout.swift" \
+  "$POC_ROOT/ImageTranslationFixtures.swift" "$POC_ROOT/ImageTranslationTests.swift" \
+  "$POC_ROOT/ScreenScannerTests.swift" \
   "$POC_ROOT/InputResilienceTests.swift" \
   "$POC_ROOT/ResilienceLiveEvidence.swift" \
   "$POC_ROOT/NativeImageTests.swift" \

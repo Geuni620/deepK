@@ -1,4 +1,4 @@
-#if DEEPK_IMAGE_TRANSLATION_POC
+#if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
 import AppKit
 
 /// One input session, one existing panel. Text and each image may finish independently.
@@ -6,13 +6,17 @@ import AppKit
     static let shared = ImagePOCIntegration()
     @objc func show() { AppModel.shared.showWindow() }
     @objc func scan() {
+        #if DEEPK_IMAGE_TRANSLATION_POC
         guard !POCSyntheticDemo.armed else { return }
+        #endif
         cancelImport()
         let app = AppModel.shared
         app.imageInput.scanner.start { image in app.acceptInputImage(image) }
     }
     @objc func rescan() {
+        #if DEEPK_IMAGE_TRANSLATION_POC
         guard !POCSyntheticDemo.armed else { return }
+        #endif
         cancelImport()
         let app = AppModel.shared
         app.imageInput.scanner.start(repeatLast:true) { image in app.acceptInputImage(image) }
@@ -41,7 +45,9 @@ import AppKit
     }
     @discardableResult func paste(_ board:NSPasteboard = .general) -> Bool {
         guard !POCImage.isConcealed(board) else { return false }
+        #if DEEPK_IMAGE_TRANSLATION_POC
         if POCSyntheticDemo.armed && !POCSyntheticDemo.accepts(plain:board.string(forType:.string) ?? "",html:board.string(forType:.html)) { return false }
+        #endif
         let version = board.changeCount
         if let data = board.data(forType:.html),data.count <= 1 << 20,let html = String(data:data,encoding:.utf8) {
             let plain = board.string(forType:.string) ?? "", source = Self.sourceURL(for:html,board:board)

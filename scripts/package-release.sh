@@ -16,6 +16,8 @@ MODE="distribution"
 VERSION="${DEEPK_VERSION:-$DEFAULT_VERSION}"
 ARCH="${DEEPK_ARCH:-$DEFAULT_ARCH}"
 NOTARY_TIMEOUT="${DEEPK_NOTARY_TIMEOUT:-10m}"
+INCLUDE_INPAINT="${DEEPK_BUNDLE_IMAGE_INPAINT:-0}"
+INPAINT_MODEL="none"
 
 STAGING_DIR=""
 FINAL_STAGING_DIR=""
@@ -152,6 +154,8 @@ done
   || fail "빌드 번호는 숫자여야 합니다: $BUILD_NUMBER"
 [[ "$NOTARY_TIMEOUT" =~ ^[0-9]+[smh]$ ]] \
   || fail "공증 대기 시간 형식이 올바르지 않습니다: $NOTARY_TIMEOUT"
+[[ "$INCLUDE_INPAINT" == 0 || "$INCLUDE_INPAINT" == 1 ]] \
+  || fail "DEEPK_BUNDLE_IMAGE_INPAINT는 0 또는 1이어야 합니다."
 
 [[ "$(uname -s)" == Darwin ]] || fail "deepK Release 패키징은 macOS에서만 실행할 수 있습니다."
 [[ -d "$PROJECT_FILE" ]] || fail "Xcode 프로젝트를 찾을 수 없습니다: $PROJECT_FILE"
@@ -251,6 +255,7 @@ XCODEBUILD_ARGS=(
   CODE_SIGNING_REQUIRED=NO
   CODE_SIGN_IDENTITY=
   ONLY_ACTIVE_ARCH=NO
+  ENABLE_DEBUG_DYLIB=NO
 )
 case "$ARCH" in
   arm64)
@@ -277,6 +282,26 @@ python3 "$SCRIPT_DIR/check-app-bundle.py" "$APP_PATH" \
 
 STAGED_APP="${STAGING_DIR}/${APP_PRODUCT_NAME}.app"
 ditto "$APP_PATH" "$STAGED_APP"
+
+# Keep the guide's ../LICENSE link valid inside the recipient's app bundle.
+mkdir -p "$STAGED_APP/Contents/Resources/docs"
+cp "$PROJECT_ROOT/LICENSE" "$STAGED_APP/Contents/Resources/LICENSE"
+cp "$PROJECT_ROOT/docs/licensing.md" "$STAGED_APP/Contents/Resources/docs/licensing.md"
+cp "$PROJECT_ROOT/THIRD-PARTY-NOTICES.txt" "$STAGED_APP/Contents/Resources/THIRD-PARTY-NOTICES.txt"
+if [[ "$INCLUDE_INPAINT" == 1 ]]; then
+  # Opt-in operator step only; the installed application never downloads model files.
+  bash "$SCRIPT_DIR/setup-image-inpaint-model.sh"
+  MODEL_ROOT="$PROJECT_ROOT/.build/image-translation-poc/models"
+  ditto "$MODEL_ROOT/compiled/MIGAN_512.mlmodelc" "$STAGED_APP/Contents/Resources/MIGAN_512.mlmodelc"
+  cp "$MODEL_ROOT/LICENSE-MWOYEO" "$STAGED_APP/Contents/Resources/LICENSE-MWOYEO"
+  cp "$MODEL_ROOT/LICENSE-MI-GAN-WEIGHTS" "$STAGED_APP/Contents/Resources/LICENSE-MI-GAN-WEIGHTS"
+  cp "$PROJECT_ROOT/experiments/image-translation/THIRD-PARTY-NOTICES.md" "$STAGED_APP/Contents/Resources/IMAGE-MODEL-NOTICES.md"
+  INPAINT_MODEL="MIGAN_512"
+elif [[ "$INCLUDE_INPAINT" != 0 ]]; then
+  fail "DEEPK_BUNDLE_IMAGE_INPAINT는 0 또는 1이어야 합니다."
+fi
+python3 "$SCRIPT_DIR/check-app-bundle.py" "$STAGED_APP"
+python3 "$SCRIPT_DIR/check-release-feature.py" "$STAGED_APP"
 
 NOTARY_RESULT=""
 NOTARY_STATUS="not-run"
@@ -342,6 +367,9 @@ cat > "$MANIFEST_FILE" <<MANIFEST
   "dirty": ${DIRTY},
   "architecture": "${ARCH}",
   "minimum_macos": "${MINIMUM_MACOS}",
+  "image_translation": true,
+  "synthetic_test_entrypoints": false,
+  "local_image_restoration_model": "${INPAINT_MODEL}",
   "mode": "${MODE}",
   "signing": "${SIGNING_STATUS}",
   "notary_status": "${NOTARY_STATUS}",

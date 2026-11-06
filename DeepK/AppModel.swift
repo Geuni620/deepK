@@ -13,7 +13,7 @@ final class AppModel: NSObject, NSWindowDelegate {
     let client: CodexTranslationClient
     let claudeClient: ClaudeTranslationClient
     let store: TranslationStore
-    #if DEEPK_IMAGE_TRANSLATION_POC
+    #if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
     let imageInput = NativeImageInput()
     #endif
     let windowPresentation = WindowPresentation()
@@ -249,7 +249,7 @@ final class AppModel: NSObject, NSWindowDelegate {
             }
         })
         super.init()
-        #if DEEPK_IMAGE_TRANSLATION_POC
+        #if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
         imageInput.makeTranslator = { [weak self] in
             guard let self else { return NativeImageTranslator(label: "", run: { _, _, _, _ in throw CancellationError() }) }
             let selection = TranslationSelection(provider: self.selectedProvider, model: self.selectedModel)
@@ -377,8 +377,10 @@ final class AppModel: NSObject, NSWindowDelegate {
         }
         monitor.onCopiedText = { [weak self] plain, html, sourcePID, uptime in
             guard let self else { return }
+            #if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
             #if DEEPK_IMAGE_TRANSLATION_POC
             if POCSyntheticDemo.armed && !POCSyntheticDemo.accepts(plain: plain, html: html) { return }
+            #endif
             guard NSWorkspace.shared.frontmostApplication?.processIdentifier == sourcePID else { self.captureMessage = nil; return }
             let sourceURL = html.flatMap { ImagePOCIntegration.sourceURL(for:$0) }
             if ImagePOCIntegration.shared.accept(plain: plain, html: html, sourceURL:sourceURL) { return }
@@ -426,7 +428,7 @@ final class AppModel: NSObject, NSWindowDelegate {
         monitor.onFailure = { [weak self] failure in
             guard let self else { return }
             captureMessage = nil
-            #if DEEPK_IMAGE_TRANSLATION_POC
+            #if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
             if (failure == .clipboardNonText || failure == .clipboardTextEmpty),
                NSWorkspace.shared.frontmostApplication?.processIdentifier == originalApplication?.processIdentifier,
                ImagePOCIntegration.shared.paste() {
@@ -970,7 +972,7 @@ final class AppModel: NSObject, NSWindowDelegate {
         elapsedMilliseconds = nil
         feedback = ""
         store.setDirection(direction)
-        #if DEEPK_IMAGE_TRANSLATION_POC
+        #if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
         if imageInput.image != nil { imageInput.retry(direction: direction) }
         #endif
         UserDefaults.standard.set(direction.rawValue, forKey: "translationDirection")
@@ -1309,7 +1311,7 @@ final class AppModel: NSObject, NSWindowDelegate {
 
     func openInputMonitoringSettings() {
         prepareForSystemPermissionUI()
-        #if DEEPK_IMAGE_TRANSLATION_POC
+        #if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
         if !CGPreflightListenEventAccess() { _ = CGRequestListenEventAccess() }
         #endif
         permissionGuide.present(.inputMonitoring) { [weak self] _ in
@@ -1386,7 +1388,7 @@ final class AppModel: NSObject, NSWindowDelegate {
         invocation = nil
         originalApplication = nil
         pendingCopy = nil
-        #if DEEPK_IMAGE_TRANSLATION_POC
+        #if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
         ImagePOCIntegration.shared.cancelImport()
         imageInput.clear()
         #endif
@@ -1453,7 +1455,7 @@ final class AppModel: NSObject, NSWindowDelegate {
         }
     }
 
-    #if DEEPK_IMAGE_TRANSLATION_POC
+    #if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
     func beginImageImport(plain: String, expand: Bool = true) {
         invocationGeneration &+= 1; invocation?.invalidate(); invocation = nil
         pendingCopy = nil; captureMessage = nil; feedback = ""; insertionNote = nil
@@ -1600,7 +1602,7 @@ final class AppModel: NSObject, NSWindowDelegate {
     }
 
     func shutdown() async {
-        #if DEEPK_IMAGE_TRANSLATION_POC
+        #if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
         imageInput.clear()
         #endif
         for provider in TranslationProvider.allCases { _ = beginProviderOperation(provider) }

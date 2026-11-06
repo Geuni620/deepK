@@ -10,7 +10,9 @@
 ./scripts/package-release.sh --local
 ```
 
-기본 후보 버전은 `VERSION` 파일의 `0.1.1`, CPU는 `arm64`(Apple Silicon)다. `--version 0.1.1 --arch arm64`로 지정할 수 있다. Intel(`x86_64`)·Universal 옵션은 제공하지만 별도 실제 검증 전에는 지원 완료로 안내하지 않는다.
+기본 후보 버전은 `VERSION` 파일의 `0.2.0`, CPU는 `arm64`(Apple Silicon)다. `--version 0.2.0 --arch arm64`로 지정할 수 있다. Intel(`x86_64`)·Universal 옵션은 제공하지만 별도 실제 검증 전에는 지원 완료로 안내하지 않는다.
+
+Debug·Release는 `DEEPK_IMAGE_TRANSLATION`으로 실제 이미지 입력 런타임을 포함한다. 합성 녹화·감사·테스트 CLI는 별도의 `DEEPK_IMAGE_TRANSLATION_POC` 전용이며 정식 앱에 넣지 않는다. 패키징은 실제 실행 파일의 이미지 기능 포함·테스트 코드 제외와 recipient 라이선스 파일을 검사한 후에만 서명·업로드한다.
 
 Release 빌드 결과를 `dist/release/<버전>/<CPU>/<모드>/<커밋>/`에 패키징한다. ZIP, SHA-256 체크섬, 빌드 정보를 담은 manifest가 생성되며 기존 결과는 덮어쓰지 않는다. 로컬 패키지는 ad-hoc 임시 서명으로 구분한다. 기존 Debug 앱을 바꾸거나 실행 중인 deepK를 종료하지 않는다. 산출물 경로와 로컬 모드 표시는 스크립트 출력에서 확인한다.
 
@@ -29,6 +31,8 @@ DEEPK_NOTARY_PROFILE='deepk-notary' \
 인증서·프로필이 없거나 공증이 거절되면 배포를 중단한다. 개발 인증서나 임시 서명으로 대신 게시하지 않는다. 공증 완료 후 앱에 티켓을 첨부하고 검증한 뒤 최종 ZIP과 체크섬을 생성한다. 배포 모드는 커밋되지 않은 변경이 있는 작업 트리를 거부한다. 실패·대기 시간 초과의 공증 JSON은 `.build/release/notary-results/`에 보존하며 자동 재제출하지 않는다. 스크립트는 GitHub에 자동 게시하지 않는다.
 
 ## 사용자의 설치·업데이트
+
+로컬 배경 복원 모델을 배포물에 포함할 때는 패키징에 `DEEPK_BUNDLE_IMAGE_INPAINT=1`을 지정한다. 고정 ref·Git blob 해시를 검사한 모델만 컴파일하며 두 원문 라이선스와 모델 고지를 함께 넣는다. 설치된 앱이 모델을 자동 다운로드하지 않는다. 미지정은 모델 없이 원본 유지 경로를 사용한다.
 
 1. 게시된 버전의 지원 macOS·CPU를 확인하고 ZIP과 체크섬을 내려받는다.
 2. ZIP을 풀어 `deepK.app`을 `/Applications`에 설치한다. 이전 릴리스의 이름은 `DeepK.app`이었다. 업데이트할 때는 기존 deepK를 종료한 뒤 앱을 교체한다. 개발 앱은 `deepK Dev.app`이며 배포 앱의 권한과 설정을 공유하지 않는다.

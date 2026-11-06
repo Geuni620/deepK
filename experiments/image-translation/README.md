@@ -1,6 +1,6 @@
 # deepK 글·이미지 입력 POC
 
-**선택 → ⌘C 두 번 → 기존 deepK 번역창** 흐름을 유지하는 실험입니다. 일반 앱에는 `DEEPK_IMAGE_TRANSLATION_POC` 플래그가 포함되지 않습니다. [변경 전후 1~5 검증](RESILIENCE_VALIDATION.md), [초기 POC 검증 기록](VALIDATION.md)을 구분합니다.
+**선택 → ⌘C 두 번 → 기존 deepK 번역창** 흐름을 검증하는 실험 도구입니다. 이미지 런타임은 `DeepK/ImageTranslation`로 옮겼고 정식 Debug·Release가 `DEEPK_IMAGE_TRANSLATION`으로 포함합니다. 합성 녹화·감사·테스트 CLI는 `DEEPK_IMAGE_TRANSLATION_POC`로만 켭니다. [변경 전후 1~5 검증](RESILIENCE_VALIDATION.md), [초기 POC 검증 기록](VALIDATION.md)은 당시 리비전의 기록입니다.
 
 ## 입력과 실패 처리
 

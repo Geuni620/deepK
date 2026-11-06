@@ -1,4 +1,4 @@
-#if DEEPK_IMAGE_TRANSLATION_POC
+#if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
 import Foundation
 
 /// Independent OCR blocks, deliberately different from the text translator's link markup.

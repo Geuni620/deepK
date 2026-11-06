@@ -1,4 +1,4 @@
-#if DEEPK_IMAGE_TRANSLATION_POC
+#if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
 import AppKit
 import SwiftUI
 
@@ -74,6 +74,7 @@ import SwiftUI
         let board = NSPasteboard.withUniqueName();defer { board.releaseGlobally() }
         check(input.copySelectedText(to:board) && board.string(forType:.string) == input.textLayout.translatedText(input.translations),"selected translation remains copyable after all body images fail")
         check(input.failedImages == 1 && !input.complete,"all-images-failed state remains explicitly partial")
+        check(input.sourceLanguage == "en" && input.targetLanguage == "ko","displayed image-session languages match the actual request")
         try await verifyVisible(host)
 
         let unclassified = ClipboardImageSelection.parse("<p>Words<img src='https://pbs.twimg.com/a.png' alt='' aria-hidden='true'></p>")
@@ -82,6 +83,15 @@ import SwiftUI
         check(!zero.containsImages,"explicitly invisible zero geometry cannot hijack text input")
         let cssOverride = ClipboardImageSelection.parse("<p>Words<img src='https://pbs.twimg.com/a.png' width='18' height='18' style='width:240px;height:180px'></p>")
         check(cssOverride.items.first?.inlineSize == nil,"inline CSS geometry overrides stale HTML size attributes")
+        let noSource = ClipboardImageSelection.parse("<p>Synthetic words</p><img srcset='https://pbs.twimg.com/a.png 2x'><img src=''>")
+        let noSourceReport = try await noSource.loadReport(plain:"Synthetic words",fetch:{ _ in throw ImagePOCError.message("Must not fetch unknown source") })
+        check(noSource.containsImages && noSourceReport.failedImages == 2,"unknown IMG resources are explicit partial failures and never fetch the document URL")
+        let imageOnly = ClipboardImageSelection.parse("<img srcset='https://pbs.twimg.com/a.png 2x'>")
+        check(imageOnly.documentText(from:"https://pbs.twimg.com/a.png").isEmpty,"image-only resource URL is never treated as document prose")
+        let imageDocument = ClipboardImageSelection.parse("<html><head><title>Synthetic title metadata</title></head><body><img srcset='https://pbs.twimg.com/a.png 2x'></body></html>")
+        check(imageDocument.documentText(from:"https://pbs.twimg.com/a.png").isEmpty,"document title metadata cannot turn an image-only URL into prose")
+        let actualURLText = ClipboardImageSelection.parse("<p>https://example.com</p><img>")
+        check(actualURLText.documentText(from:"https://example.com") == "https://example.com","explicit document URL text is retained")
         let metadataBoard = NSPasteboard.withUniqueName();defer { metadataBoard.releaseGlobally() }
         let sourceType = NSPasteboard.PasteboardType("org.chromium.source-url")
         let testHTML = "<p>Synthetic metadata</p>"

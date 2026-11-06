@@ -21,7 +21,7 @@ struct TranslationView: View {
             let expanded = bounds.size.width >= 720
             VStack(spacing: 0) {
                 header(expanded: expanded, width: bounds.size.width)
-                #if DEEPK_IMAGE_TRANSLATION_POC
+                #if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
                 NativeImageToolbar(app: model)
                 if model.imageInput.isActive {
                     NativeImageProgressHeader(input: model.imageInput)
@@ -47,7 +47,7 @@ struct TranslationView: View {
                 }
                 // The panes run down to one divider over one fixed footer: no row appears or disappears around the text.
                 Divider()
-                #if DEEPK_IMAGE_TRANSLATION_POC
+                #if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
                 if model.imageInput.isActive {
                     NativeImageFooter(app: model).frame(height: 44)
                 } else {
@@ -94,7 +94,13 @@ struct TranslationView: View {
     }
 
     private var sourceLanguageTitle: String {
-        switch store.direction {
+        #if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
+        if model.imageInput.isActive {
+            let label = model.imageInput.sourceLanguage.map { $0 == "ko" ? "한국어" : "English" } ?? "원문"
+            return store.direction == .automatic ? "자동 · " + label : label
+        }
+        #endif
+        return switch store.direction {
         case .englishToKorean: "English"
         case .koreanToEnglish: "한국어"
         case .automatic: "자동 · \(store.displayedSourceLanguage == .korean ? "한국어" : (store.displayedSourceLanguage == nil ? "원문" : "English"))"
@@ -102,7 +108,10 @@ struct TranslationView: View {
     }
 
     private var targetLanguageTitle: String {
-        switch store.direction {
+        #if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
+        if model.imageInput.isActive { return model.imageInput.targetLanguage.map { $0 == "ko" ? "한국어" : "English" } ?? "번역" }
+        #endif
+        return switch store.direction {
         case .englishToKorean: "한국어"
         case .koreanToEnglish: "English"
         case .automatic: store.displayedTargetLanguage.map { $0 == .korean ? "한국어" : "English" } ?? "번역"
@@ -119,7 +128,7 @@ struct TranslationView: View {
 
     private func windowControls(expanded: Bool) -> some View {
         HStack(spacing: 10) {
-            #if DEEPK_IMAGE_TRANSLATION_POC
+            #if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
             if model.imageInput.isActive {
                 Button { ImagePOCIntegration.shared.cancelImport(); model.imageInput.clear() } label: { Image(systemName: "xmark") }.accessibilityLabel("입력 이미지 지우기")
             }
@@ -139,7 +148,7 @@ struct TranslationView: View {
     }
 
     @ViewBuilder private func sourcePane(expanded: Bool) -> some View {
-        #if DEEPK_IMAGE_TRANSLATION_POC
+        #if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
         if model.imageInput.isActive {
             NativeImageSource(input: model.imageInput)
         } else { textSourcePane(expanded: expanded) }
@@ -156,7 +165,7 @@ struct TranslationView: View {
                          proxy: model.sourceEditor,
                          onEdit: { model.edit($0, composing: $1) }, onEscape: { model.hideAndRestore() })
             if store.sourceText.isEmpty {
-                #if DEEPK_IMAGE_TRANSLATION_POC
+                #if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
                 Text("문장을 입력하거나 글·이미지를 선택하고 ⌘C를 두 번 누르세요")
                     .font(.system(size: expanded ? 14 : 13)).foregroundStyle(.tertiary)
                     .padding(.top, 5).allowsHitTesting(false)
@@ -185,7 +194,7 @@ private struct ResultPane: View {
     private var store: TranslationStore { model.store }
 
     var body: some View {
-        #if DEEPK_IMAGE_TRANSLATION_POC
+        #if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
         if model.imageInput.isActive {
             NativeImageResult(input: model.imageInput)
         } else { textResult }

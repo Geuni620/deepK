@@ -1,4 +1,4 @@
-#if DEEPK_IMAGE_TRANSLATION_POC
+#if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
 import AppKit
 @preconcurrency import libxml2
 
@@ -26,6 +26,7 @@ struct ClipboardImageSelection: Sendable {
     let items: [ClipboardSelectedImage]
     let overflow: Int
     let resourceText: Set<String>
+    let hasDocumentText: Bool
     var references: [ClipboardImageReference] {
         var seen = Set<ClipboardImageReference>()
         return items.compactMap(\.reference).filter { seen.insert($0).inserted }
@@ -36,6 +37,8 @@ struct ClipboardImageSelection: Sendable {
     func documentText(from plain: String) -> String {
         plain.components(separatedBy:"\n").filter {
             let text = $0.trimmingCharacters(in:.whitespacesAndNewlines)
+            if !hasDocumentText,let scheme = URL(string:text)?.scheme?.lowercased(),["http","https","file","blob"].contains(scheme) { return false }
+            if !hasDocumentText,text.hasPrefix("/") { return false }
             return !resourceText.contains(text) && !text.lowercased().hasPrefix("data:image/")
         }.joined(separator:"\n").trimmingCharacters(in:.whitespacesAndNewlines)
     }
@@ -69,14 +72,14 @@ struct ClipboardImageSelection: Sendable {
     }
 
     static func parse(_ html: String, sourceURL: URL? = nil) -> Self {
-        guard html.utf8.count <= 1 << 20 else { return Self(items:[],overflow:1,resourceText:[]) }
+        guard html.utf8.count <= 1 << 20 else { return Self(items:[],overflow:1,resourceText:[],hasDocumentText:false) }
         var fragment = html
         if let start = html.range(of:"<!--StartFragment-->"),let end = html.range(of:"<!--EndFragment-->"),start.upperBound <= end.lowerBound {
             fragment = String(html[start.upperBound..<end.lowerBound])
         }
         let flags = HTML_PARSE_RECOVER.rawValue | HTML_PARSE_NONET.rawValue | HTML_PARSE_NOERROR.rawValue | HTML_PARSE_NOWARNING.rawValue
         guard let doc = fragment.withCString({ htmlReadMemory($0,Int32(fragment.utf8.count),nil,"UTF-8",Int32(flags)) }) else {
-            return Self(items:[],overflow:0,resourceText:[])
+            return Self(items:[],overflow:0,resourceText:[],hasDocumentText:false)
         }
         defer { xmlFreeDoc(doc) }
         var items: [ClipboardSelectedImage] = [], overflow = 0, visited = 0, prefix = ""
@@ -92,11 +95,13 @@ struct ClipboardImageSelection: Sendable {
         }
         func add(_ raw:String,inline:CGSize?) {
             let source = raw.trimmingCharacters(in:.whitespacesAndNewlines)
-            resources.insert(source)
-            if inline == nil && !seenContent.insert(source).inserted { return }
+            if !source.isEmpty { resources.insert(source) }
+            if inline == nil && !source.isEmpty && !seenContent.insert(source).inserted { return }
             guard items.count < 24 else { overflow += 1;return }
             var reference: ClipboardImageReference?
-            if source.lowercased().hasPrefix("data:image/"),let comma = source.firstIndex(of:","),
+            if source.isEmpty {
+                reference = nil
+            } else if source.lowercased().hasPrefix("data:image/"),let comma = source.firstIndex(of:","),
                source[..<comma].lowercased().hasSuffix(";base64"),let data = Data(base64Encoded:String(source[source.index(after:comma)...])),data.count <= 8_000_000 {
                 reference = .embedded(data)
             } else {
@@ -118,7 +123,7 @@ struct ClipboardImageSelection: Sendable {
                 }
                 guard node.pointee.type == XML_ELEMENT_NODE else { continue }
                 let name = String(cString:node.pointee.name).lowercased()
-                guard !["script","style","template","iframe","object","input","textarea","select","noscript"].contains(name) else { continue }
+                guard !["head","script","style","template","iframe","object","input","textarea","select","noscript"].contains(name) else { continue }
                 let style = attribute(node,"style") ?? ""
                 let css = style.split(separator:";").reduce(into:[String:String]()) { values,declaration in
                     let pair = declaration.split(separator:":",maxSplits:1);guard pair.count == 2 else { return }
@@ -135,7 +140,12 @@ struct ClipboardImageSelection: Sendable {
                 if let width,let height,width > 0,height > 0,width <= 24,height <= 24,inlineContext {
                     inline = CGSize(width:width,height:height)
                 } else { inline = nil }
-                if name == "img",let src = attribute(node,"src"),!src.isEmpty { add(src,inline:inline) }
+                if name == "img" {
+                    for candidate in (attribute(node,"srcset") ?? "").split(separator:",") {
+                        if let resource = candidate.split(whereSeparator:{$0.isWhitespace}).first { resources.insert(String(resource)) }
+                    }
+                    add(attribute(node,"src") ?? "",inline:inline)
+                }
                 if let expression = try? NSRegularExpression(pattern:#"(?i)(?:^|;)\s*background-image\s*:\s*url\(\s*(?:"([^"]+)"|'([^']+)'|([^\s)]+))\s*\)"#) {
                     let value = style as NSString
                     for match in expression.matches(in:style,range:NSRange(location:0,length:value.length)) {
@@ -147,7 +157,7 @@ struct ClipboardImageSelection: Sendable {
             }
         }
         walk(doc.pointee.children,depth:0)
-        return Self(items:items,overflow:overflow,resourceText:resources)
+        return Self(items:items,overflow:overflow,resourceText:resources,hasDocumentText:!prefix.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty)
     }
 
     func loadReport(plain:String,fetch:@Sendable (URL) async throws -> POCImage = MemoryImageDownload.fetch) async throws -> ClipboardImageLoad {

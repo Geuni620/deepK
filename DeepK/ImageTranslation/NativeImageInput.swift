@@ -1,4 +1,4 @@
-#if DEEPK_IMAGE_TRANSLATION_POC
+#if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
 import AppKit
 import NaturalLanguage
 import Observation
@@ -47,6 +47,8 @@ struct NativeImageTranslator {
     var firstTextSeconds: Double?
     var providerLabel = ""
     var failureKind: String?
+    var sourceLanguage: String?
+    var targetLanguage: String?
     @ObservationIgnored var makeTranslator: (() -> NativeImageTranslator)?
     @ObservationIgnored private var operation: Task<Void, Never>?
     @ObservationIgnored private var renderTask: Task<Void, Never>?
@@ -93,6 +95,7 @@ struct NativeImageTranslator {
         warning = nil;importNotice = "";failedImages = 0;failedIcons = 0;imagesWithoutText = 0
         showsOCR = false;showsTextResult = false;zoom = 1;complete = false;busy = true
         failureKind = nil;stage = .importing;draftText = "";activeRegionID = nil;renderedRegionIDs = [];bodyFontPixels = 0
+        sourceLanguage = nil;targetLanguage = nil
         lastRenderedTranslations = [:];renderRequest = 0
         ocrSeconds = nil;translationSeconds = nil;firstResultSeconds = nil;firstTextSeconds = nil;started = .now
         status = "선택한 이미지 준비 중…"
@@ -108,6 +111,7 @@ struct NativeImageTranslator {
             do {
                 guard let translator else { throw ImagePOCError.message("번역 연결을 준비하지 못했습니다. 설정에서 제공자를 확인해 주세요.") }
                 let language = Self.languages(direction,text:plain)
+                if !plain.isEmpty || direction != .automatic { self.sourceLanguage = language.source;self.targetLanguage = language.target }
                 if textFirst,!layout.regions.isEmpty {
                     try await self.translate(layout.regions,using:translator,language:language,token:token)
                 }
@@ -152,6 +156,7 @@ struct NativeImageTranslator {
                 let remaining = self.regions + (textFirst ? [] : layout.regions)
                 if !remaining.isEmpty {
                     let languages = plain.isEmpty ? Self.languages(direction,text:self.recognizedText) : language
+                    self.sourceLanguage = languages.source;self.targetLanguage = languages.target
                     try await self.translate(remaining,using:translator,language:languages,token:token)
                 }
                 try Task.checkCancellation()
@@ -280,6 +285,7 @@ struct NativeImageTranslator {
         recognizedText = ""; status = ""; warning = nil; complete = false
         stage = .idle; draftText = ""; activeRegionID = nil; renderedRegionIDs = []; bodyFontPixels = 0; lastRenderedTranslations = [:]
         failureKind = nil
+        sourceLanguage = nil;targetLanguage = nil
         ocrSeconds = nil; translationSeconds = nil; firstResultSeconds = nil; firstTextSeconds = nil
     }
     private static func seconds(_ duration: Duration) -> Double { Double(duration.components.seconds) + Double(duration.components.attoseconds) / 1e18 }

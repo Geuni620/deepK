@@ -85,7 +85,7 @@ final class DeepKApplicationDelegate: NSObject, NSApplicationDelegate {
         guard !terminating else { return .terminateLater }
         terminating = true
         Task { @MainActor in
-            #if DEEPK_IMAGE_TRANSLATION_POC
+            #if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
             await ImagePOCIntegration.shared.shutdown()
             #endif
             await AppModel.shared.shutdown()
@@ -112,7 +112,7 @@ final class DeepKApplicationDelegate: NSObject, NSApplicationDelegate {
         let settings = NSMenuItem(title: "설정…", action: #selector(AppModel.openSettings), keyEquivalent: ",")
         settings.target = AppModel.shared
         applicationMenu.addItem(settings)
-        #if DEEPK_IMAGE_TRANSLATION_POC
+        #if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
         let richPOC = NSMenuItem(title: "번역창 열기", action: #selector(ImagePOCIntegration.show), keyEquivalent: "")
         richPOC.target = ImagePOCIntegration.shared
         applicationMenu.addItem(richPOC)
@@ -152,7 +152,7 @@ final class DeepKApplicationDelegate: NSObject, NSApplicationDelegate {
             ("붙여넣기", #selector(NSText.paste(_:)), "v"),
             ("전체 선택", #selector(NSText.selectAll(_:)), "a")
         ] {
-            #if DEEPK_IMAGE_TRANSLATION_POC
+            #if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
             if key == "v" {
                 let paste = NSMenuItem(title: title, action: #selector(ImagePOCIntegration.pasteFromMenu), keyEquivalent: key)
                 paste.target = ImagePOCIntegration.shared
