@@ -325,6 +325,21 @@ final class AppModel: NSObject, NSWindowDelegate {
         window.isReleasedWhenClosed = false
     }
 
+    func isTranslationWindow(_ candidate:NSWindow?) -> Bool {
+        guard let candidate,let window else { return false }
+        return candidate === window
+    }
+
+    @discardableResult func cancelCopyIfSourceChanged(from sourcePID:pid_t,frontmostPID:pid_t?) -> Bool {
+        guard frontmostPID != sourcePID else { return false }
+        captureMessage = nil
+        feedback = "호출 중 앱이 바뀌었습니다. 원래 앱에서 다시 복사해 주세요"
+        originalApplication = nil
+        invocation?.invalidate()
+        invocation = nil
+        return true
+    }
+
     func start() {
         guard !launched else { return }
         launched = true
@@ -384,7 +399,7 @@ final class AppModel: NSObject, NSWindowDelegate {
             #if DEEPK_IMAGE_TRANSLATION_POC
             if POCSyntheticDemo.armed && !POCSyntheticDemo.accepts(plain: plain, html: html) { return }
             #endif
-            guard NSWorkspace.shared.frontmostApplication?.processIdentifier == sourcePID else { self.captureMessage = nil; return }
+            if cancelCopyIfSourceChanged(from:sourcePID,frontmostPID:NSWorkspace.shared.frontmostApplication?.processIdentifier) { return }
             let sourceURL = html.flatMap { ImagePOCIntegration.sourceURL(for:$0) }
             if ImagePOCIntegration.shared.accept(plain: plain, html: html, sourceURL:sourceURL) { return }
             ImagePOCIntegration.shared.cancelImport()
@@ -402,14 +417,7 @@ final class AppModel: NSObject, NSWindowDelegate {
                 let blocks = source.markup?.blocks ?? [], titles = blocks.filter { $0.title != nil }.count
                 Self.latencyLog.notice("copy import \(elapsed, privacy: .public) ms links=\(links, privacy: .public) code=\(code, privacy: .public) blocks=\(blocks.count, privacy: .public) titles=\(titles, privacy: .public) chrome=\(source.removed.count, privacy: .public)")
             }
-            guard NSWorkspace.shared.frontmostApplication?.processIdentifier == sourcePID else {
-                captureMessage = nil
-                feedback = "호출 중 앱이 바뀌었습니다. 원래 앱에서 다시 복사해 주세요"
-                originalApplication = nil
-                invocation?.invalidate()
-                invocation = nil
-                return
-            }
+            if cancelCopyIfSourceChanged(from:sourcePID,frontmostPID:NSWorkspace.shared.frontmostApplication?.processIdentifier) { return }
             captureMessage = nil
             feedback = ""
             switch InvocationSession.capture() {

@@ -20,6 +20,11 @@ with tempfile.TemporaryDirectory(prefix="deepk-release-feature-") as work:
     for name in ["LICENSE", "docs/licensing.md", "THIRD-PARTY-NOTICES.txt"]:
         shutil.copy2(root / name, app / "Contents/Resources" / name)
     assert not checker.check(app, root)
+    info_path = app / "Contents/Info.plist"
+    saved_info = info_path.read_bytes()
+    info_path.write_bytes(plistlib.dumps({"CFBundleExecutable":"deepK"}))
+    assert "explicit screen capture usage description missing" in checker.check(app, root)
+    info_path.write_bytes(saved_info)
     binary.write_bytes(b"old app without image input")
     assert "production image feature missing" in checker.check(app, root)
     binary.write_bytes(b"NativeImageInput SelectionTextLayout --resilience-live")

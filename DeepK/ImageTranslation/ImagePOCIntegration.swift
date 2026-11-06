@@ -55,7 +55,13 @@ import AppKit
         cancelImport();AppModel.shared.acceptInputImage(image);return true
     }
     @objc func pasteFromMenu() {
-        if !paste() { NSApp.sendAction(#selector(NSText.paste(_:)),to:nil,from:nil) }
+        Self.handleMenuPaste(in:NSApp.keyWindow,app:.shared,importSelection:{ self.paste() },pasteText:{
+            NSApp.sendAction(#selector(NSText.paste(_:)),to:nil,from:nil)
+        })
+    }
+    static func handleMenuPaste(in window:NSWindow?,app:AppModel,importSelection:()->Bool,pasteText:()->Void) {
+        if app.isTranslationWindow(window),importSelection() { return }
+        pasteText()
     }
     func shutdown() async { cancelImport();AppModel.shared.imageInput.clear() }
 }

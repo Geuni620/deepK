@@ -18,18 +18,44 @@ struct SelectionTextLayout: Sendable, Equatable {
     init(text: String, icons: [SelectionInlineImage] = []) {
         let value = text as NSString
         var nodes: [Node] = [], position = 0, ordinal = 0
+        func appendText(_ text:String) {
+            for chunk in Self.chunks(text) {
+                nodes.append(.text(.init(id:ordinal == 0 ? 0 : 100000 + ordinal,source:chunk)))
+                ordinal += 1
+            }
+        }
         for icon in icons.sorted(by: { $0.offset == $1.offset ? $0.id < $1.id : $0.offset < $1.offset }) {
             let end = max(position,min(value.length,icon.offset))
-            if end > position { nodes.append(.text(.init(id:ordinal == 0 ? 0 : 100000 + ordinal,source:value.substring(with:NSRange(location:position,length:end-position)))));ordinal += 1 }
+            if end > position { appendText(value.substring(with:NSRange(location:position,length:end-position))) }
             nodes.append(.icon(icon.id));position = end
         }
-        if position < value.length { nodes.append(.text(.init(id:ordinal == 0 ? 0 : 100000 + ordinal,source:value.substring(from:position)))) }
+        if position < value.length { appendText(value.substring(from:position)) }
         self.nodes = nodes
+    }
+    /// Keep prose below the escaped region budget without losing whitespace, icons or grapheme boundaries.
+    private static func chunks(_ text:String) -> [String] {
+        var result:[String] = [], start = text.startIndex
+        while start < text.endIndex {
+            var end = start, boundary:String.Index?, length = 0
+            while end < text.endIndex {
+                let character = String(text[end])
+                let cost = character.replacingOccurrences(of:"&",with:"&amp;").replacingOccurrences(of:"<",with:"&lt;").replacingOccurrences(of:">",with:"&gt;").count
+                if length + cost > 3200 { break }
+                length += cost
+                let next = text.index(after:end)
+                if text[end].isWhitespace && length >= 1600 { boundary = next }
+                end = next
+            }
+            if end < text.endIndex,let boundary { end = boundary }
+            result.append(String(text[start..<end]));start = end
+        }
+        return result
     }
     func translatedText(_ values: [Int:String], pending: String? = nil) -> String {
         parts.map { part in Self.display(part,translation:values[part.id],pending:pending) }.joined()
     }
     static func display(_ part: Part, translation: String?, pending: String?) -> String {
+        if part.source.allSatisfy(\.isWhitespace) { return part.source }
         guard let translation else { return pending ?? part.source }
         let prefix = String(part.source.prefix(while: { $0.isWhitespace }))
         let suffix = String(part.source.reversed().prefix(while: { $0.isWhitespace }).reversed())
