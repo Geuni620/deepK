@@ -1,0 +1,48 @@
+{
+  "physicalShortcutExercised" : false,
+  "preparedTranslationResponses" : true,
+  "providerRequests" : 0,
+  "scenes" : [
+    {
+      "busy" : false,
+      "complete" : false,
+      "imagePresent" : false,
+      "scene" : 1,
+      "translatedBlocks" : 0,
+      "translationPanelCount" : 1
+    },
+    {
+      "busy" : false,
+      "complete" : true,
+      "imagePresent" : true,
+      "scene" : 2,
+      "translatedBlocks" : 6,
+      "translationPanelCount" : 1
+    },
+    {
+      "busy" : false,
+      "complete" : false,
+      "imagePresent" : false,
+      "scene" : 3,
+      "translatedBlocks" : 0,
+      "translationPanelCount" : 1
+    },
+    {
+      "busy" : false,
+      "complete" : false,
+      "imagePresent" : false,
+      "scene" : 4,
+      "translatedBlocks" : 0,
+      "translationPanelCount" : 1
+    },
+    {
+      "busy" : false,
+      "complete" : false,
+      "imagePresent" : false,
+      "scene" : 5,
+      "translatedBlocks" : 0,
+      "translationPanelCount" : 1
+    }
+  ],
+  "syntheticOnly" : true
+}

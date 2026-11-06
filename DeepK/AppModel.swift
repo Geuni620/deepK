@@ -380,7 +380,8 @@ final class AppModel: NSObject, NSWindowDelegate {
             #if DEEPK_IMAGE_TRANSLATION_POC
             if POCSyntheticDemo.armed && !POCSyntheticDemo.accepts(plain: plain, html: html) { return }
             guard NSWorkspace.shared.frontmostApplication?.processIdentifier == sourcePID else { self.captureMessage = nil; return }
-            if ImagePOCIntegration.shared.accept(plain: plain, html: html) { return }
+            let sourceURL = html.flatMap { ImagePOCIntegration.sourceURL(for:$0) }
+            if ImagePOCIntegration.shared.accept(plain: plain, html: html, sourceURL:sourceURL) { return }
             ImagePOCIntegration.shared.cancelImport()
             self.imageInput.clear()
             #endif
@@ -1453,7 +1454,7 @@ final class AppModel: NSObject, NSWindowDelegate {
     }
 
     #if DEEPK_IMAGE_TRANSLATION_POC
-    func beginImageImport(plain: String) {
+    func beginImageImport(plain: String, expand: Bool = true) {
         invocationGeneration &+= 1; invocation?.invalidate(); invocation = nil
         pendingCopy = nil; captureMessage = nil; feedback = ""; insertionNote = nil
         store.editSource("", isComposing: false)
@@ -1461,7 +1462,7 @@ final class AppModel: NSObject, NSWindowDelegate {
         imageInput.stage = .importing
         imageInput.status = "선택한 이미지 불러오는 중…"
         showWindow(activate: false)
-        if let window, window.frame.width < 720 {
+        if expand, let window, window.frame.width < 720 {
             var frame = window.frame
             let bounds = window.screen?.visibleFrame ?? NSScreen.main?.visibleFrame ?? frame
             frame.size = CGSize(width: min(1000, bounds.width), height: min(720, bounds.height))

@@ -26,13 +26,17 @@ enum ImageReadingGeometry {
 @MainActor struct NativeImageProgressHeader: View {
     let input: NativeImageInput
     private var title: String {
-        if !input.busy { return input.complete ? "이미지 번역 완료" : (input.warning != nil ? "일부 영역은 원본을 유지했어요" : input.status) }
+        if !input.busy {
+            if input.complete { return input.image == nil ? "글 번역 완료" : "번역 완료" }
+            if input.textReady { return "글 번역 완료 · 일부 이미지는 원본 유지 또는 읽기 실패" }
+            return input.warning != nil ? "일부 영역은 원본을 유지했어요" : input.status
+        }
         switch input.stage {
         case .importing: return "선택한 이미지를 가져오고 있어요"
         case .reading: return "이미지에서 글자를 읽고 있어요"
         case .waiting: return "글자를 읽었어요 · 번역 응답을 기다려요"
         case .applying: return "번역을 원래 배경에 반영하고 있어요"
-        default: return input.activeRegionID == 0 ? "이미지 번역 완료 · 선택한 글 생성 중" : "이미지 속 번역문을 만들고 있어요"
+        default: return input.textLayout.parts.contains(where: { $0.id == input.activeRegionID }) ? "선택한 글을 번역하고 있어요" : "이미지 속 번역문을 만들고 있어요"
         }
     }
     private var detail: String {

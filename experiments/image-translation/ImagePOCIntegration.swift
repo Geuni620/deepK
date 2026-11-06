@@ -1,12 +1,9 @@
 #if DEEPK_IMAGE_TRANSLATION_POC
 import AppKit
 
-/// Clipboard images enter the existing translation panel. Import state stays in memory.
+/// One input session, one existing panel. Text and each image may finish independently.
 @MainActor final class ImagePOCIntegration: NSObject {
     static let shared = ImagePOCIntegration()
-    private var importTask: Task<Void, Never>?
-    private var generation = UUID()
-    private var pendingSelection: (selection: ClipboardImageSelection, plain: String)?
     @objc func show() { AppModel.shared.showWindow() }
     @objc func scan() {
         guard !POCSyntheticDemo.armed else { return }
@@ -18,51 +15,44 @@ import AppKit
         guard !POCSyntheticDemo.armed else { return }
         cancelImport()
         let app = AppModel.shared
-        app.imageInput.scanner.start(repeatLast: true) { image in app.acceptInputImage(image) }
+        app.imageInput.scanner.start(repeatLast:true) { image in app.acceptInputImage(image) }
     }
-    func cancelImport() { generation = UUID(); importTask?.cancel(); importTask = nil; pendingSelection = nil }
-    @discardableResult func accept(plain: String, html: String?) -> Bool {
+    func cancelImport() { AppModel.shared.imageInput.cancel() }
+    @discardableResult func accept(plain:String,html:String?,sourceURL:URL? = nil) -> Bool {
         guard let html else { return false }
-        let selection = ClipboardImageSelection.parse(html)
+        let selection = ClipboardImageSelection.parse(html,sourceURL:sourceURL)
         guard selection.containsImages else { return false }
-        start(selection, plain: selection.documentText(from: plain))
+        let text = selection.documentText(from:plain), app = AppModel.shared
+        app.beginImageImport(plain:text,expand:selection.items.contains { $0.inlineSize == nil } || selection.overflow > 0)
+        app.imageInput.loadSelection(selection,plain:text,direction:app.store.direction)
         return true
     }
-    func retryImport() { if let pendingSelection { start(pendingSelection.selection, plain: pendingSelection.plain) } }
-    private func start(_ selection: ClipboardImageSelection, plain: String) {
-        cancelImport()
-        pendingSelection = (selection, plain)
-        let token = generation, app = AppModel.shared
-        app.beginImageImport(plain: plain)
-        importTask = Task { [weak self] in
-            do {
-                let image = try await selection.load()
-                try Task.checkCancellation()
-                guard let self, self.generation == token else { return }
-                app.acceptInputImage(image, plain: plain)
-                self.importTask = nil; self.pendingSelection = nil
-            } catch {
-                guard let self, self.generation == token else { return }
-                app.imageInput.busy = false
-                app.imageInput.status = (error as? ImagePOCError)?.localizedDescription ?? "선택한 이미지를 읽지 못했습니다. 원본 이미지 서버 연결을 확인해 주세요."
-                self.importTask = nil
-            }
-        }
-    }
-    @discardableResult func paste(_ board: NSPasteboard = .general) -> Bool {
-        guard !POCImage.isConcealed(board) else { return false }
-        if POCSyntheticDemo.armed && !POCSyntheticDemo.accepts(plain: board.string(forType: .string) ?? "", html: board.string(forType: .html)) { return false }
+    func retryImport() { AppModel.shared.imageInput.retry(direction:AppModel.shared.store.direction) }
+
+    /// Only use origin metadata from the same stable, non-sensitive clipboard HTML snapshot.
+    static func sourceURL(for html:String,board:NSPasteboard = .general) -> URL? {
+        guard !POCImage.isConcealed(board) else { return nil }
         let version = board.changeCount
-        if let data = board.data(forType: .html), data.count <= 1 << 20, let html = String(data: data, encoding: .utf8) {
-            let plain = board.string(forType: .string) ?? ""
-            if version == board.changeCount, !POCImage.isConcealed(board), accept(plain: plain, html: html) { return true }
+        guard let actual = board.string(forType:.html),actual == html,
+              let text = board.string(forType:.init("org.chromium.source-url")),text.utf8.count <= 8192,
+              let url = URL(string:text),url.scheme?.lowercased() == "https",url.user == nil,url.password == nil,
+              board.changeCount == version,!POCImage.isConcealed(board) else { return nil }
+        return url
+    }
+    @discardableResult func paste(_ board:NSPasteboard = .general) -> Bool {
+        guard !POCImage.isConcealed(board) else { return false }
+        if POCSyntheticDemo.armed && !POCSyntheticDemo.accepts(plain:board.string(forType:.string) ?? "",html:board.string(forType:.html)) { return false }
+        let version = board.changeCount
+        if let data = board.data(forType:.html),data.count <= 1 << 20,let html = String(data:data,encoding:.utf8) {
+            let plain = board.string(forType:.string) ?? "", source = Self.sourceURL(for:html,board:board)
+            if version == board.changeCount,!POCImage.isConcealed(board),accept(plain:plain,html:html,sourceURL:source) { return true }
         }
-        guard let image = try? POCImage.clipboard(board), version == board.changeCount, !POCImage.isConcealed(board) else { return false }
-        cancelImport(); AppModel.shared.acceptInputImage(image); return true
+        guard let image = try? POCImage.clipboard(board),version == board.changeCount,!POCImage.isConcealed(board) else { return false }
+        cancelImport();AppModel.shared.acceptInputImage(image);return true
     }
     @objc func pasteFromMenu() {
-        if !paste() { NSApp.sendAction(#selector(NSText.paste(_:)), to: nil, from: nil) }
+        if !paste() { NSApp.sendAction(#selector(NSText.paste(_:)),to:nil,from:nil) }
     }
-    func shutdown() async { cancelImport(); AppModel.shared.imageInput.clear() }
+    func shutdown() async { cancelImport();AppModel.shared.imageInput.clear() }
 }
 #endif

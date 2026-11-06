@@ -6,6 +6,15 @@ import AppKit
 enum DeepKApp {
     static func main() {
         #if DEEPK_IMAGE_TRANSLATION_POC
+        if CommandLine.arguments.contains("--resilience-live") {
+            _ = NSApplication.shared
+            Task { await ResilienceLiveEvidence.run() }
+            RunLoop.main.run(); return
+        }
+        if CommandLine.arguments.contains("--resilience-fetch") {
+            Task { await ResilienceLiveEvidence.fetchCheck();exit(0) }
+            RunLoop.main.run(); return
+        }
         if CommandLine.arguments.contains("--feedback-benchmark") {
             _ = NSApplication.shared
             Task { await ImageFeedbackBenchmark.run(); exit(0) }

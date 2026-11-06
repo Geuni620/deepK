@@ -38,12 +38,16 @@ for line in sys.stdin:
         assert all(report["threadProtection"].values())
     copies = list(root.glob("audit.process-*.json"))
     assert len(copies) == 2 and all(json.loads(p.read_text())["turnCount"] == 1 for p in copies)
+    for subset in ["<r1>Tickets</r1>", "<r0>Please check the platform before boarding.</r0>"]:
+        subprocess.run([sys.executable, str(wrapper), "app-server", "--stdio"], input=messages(subset), text=True,
+                       env=environment, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True, timeout=10)
+        assert all(json.loads(output.read_text())["checks"][0].values())
     before = output.read_bytes()
     subprocess.run([sys.executable, str(wrapper), "--version"], input="", text=True, env=environment,
                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True, timeout=10)
     assert output.read_bytes() == before
     rejected = subprocess.run([sys.executable, str(wrapper), "app-server", "--stdio"], input=messages("synthetic mismatch"),
                               text=True, env=environment, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True, timeout=10)
-    assert not json.loads(output.read_text())["checks"][0]["sourceExactlyMatchesOCRBatch"]
+    assert not json.loads(output.read_text())["checks"][0]["sourceExactlyMatchesApprovedSyntheticRegions"]
     assert not any(json.loads(line).get("id") == 2 for line in rejected.stdout.splitlines())
 print("PASS: audit snapshots survive version probes and process replacement; mismatched input is never forwarded")

@@ -17,6 +17,7 @@ import SwiftUI
     static var sampleImage: POCImage { chatFixture ? ChatLayoutTests.fixture().image : POCFixtures.sample() }
     static var fixturePNG: Data { NSBitmapImageRep(cgImage: sampleImage.pixels).representation(using: .png, properties: [:])! }
     static func auditedConfiguration(_ configuration: CodexTranslationClient.Configuration) -> CodexTranslationClient.Configuration {
+        if CommandLine.arguments.contains("--resilience-live") { return ResilienceLiveEvidence.configuration(configuration) }
         guard CommandLine.arguments.contains("--record-synthetic-demo") || CommandLine.arguments.contains("--scan-live-smoke") else { return configuration }
         func argument(_ flag: String) -> String? {
             guard let index = CommandLine.arguments.firstIndex(of: flag), CommandLine.arguments.count > index + 1 else { return nil }; return CommandLine.arguments[index + 1]
@@ -168,7 +169,7 @@ import SwiftUI
 }
 
 /// Writes only app-owned synthetic window frames. Avoids ReplayKit's remote file-write extension path.
-@MainActor private final class SyntheticWindowVideo {
+@MainActor final class SyntheticWindowVideo {
     private let writer: AVAssetWriter
     private let input: AVAssetWriterInput
     private let adaptor: AVAssetWriterInputPixelBufferAdaptor

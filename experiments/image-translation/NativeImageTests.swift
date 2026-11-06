@@ -83,6 +83,7 @@ import SwiftUI
             expect(rejected.keptOriginalIDs == [first] && pixels(rejected.image) == pixels(sample.pixels), "overflow keeps the original intact")
             try await cards()
             try ChatLayoutTests.run()
+            try await InputResilienceTests.run()
             try await snapshotSyntheticUI()
             print("PASS: native CSS image input, region streaming, pixel preservation, Korean re-OCR and overflow gates; synthetic only")
         } catch {

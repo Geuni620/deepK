@@ -19,6 +19,23 @@ summary["rpcResponses"] = []
 child = subprocess.Popen([real, *sys.argv[1:]], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=sys.stderr)
 
 
+def approved_source(value):
+    # Text and OCR now travel in separate phases. Every submitted block must still be
+    # byte-for-byte one of the fixed synthetic fixture's blocks, with no extra prose.
+    expression = re.compile(r"<([ar])([0-9]+)>([\s\S]*?)</\1\2>")
+    wanted = list(expression.finditer(expected))
+    found = list(expression.finditer(value))
+    if not wanted or not found or expression.sub("", expected).strip() or expression.sub("", value).strip():
+        return False
+    mapping = {(m[1], m[2]): m[0] for m in wanted}
+    keys = [(m[1], m[2]) for m in found]
+    if len(mapping) != len(wanted) or len(set(keys)) != len(keys):
+        return False
+    if any(mapping.get((m[1], m[2])) != m[0] for m in found):
+        return False
+    return keys == [(m[1], m[2]) for m in wanted if (m[1], m[2]) in set(keys)]
+
+
 def write_summary():
     # The executable resolver also invokes this wrapper with --version. That short probe must
     # never overwrite an app-server audit with an empty report.
@@ -67,8 +84,8 @@ def forward_input():
                         sources.append(text.split("<source_text>\n", 1)[1].rsplit("\n</source_text>", 1)[0])
                 check = {
                     "onlyTextItems": bool(items) and all(set(item) == {"type", "text"} and item["type"] == "text" for item in items),
-                    "sourceExactlyMatchesOCRBatch": sources == [expected],
-                    "documentTextAndImageOCRTogether": "Please check the platform before boarding." in expected and len(re.findall(r"<[ar][0-9]+>", expected)) >= 2,
+                    "sourceExactlyMatchesApprovedSyntheticRegions": len(sources) == 1 and approved_source(sources[0]),
+                    "approvedRegionBatch": bool(expected) and len(re.findall(r"<[ar][0-9]+>", expected)) >= 1,
                     "noImageDataOrReferences": all("data:image/" not in text and "image_url" not in text and "file://" not in text for text in texts),
                     "noFixtureNameOrMetadata": all("역 안내판" not in text and "synthetic-original.png" not in text and "EXIF" not in text for text in texts),
                 }

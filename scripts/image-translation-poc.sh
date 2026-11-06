@@ -87,6 +87,9 @@ xcrun swiftc -swift-version 6 -warnings-as-errors -O -whole-module-optimization 
   "$POC_ROOT/ScreenScanner.swift" "$POC_ROOT/ScreenScannerTests.swift" \
   "$POC_ROOT/NativeImageInput.swift" "$POC_ROOT/NaturalImageRenderer.swift" \
   "$POC_ROOT/ImageRegionBatch.swift" "$POC_ROOT/ClipboardImageImport.swift" \
+  "$POC_ROOT/SelectionTextLayout.swift" \
+  "$POC_ROOT/InputResilienceTests.swift" \
+  "$POC_ROOT/ResilienceLiveEvidence.swift" \
   "$POC_ROOT/NativeImageTests.swift" \
   "$POC_ROOT/SyntheticDemo.swift" \
   "$POC_ROOT/ImageFeedbackBenchmark.swift" \

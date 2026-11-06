@@ -12,6 +12,16 @@ struct NativeImageTranslator {
 @MainActor @Observable final class NativeImageInput {
     let scanner = POCScreenScanner()
     var isImporting = false
+    var activeSelection = false
+    var textLayout = SelectionTextLayout(text: "")
+    var inlineImages: [SelectionInlineImage] = []
+    var failedImages = 0
+    var failedIcons = 0
+    var imagesWithoutText = 0
+    var importNotice = ""
+    @ObservationIgnored var fetchImage: @Sendable (URL) async throws -> POCImage = MemoryImageDownload.fetch
+    @ObservationIgnored private var retrySelection: ClipboardImageSelection?
+    @ObservationIgnored private var importOperation: Task<ClipboardImageLoad, Error>?
     var selectionText = ""
     var image: POCImage?
     var renderedImage: CGImage?
@@ -48,11 +58,16 @@ struct NativeImageTranslator {
     @ObservationIgnored private var lastRenderedTranslations: [Int: String] = [:]
     @ObservationIgnored private var started = ContinuousClock.now
 
-    var isActive: Bool { isImporting || image != nil }
+    var isActive: Bool { activeSelection || isImporting || image != nil }
     var identity: UUID { generation }
     var pendingBoxes: [CGRect] { busy ? regions.filter { !renderedRegionIDs.contains($0.id) }.map(\.box) : [] }
     var activeBox: CGRect? { busy ? regions.first { $0.id == activeRegionID }?.box : nil }
-    var copyText: String { ([translations[0]].compactMap { $0 } + regions.compactMap { translations[$0.id] }).joined(separator: "\n\n") }
+    var textReady: Bool { !textLayout.regions.isEmpty && textLayout.regions.allSatisfy { translations[$0.id] != nil } }
+    @discardableResult func copySelectedText(to board:NSPasteboard) -> Bool {
+        guard textReady else { return false }
+        board.clearContents();return board.setString(textLayout.translatedText(translations),forType:.string)
+    }
+    var copyText: String { ([textReady ? textLayout.translatedText(translations) : nil].compactMap { $0 } + regions.compactMap { translations[$0.id] }).joined(separator: "\n\n") }
     var timing: String {
         var fields: [String] = []
         if let ocrSeconds { fields.append(String(format: "글자 읽기 %.1f초", ocrSeconds)) }
@@ -62,93 +77,151 @@ struct NativeImageTranslator {
     }
 
     func load(_ image: POCImage, direction: TranslationDirection, selectionText: String = "") {
+        start(plain:selectionText,layout:SelectionTextLayout(text:selectionText),direct:image,selection:nil,direction:direction,textFirst:false)
+    }
+    func loadSelection(_ selection:ClipboardImageSelection,plain:String,direction:TranslationDirection) {
+        let icons = selection.inlinePlaceholders(in:plain)
+        start(plain:plain,layout:SelectionTextLayout(text:plain,icons:icons),direct:nil,selection:selection,direction:direction,textFirst:true)
+    }
+    private func start(plain:String,layout:SelectionTextLayout,direct:POCImage?,selection:ClipboardImageSelection?,direction:TranslationDirection,textFirst:Bool) {
         cancel()
         let token = generation
-        self.selectionText = selectionText; isImporting = false
-        self.image = image; renderedImage = image.pixels; regions = []; translations = [:]; recognizedText = ""
-        warning = nil; showsOCR = false; showsTextResult = false; zoom = 1; complete = false; busy = true
-        failureKind = nil
-        stage = .reading; draftText = ""; activeRegionID = nil; renderedRegionIDs = []; bodyFontPixels = 0
-        lastRenderedTranslations = [:]; renderRequest = 0
-        ocrSeconds = nil; translationSeconds = nil; firstResultSeconds = nil; firstTextSeconds = nil; started = .now
-        status = "이미지에서 글자 읽는 중…"
-        let translator = makeTranslator?(); providerLabel = translator?.label ?? ""
+        retrySelection = selection
+        activeSelection = true;isImporting = true;selectionText = plain;self.textLayout = layout
+        inlineImages = selection?.inlinePlaceholders(in:plain) ?? []
+        self.image = direct;renderedImage = direct?.pixels;regions = [];translations = [:];recognizedText = ""
+        warning = nil;importNotice = "";failedImages = 0;failedIcons = 0;imagesWithoutText = 0
+        showsOCR = false;showsTextResult = false;zoom = 1;complete = false;busy = true
+        failureKind = nil;stage = .importing;draftText = "";activeRegionID = nil;renderedRegionIDs = [];bodyFontPixels = 0
+        lastRenderedTranslations = [:];renderRequest = 0
+        ocrSeconds = nil;translationSeconds = nil;firstResultSeconds = nil;firstTextSeconds = nil;started = .now
+        status = "선택한 이미지 준비 중…"
+        let translator = makeTranslator?();providerLabel = translator?.label ?? ""
+        let fetch = fetchImage
+        let work = Task.detached(priority:.userInitiated) { () throws -> ClipboardImageLoad in
+            if let selection { return try await selection.loadReport(plain:plain,fetch:fetch) }
+            return ClipboardImageLoad(images:direct.map { [$0] } ?? [])
+        }
+        importOperation = work
         operation = Task { [weak self] in
+            guard let self else { work.cancel();return }
             do {
-                let found = try await Task.detached(priority: .userInitiated) { try POCTextRecognition.recognize(image) }.value
-                try Task.checkCancellation()
-                guard let self, self.generation == token else { return }
-                self.ocrSeconds = Self.seconds(self.started.duration(to: .now))
-                self.regions = found; self.recognizedText = found.map(\.text).joined(separator: "\n\n")
-                let heights = found.flatMap(\.lineBoxes).map { $0.height * CGFloat(image.pixels.height) }.sorted()
-                self.bodyFontPixels = (heights.isEmpty ? 0 : heights[heights.count / 4]) * 0.85
-                self.rendererPreparation = Task.detached(priority: .userInitiated) { try NaturalImageRenderer(image: image.pixels, regions: found) }
                 guard let translator else { throw ImagePOCError.message("번역 연결을 준비하지 못했습니다. 설정에서 제공자를 확인해 주세요.") }
-                let language = Self.languages(direction, text: self.recognizedText)
-                // Image blocks come first: a long copied article must not delay the first image result.
-                let requestRegions = found + (selectionText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? [] : [ImageTextRegion(id: 0, text: selectionText, box: .zero)])
-                guard !requestRegions.isEmpty else { throw ImagePOCError.message("이미지에서 글자를 찾지 못했습니다. 원본은 그대로 유지했습니다.") }
-                let batches = try NativeImageRegionBatch.make(requestRegions)
-                let requestStart = ContinuousClock.now
-                for (index, batch) in batches.enumerated() {
-                    var missing = batch.regions
-                    for attempt in 0..<2 where !missing.isEmpty {
-                        try Task.checkCancellation()
-                        guard self.generation == token else { return }
-                        self.status = attempt == 0 ? "\(found.count)개 영역 읽음 · 번역 중 \(index + 1)/\(batches.count)…" : "누락된 \(missing.count)개 영역 다시 번역 중…"
-                        self.stage = .waiting
-                        let current = NativeImageRegionBatch(regions: missing), stream = UUID()
-                        self.streamID = stream
-                        let partial: @Sendable (String) -> Void = { [weak self] text in
-                            Task { @MainActor in
-                                guard let self, self.generation == token, self.streamID == stream else { return }
-                                let completed = current.completedTranslations(in: text)
-                                if let draft = current.draft(in: text) {
-                                    self.stage = .generating; self.activeRegionID = draft.id; self.draftText = draft.text
-                                    if self.firstTextSeconds == nil { self.firstTextSeconds = Self.seconds(self.started.duration(to: .now)) }
-                                } else if let last = current.regions.last(where: { completed[$0.id] != nil }), let value = completed[last.id] {
-                                    self.stage = .generating; self.draftText = String(value.suffix(160))
-                                }
-                                // Tokens inside the next open block do not restart a completed block's display timer.
-                                if completed.contains(where: { self.translations[$0.key] != $0.value }) {
-                                    self.translations.merge(completed) { _, next in next }
-                                    self.scheduleRender(token: token)
-                                }
-                            }
-                        }
-                        let response = try await translator.run(current, language.source, language.target, partial)
-                        try Task.checkCancellation()
-                        guard self.generation == token else { return }
-                        self.streamID = nil
-                        let parsed = current.completedTranslations(in: response)
-                        for region in missing { self.translations[region.id] = nil }
-                        self.translations.merge(parsed) { _, next in next }
-                        missing = current.regions.filter { parsed[$0.id] == nil }
-                        self.scheduleRender(token: token)
-                    }
+                let language = Self.languages(direction,text:plain)
+                if textFirst,!layout.regions.isEmpty {
+                    try await self.translate(layout.regions,using:translator,language:language,token:token)
                 }
-                self.translationSeconds = Self.seconds(requestStart.duration(to: .now))
+                let loaded = try await withTaskCancellationHandler { try await work.value } onCancel: { work.cancel() }
+                try Task.checkCancellation()
+                guard self.generation == token else { return }
+                self.importOperation = nil;self.isImporting = false
+                self.inlineImages = loaded.icons;self.failedImages = loaded.failedImages;self.failedIcons = loaded.failedIcons
+                self.refreshImportNotice()
+                if !loaded.images.isEmpty {
+                    let original = try ClipboardImageSelection.stack(loaded.images)
+                    self.image = original;self.renderedImage = original.pixels
+                    self.stage = .reading;self.status = "본문 이미지에서 글자 읽는 중…"
+                    let ocrStart = ContinuousClock.now
+                    var found: [ImageTextRegion] = []
+                    var bottom = original.pixels.height
+                    for item in loaded.images {
+                        bottom -= item.pixels.height
+                        let local: [ImageTextRegion]
+                        do { local = try await Task.detached(priority:.userInitiated) { try POCTextRecognition.recognize(item) }.value }
+                        catch is CancellationError { throw CancellationError() }
+                        catch { self.imagesWithoutText += 1;continue }
+                        try Task.checkCancellation()
+                        guard self.generation == token else { return }
+                        func mapped(_ rect:CGRect) -> CGRect {
+                            CGRect(x:rect.minX * CGFloat(item.pixels.width) / CGFloat(original.pixels.width),
+                                   y:(CGFloat(bottom) + rect.minY * CGFloat(item.pixels.height)) / CGFloat(original.pixels.height),
+                                   width:rect.width * CGFloat(item.pixels.width) / CGFloat(original.pixels.width),
+                                   height:rect.height * CGFloat(item.pixels.height) / CGFloat(original.pixels.height))
+                        }
+                        for region in local {
+                            found.append(ImageTextRegion(id:found.count+1,text:region.text,box:mapped(region.box),lineBoxes:region.lineBoxes.map(mapped),isMetadata:region.isMetadata))
+                        }
+                    }
+                    self.ocrSeconds = Self.seconds(ocrStart.duration(to:.now));self.regions = found
+                    self.recognizedText = found.map(\.text).joined(separator:"\n\n")
+                    let heights = found.flatMap(\.lineBoxes).map { $0.height * CGFloat(original.pixels.height) }.sorted()
+                    self.bodyFontPixels = (heights.isEmpty ? 0 : heights[heights.count/4]) * 0.85
+                    if !found.isEmpty { self.rendererPreparation = Task.detached(priority:.userInitiated) { try NaturalImageRenderer(image:original.pixels,regions:found) } }
+                }
+                self.refreshImportNotice()
+                let remaining = self.regions + (textFirst ? [] : layout.regions)
+                if !remaining.isEmpty {
+                    let languages = plain.isEmpty ? Self.languages(direction,text:self.recognizedText) : language
+                    try await self.translate(remaining,using:translator,language:languages,token:token)
+                }
+                try Task.checkCancellation()
+                guard self.generation == token else { return }
                 self.stage = .applying
                 await self.renderTask?.value
-                try Task.checkCancellation()
-                try await self.renderNow(token: token)
-                guard self.generation == token else { return }
-                let missing = requestRegions.filter { self.translations[$0.id] == nil }.count
-                self.busy = false
-                self.complete = missing == 0 && self.warning == nil
-                self.stage = .finished; self.activeRegionID = nil; self.draftText = ""
-                self.status = missing > 0 ? "\(missing)개 영역의 응답을 연결하지 못해 원본을 유지했습니다." : "\(found.count)개 영역 번역 처리 완료"
+                try await self.renderNow(token:token)
+                let requested = self.regions + layout.regions
+                let missing = requested.filter { self.translations[$0.id] == nil }.count
+                self.busy = false;self.stage = .finished;self.activeRegionID = nil;self.draftText = ""
+                self.complete = missing == 0 && !requested.isEmpty && self.warning == nil && self.importNotice.isEmpty
+                var summaries: [String] = []
+                if self.textReady { summaries.append("글 번역 완료") }
+                if !self.renderedRegionIDs.isEmpty { summaries.append("이미지 \(self.renderedRegionIDs.count)개 영역 반영") }
+                if !self.importNotice.isEmpty { summaries.append(self.importNotice) }
+                if missing > 0 { summaries.append("번역 \(missing)개 영역은 원문 유지") }
+                self.status = summaries.isEmpty ? "번역할 글자를 찾지 못해 원본을 유지했습니다." : summaries.joined(separator:" · ")
+                if self.image == nil,layout.regions.isEmpty { self.stage = .failed;self.status = "읽을 수 있는 글이나 이미지가 없습니다." }
             } catch is CancellationError {
             } catch {
-                guard let self, self.generation == token else { return }
-                self.streamID = nil; self.busy = false; self.complete = false
-                self.stage = .failed; self.activeRegionID = nil; self.draftText = ""
-                if case let CodexTranslationClient.ClientError.timeout(operation) = error {
-                    self.failureKind = ["initialize", "config/read", "account/read", "model/list", "thread/start", "mcpServerStatus/list", "app/installed", "turn/start", "turn completion"].contains(operation) ? "codex.timeout.\(operation)" : "codex.timeout"
-                } else { self.failureKind = String(describing: type(of: error)) }
-                self.status = Self.message(error)
+                work.cancel()
+                guard self.generation == token else { return }
+                self.streamID = nil;self.busy = false;self.complete = false;self.isImporting = false
+                self.stage = .failed;self.activeRegionID = nil;self.draftText = ""
+                self.failureKind = String(describing:type(of:error))
+                self.status = self.textReady ? "글 번역 완료 · 이미지 처리를 마치지 못했습니다." : Self.message(error)
             }
         }
+    }
+    private func translate(_ requested:[ImageTextRegion],using translator:NativeImageTranslator,language:(source:String,target:String),token:UUID) async throws {
+        let began = ContinuousClock.now
+        defer { translationSeconds = (translationSeconds ?? 0) + Self.seconds(began.duration(to:.now)) }
+        for batch in try NativeImageRegionBatch.make(requested) {
+            var missing = batch.regions
+            for attempt in 0..<2 where !missing.isEmpty {
+                try Task.checkCancellation()
+                guard generation == token else { return }
+                stage = .waiting;status = attempt == 0 ? "번역 응답을 기다리는 중…" : "누락된 \(missing.count)개 영역 다시 번역 중…"
+                let current = NativeImageRegionBatch(regions:missing),stream = UUID();streamID = stream
+                let partial: @Sendable(String)->Void = { [weak self] text in
+                    Task { @MainActor in
+                        guard let self,self.generation == token,self.streamID == stream else { return }
+                        let closed = current.completedTranslations(in:text)
+                        if let draft = current.draft(in:text) {
+                            self.stage = .generating;self.activeRegionID = draft.id;self.draftText = draft.text
+                            if self.firstTextSeconds == nil { self.firstTextSeconds = Self.seconds(self.started.duration(to:.now)) }
+                        }
+                        if closed.contains(where:{self.translations[$0.key] != $0.value}) {
+                            self.translations.merge(closed) { _,next in next };self.scheduleRender(token:token)
+                        }
+                    }
+                }
+                let response = try await translator.run(current,language.source,language.target,partial)
+                try Task.checkCancellation()
+                guard generation == token else { return }
+                streamID = nil
+                let parsed = current.completedTranslations(in:response)
+                for region in missing { translations[region.id] = nil }
+                translations.merge(parsed) { _,next in next }
+                missing = current.regions.filter { parsed[$0.id] == nil }
+                scheduleRender(token:token)
+            }
+        }
+    }
+    private func refreshImportNotice() {
+        var parts: [String] = []
+        if failedImages > 0 { parts.append("이미지 \(failedImages)개를 읽지 못함") }
+        if failedIcons > 0 { parts.append("아이콘 \(failedIcons)개를 읽지 못함") }
+        if imagesWithoutText > 0 { parts.append("이미지 \(imagesWithoutText)개는 글자가 없어 원본 유지") }
+        importNotice = parts.joined(separator:" · ")
     }
 
     private func scheduleRender(token: UUID) {
@@ -168,7 +241,8 @@ struct NativeImageTranslator {
     }
     private func renderNow(token: UUID) async throws {
         guard generation == token else { return }
-        let values = translations.filter { $0.key != 0 }
+        let imageIDs = Set(regions.map(\.id))
+        let values = translations.filter { imageIDs.contains($0.key) }
         guard !values.isEmpty, values != lastRenderedTranslations else { return }
         if renderer == nil, let preparation = rendererPreparation {
             let prepared = try await withTaskCancellationHandler { try await preparation.value } onCancel: { preparation.cancel() }
@@ -190,13 +264,19 @@ struct NativeImageTranslator {
             warning = "번역은 받았지만 \(reasons) \(result.keptOriginalIDs.count)개 영역을 원본으로 남겼어요. ‘번역문’에서 전체 결과를 확인하세요."
         }
     }
-    func retry(direction: TranslationDirection) { if let image { load(image, direction: direction, selectionText: selectionText) } }
+    func retry(direction: TranslationDirection) {
+        if let retrySelection { loadSelection(retrySelection,plain:selectionText,direction:direction) }
+        else if let image { load(image,direction:direction,selectionText:selectionText) }
+    }
     func cancel() {
         generation = UUID(); streamID = nil; operation?.cancel(); operation = nil
+        importOperation?.cancel();importOperation = nil
         renderTask?.cancel(); renderTask = nil; rendererPreparation?.cancel(); rendererPreparation = nil; renderer = nil; busy = false
     }
     func clear() {
         cancel(); scanner.clear(); image = nil; renderedImage = nil; regions = []; translations = [:]; isImporting = false; selectionText = ""
+        activeSelection = false;retrySelection = nil;textLayout = SelectionTextLayout(text:"");inlineImages = []
+        importNotice = "";failedImages = 0;failedIcons = 0;imagesWithoutText = 0
         recognizedText = ""; status = ""; warning = nil; complete = false
         stage = .idle; draftText = ""; activeRegionID = nil; renderedRegionIDs = []; bodyFontPixels = 0; lastRenderedTranslations = [:]
         failureKind = nil
@@ -254,7 +334,7 @@ struct NativeImageTranslator {
                     .help("화면에서 이미지 가져오기").disabled(input.scanner.busy)
                 if input.scanner.lastRegion != nil { Button("다시 읽기") { ImagePOCIntegration.shared.rescan() }.disabled(input.scanner.busy) }
             }.controlSize(.small)
-            Text("이미지는 Mac에서 읽고, 글자만 선택한 제공자에게 보냅니다. X 이미지는 원본 서버에서 불러옵니다.")
+            Text("이미지는 Mac에서 읽고, 글자만 선택한 제공자에게 보냅니다. 웹 이미지는 원본 서버에서 불러옵니다.")
                 .font(.system(size: 10)).foregroundStyle(.tertiary).lineLimit(2)
             if let message = input.scanner.message {
                 Text(message).font(.system(size: 11)).foregroundStyle(.secondary).lineLimit(2)
@@ -267,61 +347,62 @@ struct NativeImageTranslator {
 @MainActor struct NativeImageSource: View {
     let input: NativeImageInput
     var body: some View {
-        VStack(spacing: 5) {
+        VStack(spacing:5) {
             if !input.selectionText.isEmpty {
-                ScrollView { Text(input.selectionText).font(.system(size: 16)).textSelection(.enabled).frame(maxWidth: .infinity, alignment: .leading).padding(10) }
-                    .frame(maxHeight: 96)
+                SelectionTextView(layout:input.textLayout,icons:input.inlineImages).frame(minHeight:input.image == nil ? 0 : 160,maxHeight:input.image == nil ? .infinity : 160)
             }
-            if input.showsOCR {
-                ScrollView { Text(input.recognizedText).font(.system(size: 16)).textSelection(.enabled).frame(maxWidth: .infinity, alignment: .leading).padding(10) }
+            if input.showsOCR,!input.recognizedText.isEmpty {
+                ScrollView { Text(input.recognizedText).font(.system(size:16)).textSelection(.enabled).frame(maxWidth:.infinity,alignment:.leading).padding(10) }
             } else if let image = input.image {
-                NativeImageHost(image: image.pixels, zoom: input.zoom, bodyFontPixels: input.bodyFontPixels, readable: input.prefersReadableSize).id(input.identity)
+                NativeImageHost(image:image.pixels,zoom:input.zoom,bodyFontPixels:input.bodyFontPixels,readable:input.prefersReadableSize).id(input.identity)
             }
         }
     }
 }
-
 @MainActor struct NativeImageResult: View {
     let input: NativeImageInput
     var body: some View {
-        if input.showsTextResult {
-            ScrollView { Text(input.copyText).font(.system(size: 16)).textSelection(.enabled).frame(maxWidth: .infinity, alignment: .leading).padding(12) }
+        if input.showsTextResult,input.image != nil {
+            ScrollView { Text(input.copyText).font(.system(size:16)).textSelection(.enabled).frame(maxWidth:.infinity,alignment:.leading).padding(12) }
         } else {
-            VStack(spacing: 5) {
+            VStack(spacing:5) {
                 if !input.selectionText.isEmpty {
-                    ScrollView { Text(input.translations[0] ?? (input.busy ? "선택한 글 번역 대기" : "번역 결과 없음")).font(.system(size: 16)).textSelection(.enabled).frame(maxWidth: .infinity, alignment: .leading).padding(10) }
-                        .frame(maxHeight: 96)
+                    SelectionTextView(layout:input.textLayout,icons:input.inlineImages,translations:input.translations).frame(minHeight:input.image == nil ? 0 : 160,maxHeight:input.image == nil ? .infinity : 160)
                 }
                 if let image = input.renderedImage {
-                    NativeImageHost(image: image, zoom: input.zoom, bodyFontPixels: input.bodyFontPixels, readable: input.prefersReadableSize,
-                                    pendingBoxes: input.pendingBoxes, activeBox: input.activeBox).id(input.identity)
-                } else { Text(input.status).font(.system(size: 12)).foregroundStyle(.secondary).padding(12); Spacer() }
+                    NativeImageHost(image:image,zoom:input.zoom,bodyFontPixels:input.bodyFontPixels,readable:input.prefersReadableSize,
+                                    pendingBoxes:input.pendingBoxes,activeBox:input.activeBox).id(input.identity)
+                }
+                if input.failedImages > 0 {
+                    Label("이미지 \(input.failedImages)개를 읽지 못했습니다. 글 번역은 사용할 수 있습니다.",systemImage:"photo.badge.exclamationmark")
+                        .font(.system(size:12)).foregroundStyle(.secondary).frame(maxWidth:.infinity,alignment:.leading).padding(12)
+                }
             }
         }
     }
 }
-
 @MainActor struct NativeImageFooter: View {
     let app: AppModel
     private var input: NativeImageInput { app.imageInput }
     var body: some View {
-        HStack(spacing: 7) {
+        HStack(spacing:7) {
             if input.busy { ProgressView().controlSize(.small) }
-            Text(input.warning ?? input.status).font(.system(size: 11)).lineLimit(2)
-                .help([input.providerLabel, input.timing].filter { !$0.isEmpty }.joined(separator: " · "))
-            Spacer(minLength: 0)
-            Button(input.showsTextResult ? "이미지" : "번역문") { input.showsTextResult.toggle() }.disabled(input.translations.isEmpty)
-            Button("−") { input.zoom = max(1, input.zoom - 0.5) }.disabled(input.zoom <= 1)
-            Button("+") { input.zoom = min(4, input.zoom + 0.5) }.disabled(input.zoom >= 4)
-            if !input.busy {
-                if input.image != nil { Button("다시 번역") { input.retry(direction: app.store.direction) } }
-                else { Button("다시 불러오기") { ImagePOCIntegration.shared.retryImport() } }
+            Text(input.warning ?? input.status).font(.system(size:11)).lineLimit(2).help([input.providerLabel,input.timing].filter { !$0.isEmpty }.joined(separator:" · "))
+            Spacer(minLength:0)
+            if input.image != nil {
+                Button(input.showsTextResult ? "이미지" : "번역문") { input.showsTextResult.toggle() }.disabled(input.translations.isEmpty)
+                Button("−") { input.zoom = max(1,input.zoom-0.5) }.disabled(input.zoom <= 1)
+                Button("+") { input.zoom = min(4,input.zoom+0.5) }.disabled(input.zoom >= 4)
             }
-            Button("복사") {
-                guard let image = input.renderedImage, let png = NSBitmapImageRep(cgImage: image).representation(using: .png, properties: [:]) else { return }
-                NSPasteboard.general.clearContents(); NSPasteboard.general.setData(png, forType: .png)
-            }.disabled(!input.complete)
-        }.controlSize(.small).padding(.horizontal, 10)
+            if !input.busy { Button("다시 번역") { input.retry(direction:app.store.direction) } }
+            if !input.selectionText.isEmpty { Button("글 복사") { _ = input.copySelectedText(to:.general) }.disabled(!input.textReady) }
+            if input.renderedImage != nil {
+                Button("이미지 복사") {
+                    guard let image = input.renderedImage,let png = NSBitmapImageRep(cgImage:image).representation(using:.png,properties:[:]) else { return }
+                    NSPasteboard.general.clearContents();NSPasteboard.general.setData(png,forType:.png)
+                }.disabled(input.busy)
+            }
+        }.controlSize(.small).padding(.horizontal,10)
     }
 }
 
