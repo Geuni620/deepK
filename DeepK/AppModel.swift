@@ -13,6 +13,9 @@ final class AppModel: NSObject, NSWindowDelegate {
     let client: CodexTranslationClient
     let claudeClient: ClaudeTranslationClient
     let store: TranslationStore
+    #if DEEPK_IMAGE_TRANSLATION_POC
+    let imageInput = NativeImageInput()
+    #endif
     let windowPresentation = WindowPresentation()
     let loginItemController = LoginItemController()
     /// 편집 메뉴 ⌘↩ '끝에 구분선 넣기'의 target. 덧붙일 글은 경계 규칙(planner)이 정한다.
@@ -143,12 +146,18 @@ final class AppModel: NSObject, NSWindowDelegate {
     private static let latencyLog = Logger(subsystem: "com.deepk.app", category: "latency")
 
     override init() {
-        let backend = CodexTranslationClient(configuration: .init(
+        let initialCodexConfiguration = CodexTranslationClient.Configuration(
             prewarmEnabled: UserDefaults.standard.object(forKey: "codexPrewarmEnabled") as? Bool ?? true,
             preserveOpaqueLiterals: UserDefaults.standard.object(forKey: "codexPreserveOpaqueLiterals") as? Bool ?? true,
             // 새 app-server를 띄울 때마다 읽으므로 `defaults write` 뒤 재실행 없이 '연결 해제 → 연결 확인'으로 반영된다.
             userExecutablePathProvider: { UserDefaults.standard.string(forKey: "codexExecutablePath") }
-        ))
+        )
+        #if DEEPK_IMAGE_TRANSLATION_POC
+        let codexConfiguration = POCSyntheticDemo.auditedConfiguration(initialCodexConfiguration)
+        #else
+        let codexConfiguration = initialCodexConfiguration
+        #endif
+        let backend = CodexTranslationClient(configuration: codexConfiguration)
         client = backend
         let claudePath = UserDefaults.standard.string(forKey: "claudeExecutablePath")
         // 비상 스위치: `defaults write com.deepk.app claudeTransport oneShotJSON`이면 재빌드 없이 기존 경로로 돌아간다.
@@ -240,6 +249,23 @@ final class AppModel: NSObject, NSWindowDelegate {
             }
         })
         super.init()
+        #if DEEPK_IMAGE_TRANSLATION_POC
+        imageInput.makeTranslator = { [weak self] in
+            guard let self else { return NativeImageTranslator(label: "", run: { _, _, _, _ in throw CancellationError() }) }
+            let selection = TranslationSelection(provider: self.selectedProvider, model: self.selectedModel)
+            let codex = self.client, claude = self.claudeClient, fast = self.codexFastServiceTier
+            return NativeImageTranslator(label: selection.label, run: { batch, source, target, partial in
+                switch selection.provider {
+                case .codex:
+                    return try await codex.translate(text: batch.payload, source: source, target: target, model: selection.model,
+                                                     fastServiceTier: fast, imageRegionMarkup: true, onPartialText: partial)
+                case .claude:
+                    return try await claude.translate(text: batch.payload, source: source, target: target, model: selection.model,
+                                                      imageRegionMarkup: true, onPartialText: partial)
+                }
+            })
+        }
+        #endif
         // 비상 스위치: `defaults write com.deepk.app outputEchoRetry -bool false`면 원문을 그대로 돌려준 답을 다시 요청하지 않고
         // 경고와 함께 보여 준다. `outputHanjaRepair -bool false`면 한국어 결과에 섞인 한자를 그대로 둔다. 재실행하면 반영된다.
         store.applyOutputCheckSwitches(from: .standard)
@@ -351,6 +377,13 @@ final class AppModel: NSObject, NSWindowDelegate {
         }
         monitor.onCopiedText = { [weak self] plain, html, sourcePID, uptime in
             guard let self else { return }
+            #if DEEPK_IMAGE_TRANSLATION_POC
+            if POCSyntheticDemo.armed && !POCSyntheticDemo.accepts(plain: plain, html: html) { return }
+            guard NSWorkspace.shared.frontmostApplication?.processIdentifier == sourcePID else { self.captureMessage = nil; return }
+            if ImagePOCIntegration.shared.accept(plain: plain, html: html) { return }
+            ImagePOCIntegration.shared.cancelImport()
+            self.imageInput.clear()
+            #endif
             // 원문 창에 보이는 글자와 번역·중복 판정에 쓰는 글자가 같도록 한 번만 정리한다.
             // 수식이 없을 때만 링크·인라인 코드를 원문 구조로 붙인다.
             let importStart = DispatchTime.now().uptimeNanoseconds
@@ -392,6 +425,13 @@ final class AppModel: NSObject, NSWindowDelegate {
         monitor.onFailure = { [weak self] failure in
             guard let self else { return }
             captureMessage = nil
+            #if DEEPK_IMAGE_TRANSLATION_POC
+            if (failure == .clipboardNonText || failure == .clipboardTextEmpty),
+               NSWorkspace.shared.frontmostApplication?.processIdentifier == originalApplication?.processIdentifier,
+               ImagePOCIntegration.shared.paste() {
+                return
+            }
+            #endif
             switch failure {
             case .inputMonitoringPermissionRequired:
                 feedback = "현재 앱의 키 입력 감시가 연결되지 않았습니다. 이미 허용했다면 앱을 다시 열어 주세요"
@@ -437,7 +477,9 @@ final class AppModel: NSObject, NSWindowDelegate {
         ]
         if shortcutEnabled && !shortcutReady && !UserDefaults.standard.bool(forKey: "shortcutSetupShown") {
             UserDefaults.standard.set(true, forKey: "shortcutSetupShown")
+            #if !DEEPK_IMAGE_TRANSLATION_POC
             openSettings()
+            #endif
         }
         Task { await connect() }
     }
@@ -927,6 +969,9 @@ final class AppModel: NSObject, NSWindowDelegate {
         elapsedMilliseconds = nil
         feedback = ""
         store.setDirection(direction)
+        #if DEEPK_IMAGE_TRANSLATION_POC
+        if imageInput.image != nil { imageInput.retry(direction: direction) }
+        #endif
         UserDefaults.standard.set(direction.rawValue, forKey: "translationDirection")
         refreshPendingCopy()
     }
@@ -1263,6 +1308,9 @@ final class AppModel: NSObject, NSWindowDelegate {
 
     func openInputMonitoringSettings() {
         prepareForSystemPermissionUI()
+        #if DEEPK_IMAGE_TRANSLATION_POC
+        if !CGPreflightListenEventAccess() { _ = CGRequestListenEventAccess() }
+        #endif
         permissionGuide.present(.inputMonitoring) { [weak self] _ in
             self?.inputMonitoringGranted()
         }
@@ -1337,6 +1385,10 @@ final class AppModel: NSObject, NSWindowDelegate {
         invocation = nil
         originalApplication = nil
         pendingCopy = nil
+        #if DEEPK_IMAGE_TRANSLATION_POC
+        ImagePOCIntegration.shared.cancelImport()
+        imageInput.clear()
+        #endif
         window?.orderOut(nil)
         guard restoreOriginalFocus else { return }
         NSApp.hide(nil)
@@ -1399,6 +1451,31 @@ final class AppModel: NSObject, NSWindowDelegate {
             window?.orderFrontRegardless()
         }
     }
+
+    #if DEEPK_IMAGE_TRANSLATION_POC
+    func beginImageImport(plain: String) {
+        invocationGeneration &+= 1; invocation?.invalidate(); invocation = nil
+        pendingCopy = nil; captureMessage = nil; feedback = ""; insertionNote = nil
+        store.editSource("", isComposing: false)
+        imageInput.clear(); imageInput.isImporting = true; imageInput.busy = true; imageInput.selectionText = plain
+        imageInput.stage = .importing
+        imageInput.status = "선택한 이미지 불러오는 중…"
+        showWindow(activate: false)
+        if let window, window.frame.width < 720 {
+            var frame = window.frame
+            let bounds = window.screen?.visibleFrame ?? NSScreen.main?.visibleFrame ?? frame
+            frame.size = CGSize(width: min(1000, bounds.width), height: min(720, bounds.height))
+            frame.origin.x = max(bounds.minX, min(frame.origin.x, bounds.maxX - frame.width))
+            frame.origin.y = max(bounds.minY, min(frame.origin.y, bounds.maxY - frame.height))
+            window.setFrame(frame, display: true)
+        }
+    }
+    func acceptInputImage(_ image: POCImage, plain: String = "") {
+        if !imageInput.isImporting { beginImageImport(plain: plain) }
+        imageInput.load(image, direction: store.direction, selectionText: plain)
+        showWindow(activate: false)
+    }
+    #endif
 
     func previewTranslationWindow() {
         closeSettingsWindow()
@@ -1522,6 +1599,9 @@ final class AppModel: NSObject, NSWindowDelegate {
     }
 
     func shutdown() async {
+        #if DEEPK_IMAGE_TRANSLATION_POC
+        imageInput.clear()
+        #endif
         for provider in TranslationProvider.allCases { _ = beginProviderOperation(provider) }
         connecting = false
         pendingCopy = nil

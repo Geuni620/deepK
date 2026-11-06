@@ -1,0 +1,65 @@
+{
+  "base": "c409674a6be322e5f522e62dd360d524bb618757",
+  "recordedAtUTC": "2026-11-06T08:46:50.576094+00:00",
+  "sourceDigestSHA256": "20bf8caf4943672445ea3ed8653c4753fc681d62b2e0872a058d487a4b6f47ea",
+  "sourceDigestFileCount": 135,
+  "sourceDigestScope": [
+    "DeepK",
+    "DeepKTests",
+    "experiments/image-translation",
+    "scripts"
+  ],
+  "sourceDigestExtensions": [
+    ".swift",
+    ".py",
+    ".sh",
+    ".command"
+  ],
+  "checks": [
+    {
+      "name": "full-tests",
+      "command": [
+        "bash",
+        "scripts/test.sh"
+      ],
+      "exit": 0,
+      "seconds": 804.26
+    },
+    {
+      "name": "format-strict",
+      "command": [
+        "bash",
+        "scripts/test-format-regressions.sh",
+        "--strict"
+      ],
+      "exit": 0,
+      "seconds": 53.022
+    },
+    {
+      "name": "regular-build",
+      "command": [
+        "bash",
+        "scripts/build.sh"
+      ],
+      "exit": 0,
+      "seconds": 191.279
+    },
+    {
+      "name": "image-poc-tests",
+      "command": [
+        "bash",
+        "scripts/image-translation-poc.sh",
+        "--test"
+      ],
+      "exit": 0,
+      "seconds": 503.856
+    }
+  ],
+  "failures": 0,
+  "retries": 0,
+  "newProviderRequests": 0,
+  "modelDownloaded": false,
+  "normalAppLaunched": false,
+  "physicalShortcutExercised": false,
+  "syntheticOnly": true
+}

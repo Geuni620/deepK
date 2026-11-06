@@ -21,6 +21,13 @@ struct TranslationView: View {
             let expanded = bounds.size.width >= 720
             VStack(spacing: 0) {
                 header(expanded: expanded, width: bounds.size.width)
+                #if DEEPK_IMAGE_TRANSLATION_POC
+                NativeImageToolbar(app: model)
+                if model.imageInput.isActive {
+                    NativeImageProgressHeader(input: model.imageInput)
+                    Divider()
+                }
+                #endif
                 if expanded { Divider() }
                 GeometryReader { content in
                     let sourceHeight = expanded ? content.size.height : max(64, (content.size.height - 1) * 0.38)
@@ -40,8 +47,15 @@ struct TranslationView: View {
                 }
                 // The panes run down to one divider over one fixed footer: no row appears or disappears around the text.
                 Divider()
-                FooterBar(model: model, expanded: expanded, scrollProxy: scrollProxy, presence: presence)
-                    .frame(height: expanded ? 44 : 40)
+                #if DEEPK_IMAGE_TRANSLATION_POC
+                if model.imageInput.isActive {
+                    NativeImageFooter(app: model).frame(height: 44)
+                } else {
+                    FooterBar(model: model, expanded: expanded, scrollProxy: scrollProxy, presence: presence).frame(height: expanded ? 44 : 40)
+                }
+                #else
+                FooterBar(model: model, expanded: expanded, scrollProxy: scrollProxy, presence: presence).frame(height: expanded ? 44 : 40)
+                #endif
             }
             .background(Color(nsColor: .windowBackgroundColor))
         }
@@ -105,6 +119,11 @@ struct TranslationView: View {
 
     private func windowControls(expanded: Bool) -> some View {
         HStack(spacing: 10) {
+            #if DEEPK_IMAGE_TRANSLATION_POC
+            if model.imageInput.isActive {
+                Button { ImagePOCIntegration.shared.cancelImport(); model.imageInput.clear() } label: { Image(systemName: "xmark") }.accessibilityLabel("입력 이미지 지우기")
+            }
+            #endif
             if !store.sourceText.isEmpty {
                 Button { model.edit("", composing: false) } label: { Image(systemName: "xmark") }
                     .accessibilityLabel("원문 지우기")
@@ -119,7 +138,17 @@ struct TranslationView: View {
         }.buttonStyle(.plain)
     }
 
-    private func sourcePane(expanded: Bool) -> some View {
+    @ViewBuilder private func sourcePane(expanded: Bool) -> some View {
+        #if DEEPK_IMAGE_TRANSLATION_POC
+        if model.imageInput.isActive {
+            NativeImageSource(input: model.imageInput)
+        } else { textSourcePane(expanded: expanded) }
+        #else
+        textSourcePane(expanded: expanded)
+        #endif
+    }
+
+    private func textSourcePane(expanded: Bool) -> some View {
         ZStack(alignment: .topLeading) {
             SourceEditor(text: store.sourceText, fontSize: expanded ? 14 : 13,
                          boundaryLines: store.sourceBoundaryLines,
@@ -127,9 +156,15 @@ struct TranslationView: View {
                          proxy: model.sourceEditor,
                          onEdit: { model.edit($0, composing: $1) }, onEscape: { model.hideAndRestore() })
             if store.sourceText.isEmpty {
+                #if DEEPK_IMAGE_TRANSLATION_POC
+                Text("문장을 입력하거나 글·이미지를 선택하고 ⌘C를 두 번 누르세요")
+                    .font(.system(size: expanded ? 14 : 13)).foregroundStyle(.tertiary)
+                    .padding(.top, 5).allowsHitTesting(false)
+                #else
                 Text("문장을 입력하거나 다른 앱에서 ⌘C를 두 번 누르세요")
                     .font(.system(size: expanded ? 14 : 13)).foregroundStyle(.tertiary)
                     .padding(.top, 5).allowsHitTesting(false)
+                #endif
             }
         }
         .padding(.horizontal, TranslationLayout.textInset(expanded: expanded))
@@ -150,8 +185,18 @@ private struct ResultPane: View {
     private var store: TranslationStore { model.store }
 
     var body: some View {
+        #if DEEPK_IMAGE_TRANSLATION_POC
+        if model.imageInput.isActive {
+            NativeImageResult(input: model.imageInput)
+        } else { textResult }
+        #else
+        textResult
+        #endif
+    }
+
+    private var textResult: some View {
         let content = store.resultContent
-        TranslationResultTextView(content: content, lineSpacing: expanded ? 6 : 3, display: model.resultDisplay, proxy: scrollProxy,
+        return TranslationResultTextView(content: content, lineSpacing: expanded ? 6 : 3, display: model.resultDisplay, proxy: scrollProxy,
                                   menuActions: [wholeDocumentRetranslation])
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .overlay(alignment: .topLeading) {

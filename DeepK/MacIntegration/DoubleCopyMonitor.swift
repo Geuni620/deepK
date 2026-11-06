@@ -313,9 +313,15 @@ public final class DoubleCopyMonitor {
     /// 수식 정리에 쓸 public.html이다. 다른 앱은 HTML을 읽는 순간에 만들 수 있어(지연 제공) 그동안
     /// 메인 액터가 멈추므로, Chromium 복사에서만 읽는다. 크기 상한을 넘으면 nil이다.
     static func copiedHTML(from pasteboard: NSPasteboard) -> String? {
+        #if DEEPK_IMAGE_TRANSLATION_POC
+        guard pasteboard.types?.contains(.html) == true,
+              let data = pasteboard.data(forType: .html), data.count <= CopiedMathNormalizer.maximumHTMLBytes
+        else { return nil }
+        #else
         guard pasteboard.pasteboardItems?.contains(where: { $0.types.contains(chromiumSourceURLType) }) == true,
               let data = pasteboard.data(forType: .html), data.count <= CopiedMathNormalizer.maximumHTMLBytes
         else { return nil }
+        #endif
         return String(data: data, encoding: .utf8)
     }
 

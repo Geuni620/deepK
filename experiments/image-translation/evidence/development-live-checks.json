@@ -1,0 +1,26 @@
+{
+  "failureKind" : "none",
+  "firstDraftSeconds" : 4.3364304159999998,
+  "firstRenderedSeconds" : 4.3749452499999997,
+  "fixture" : "synthetic-chat",
+  "koreanImageRegions" : 6,
+  "mappedRegions" : 10,
+  "ocrSeconds" : 0.70805733299999996,
+  "passed" : true,
+  "provider" : "codex",
+  "providerResponseMocked" : false,
+  "rawContentSaved" : false,
+  "seededSyntheticInput" : true,
+  "shortcutMonitorReady" : true,
+  "syntheticClipboardReplay" : true,
+  "syntheticOnly" : true,
+  "systemShortcutExercised" : false,
+  "translationSeconds" : 5.9253429579999999,
+  "translationWindowCount" : 1,
+  "visibleAppWindowTypes" : [
+    "NSStatusBarWindow",
+    "TranslationPanel",
+    "NSStatusBarWindow"
+  ],
+  "windowCount" : 3
+}
