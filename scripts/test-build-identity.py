@@ -25,6 +25,11 @@ for configuration, identifier, name in [
     assert settings["PRODUCT_BUNDLE_IDENTIFIER"] == identifier, settings["PRODUCT_BUNDLE_IDENTIFIER"]
     assert settings["INFOPLIST_KEY_CFBundleDisplayName"] == name, settings["INFOPLIST_KEY_CFBundleDisplayName"]
     assert settings["PRODUCT_NAME"] == name, settings["PRODUCT_NAME"]
+    flags = settings.get("SWIFT_ACTIVE_COMPILATION_CONDITIONS", "").split()
+    assert "DEEPK_IMAGE_TRANSLATION" in flags, (configuration, flags)
+    assert "DEEPK_IMAGE_TRANSLATION_POC" not in flags, (configuration, flags)
+    source_info = plistlib.loads((root / settings["INFOPLIST_FILE"]).read_bytes())
+    assert source_info.get("NSScreenCaptureUsageDescription"), configuration
     app = args.debug_app if configuration == "Debug" else args.release_app
     if app is not None:
         info = plistlib.loads((app / "Contents/Info.plist").read_bytes())
@@ -32,6 +37,7 @@ for configuration, identifier, name in [
                     "CFBundleDisplayName": name, "CFBundleExecutable": name}
         for key, value in expected.items():
             assert info.get(key) == value, (configuration, key, info.get(key), value)
+        assert info.get("NSScreenCaptureUsageDescription") == source_info["NSScreenCaptureUsageDescription"]
         # macOS의 대소문자 구분 없는 경로 조회가 기존 DeepK 이름을 가리는 것도 잡는다.
         assert f"{name}.app" in {item.name for item in app.parent.iterdir()}
         assert name in {item.name for item in (app / "Contents/MacOS").iterdir()}

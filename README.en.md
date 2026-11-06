@@ -51,6 +51,8 @@ After installing, install [Codex CLI](docs/development.md#codex-cli-준비) or [
 deepK is in an early release stage. Translation speed depends on the provider, model, and input.
 
 - Text input with automatic translation, automatic or manual language direction
+- Selected text and images in the same window; on-device OCR sends only text to the chosen provider
+- Small inline icons stay small; image failures do not block selected-text translation or copy
 - Results that keep code blocks, inline code, and links, with copy
 - Continued translation of paragraphs separated by a divider (`---`)
 - Lives in the menu bar, returns to the original app, and inserts only when you ask

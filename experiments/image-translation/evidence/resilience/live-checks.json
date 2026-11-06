@@ -1,0 +1,18 @@
+{
+  "copyVerified" : true,
+  "expectedRequests" : 1,
+  "failedIcons" : 1,
+  "failureKind" : "none",
+  "firstTextSeconds" : 13.060527625000001,
+  "imageOrPathIncludedInModelInput" : false,
+  "ocrRegions" : 0,
+  "passed" : true,
+  "physicalShortcutExercised" : false,
+  "provider" : "codex",
+  "providerLabel" : "Codex · gpt-5.6-luna",
+  "selectedModel" : "gpt-5.6-luna",
+  "syntheticOnly" : true,
+  "textBlocks" : 2,
+  "textReady" : true,
+  "translationSeconds" : 12.926977166
+}

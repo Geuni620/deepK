@@ -1,0 +1,11 @@
+{
+  "complete" : true,
+  "completedSeconds" : 2.1293738750000002,
+  "firstBitmapSeconds" : 0.89079691599999999,
+  "firstImageBlockClosedSeconds" : 0.86985758300000005,
+  "firstRequestedID" : 1,
+  "imageVisibleBeforeEngineFinished" : true,
+  "providerRequests" : 0,
+  "scope" : "fixed synthetic mock stream; local UI delay only, not provider speed",
+  "twoTimesZoomActualRatio" : 2
+}

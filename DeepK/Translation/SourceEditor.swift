@@ -217,6 +217,9 @@ struct SourceEditor: NSViewRepresentable {
 
         /// 붙여 넣기와 서비스. 끌어다 놓기도 여기를 지나지만, 놓은 글은 NSTextView가 이어서 선택하므로 줄을 바꾸지 않는다.
         override func readSelection(from pboard: NSPasteboard, type: NSPasteboard.PasteboardType) -> Bool {
+            #if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
+            if ImagePOCIntegration.shared.paste(pboard) { return true }
+            #endif
             let read = super.readSelection(from: pboard, type: type)
             if read, !droppingText { breakAfterTypedBoundary() }
             return read

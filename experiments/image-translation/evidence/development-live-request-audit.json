@@ -1,0 +1,57 @@
+{
+  "checks": [
+    {
+      "documentTextAndImageOCRTogether": true,
+      "noFixtureNameOrMetadata": true,
+      "noImageDataOrReferences": true,
+      "onlyTextItems": true,
+      "sourceExactlyMatchesOCRBatch": true
+    }
+  ],
+  "rpcRequests": [
+    "initialize",
+    "config/read",
+    "account/read",
+    "model/list",
+    "account/read",
+    "thread/start",
+    "account/read",
+    "mcpServerStatus/list",
+    "app/installed",
+    "account/read",
+    "turn/start",
+    "thread/unsubscribe",
+    "account/read",
+    "thread/start",
+    "mcpServerStatus/list",
+    "app/installed"
+  ],
+  "rpcResponses": [
+    "initialize",
+    "config/read",
+    "account/read",
+    "model/list",
+    "account/read",
+    "account/read",
+    "thread/start",
+    "mcpServerStatus/list",
+    "app/installed",
+    "account/read",
+    "turn/start",
+    "thread/unsubscribe",
+    "account/read",
+    "thread/start",
+    "mcpServerStatus/list",
+    "app/installed"
+  ],
+  "scope": "synthetic CLI JSON-RPC request; not provider HTTP or retention audit",
+  "threadProtection": {
+    "approvalNever": true,
+    "appsDisabled": true,
+    "ephemeral": true,
+    "memoriesDisabled": true,
+    "shellDisabled": true,
+    "viewImageDisabled": true
+  },
+  "turnCount": 1
+}

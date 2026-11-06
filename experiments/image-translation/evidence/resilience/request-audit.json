@@ -1,0 +1,43 @@
+{
+  "checks": [
+    {
+      "approvedRegionBatch": true,
+      "noFixtureNameOrMetadata": true,
+      "noImageDataOrReferences": true,
+      "onlyTextItems": true,
+      "sourceExactlyMatchesApprovedSyntheticRegions": true
+    }
+  ],
+  "rpcRequests": [
+    "initialize",
+    "config/read",
+    "account/read",
+    "model/list",
+    "thread/start",
+    "mcpServerStatus/list",
+    "app/installed",
+    "turn/start",
+    "thread/unsubscribe"
+  ],
+  "rpcResponses": [
+    "initialize",
+    "config/read",
+    "account/read",
+    "model/list",
+    "thread/start",
+    "mcpServerStatus/list",
+    "app/installed",
+    "turn/start",
+    "thread/unsubscribe"
+  ],
+  "scope": "synthetic CLI JSON-RPC request; not provider HTTP or retention audit",
+  "threadProtection": {
+    "approvalNever": true,
+    "appsDisabled": true,
+    "ephemeral": true,
+    "memoriesDisabled": true,
+    "shellDisabled": true,
+    "viewImageDisabled": true
+  },
+  "turnCount": 1
+}
