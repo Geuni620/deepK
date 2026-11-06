@@ -254,7 +254,10 @@ final class AppModel: NSObject, NSWindowDelegate {
             guard let self else { return NativeImageTranslator(label: "", run: { _, _, _, _ in throw CancellationError() }) }
             let selection = TranslationSelection(provider: self.selectedProvider, model: self.selectedModel)
             let codex = self.client, claude = self.claudeClient, fast = self.codexFastServiceTier
-            return NativeImageTranslator(label: selection.label, run: { batch, source, target, partial in
+            return NativeImageTranslator(label: selection.label, provider:selection.provider, run: { [weak self] batch, source, target, partial in
+                guard await self?.imageTranslationAllowed(for:selection.provider) == true else {
+                    throw ImagePOCError.message("선택한 제공자의 연결을 해제했습니다. 설정에서 다시 연결해 주세요.")
+                }
                 switch selection.provider {
                 case .codex:
                     return try await codex.translate(text: batch.payload, source: source, target: target, model: selection.model,
@@ -831,6 +834,9 @@ final class AppModel: NSObject, NSWindowDelegate {
     func disconnectProvider(_ provider: TranslationProvider) async {
         guard !providerState(for: provider).isConnecting else { return }
         disconnectedByUser.insert(provider)
+        #if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
+        imageInput.providerDisconnected(provider)
+        #endif
         let generation = beginProviderOperation(provider)
         setProviderState(.connecting(message: "연결 해제 중…"), for: provider)
         let isSelected = provider == selectedProvider
@@ -868,6 +874,9 @@ final class AppModel: NSObject, NSWindowDelegate {
         }
         disconnectedByUser.insert(provider)
         setProviderState(.connecting(message: "로그아웃 중…"), for: provider)
+        #if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
+        imageInput.providerDisconnected(provider)
+        #endif
         if provider == selectedProvider {
             connecting = false
             pendingCopy = nil
@@ -973,7 +982,7 @@ final class AppModel: NSObject, NSWindowDelegate {
         feedback = ""
         store.setDirection(direction)
         #if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
-        if imageInput.image != nil { imageInput.retry(direction: direction) }
+        if imageInput.isActive { imageInput.retry(direction: direction) }
         #endif
         UserDefaults.standard.set(direction.rawValue, forKey: "translationDirection")
         refreshPendingCopy()
@@ -1456,14 +1465,15 @@ final class AppModel: NSObject, NSWindowDelegate {
     }
 
     #if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
-    func beginImageImport(plain: String, expand: Bool = true) {
+    func imageTranslationAllowed(for provider:TranslationProvider) -> Bool { !disconnectedByUser.contains(provider) }
+    func beginImageImport(plain: String, expand: Bool = true, preserveScanner:Bool = false, present:Bool = true) {
         invocationGeneration &+= 1; invocation?.invalidate(); invocation = nil
         pendingCopy = nil; captureMessage = nil; feedback = ""; insertionNote = nil
         store.editSource("", isComposing: false)
-        imageInput.clear(); imageInput.isImporting = true; imageInput.busy = true; imageInput.selectionText = plain
+        imageInput.clear(preserveScanner:preserveScanner); imageInput.isImporting = true; imageInput.busy = true; imageInput.selectionText = plain
         imageInput.stage = .importing
         imageInput.status = "선택한 이미지 불러오는 중…"
-        showWindow(activate: false)
+        if present { showWindow(activate: false) }
         if expand, let window, window.frame.width < 720 {
             var frame = window.frame
             let bounds = window.screen?.visibleFrame ?? NSScreen.main?.visibleFrame ?? frame
@@ -1473,11 +1483,12 @@ final class AppModel: NSObject, NSWindowDelegate {
             window.setFrame(frame, display: true)
         }
     }
-    func acceptInputImage(_ image: POCImage, plain: String = "") {
-        if !imageInput.isImporting { beginImageImport(plain: plain) }
+    func acceptInputImage(_ image: POCImage, plain: String = "", preserveScanner:Bool = false, present:Bool = true) {
+        if !imageInput.isImporting { beginImageImport(plain: plain,preserveScanner:preserveScanner,present:present) }
         imageInput.load(image, direction: store.direction, selectionText: plain)
-        showWindow(activate: false)
+        if present { showWindow(activate: false) }
     }
+    func acceptScannedImage(_ image:POCImage,present:Bool = true) { acceptInputImage(image,preserveScanner:true,present:present) }
     #endif
 
     func previewTranslationWindow() {

@@ -9,6 +9,6 @@ while IFS= read -r source_file;do sources+=("$project_root/$source_file");done <
 fixtures=(ImageTranslationFixtures ImageTranslationTests NativeImageTests InputResilienceTests ChatLayoutTests ImageFeedbackBenchmark ScreenScannerTests)
 for fixture in "${fixtures[@]}";do sources+=("$project_root/experiments/image-translation/$fixture.swift");done
 xcrun swiftc -swift-version 6 -warnings-as-errors -parse-as-library -D DEEPK_IMAGE_TRANSLATION -D IMAGE_INPUT_RELEASE_TESTS \
-  -module-cache-path "$test_root/cache" "${sources[@]}" "$project_root/DeepKTests/ImageInputReleaseTests.swift" \
+  -module-cache-path "$test_root/cache" "${sources[@]}" "$project_root/DeepKTests/ImageInputReleaseTests.swift" "$project_root/DeepKTests/ImageInputLifecycleTests.swift" \
   -o "$test_root/ImageInputReleaseTests" -framework AppKit -framework SwiftUI -framework Vision -framework ScreenCaptureKit -framework CoreML -lxml2
 "$test_root/ImageInputReleaseTests" --assert-feedback

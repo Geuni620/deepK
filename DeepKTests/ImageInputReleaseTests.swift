@@ -7,6 +7,8 @@ import AppKit
         _ = NSApplication.shared
         Task {
             await NativeImageTests.run()
+            do { try await ImageInputLifecycleTests.run() }
+            catch { fputs("FAIL: image session lifecycle\n",stderr);exit(1) }
             await ImageFeedbackBenchmark.run()
             do { try ScreenScannerTests.run() }
             catch { fputs("FAIL: production image scanner geometry\n",stderr);exit(1) }

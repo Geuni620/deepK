@@ -4,9 +4,14 @@ import NaturalLanguage
 import Observation
 import SwiftUI
 
+typealias NativeImageTranslationRun = @Sendable (NativeImageRegionBatch, String, String, @escaping @Sendable (String) -> Void) async throws -> String
 struct NativeImageTranslator {
     let label: String
-    let run: @Sendable (NativeImageRegionBatch, String, String, @escaping @Sendable (String) -> Void) async throws -> String
+    let provider: TranslationProvider?
+    let run: NativeImageTranslationRun
+    init(label:String,provider:TranslationProvider? = nil,run:@escaping NativeImageTranslationRun) {
+        self.label=label;self.provider=provider;self.run=run
+    }
 }
 
 @MainActor @Observable final class NativeImageInput {
@@ -49,6 +54,7 @@ struct NativeImageTranslator {
     var failureKind: String?
     var sourceLanguage: String?
     var targetLanguage: String?
+    @ObservationIgnored private(set) var activeProvider: TranslationProvider?
     @ObservationIgnored var makeTranslator: (() -> NativeImageTranslator)?
     @ObservationIgnored private var operation: Task<Void, Never>?
     @ObservationIgnored private var renderTask: Task<Void, Never>?
@@ -99,7 +105,7 @@ struct NativeImageTranslator {
         lastRenderedTranslations = [:];renderRequest = 0
         ocrSeconds = nil;translationSeconds = nil;firstResultSeconds = nil;firstTextSeconds = nil;started = .now
         status = "선택한 이미지 준비 중…"
-        let translator = makeTranslator?();providerLabel = translator?.label ?? ""
+        let translator = makeTranslator?();providerLabel = translator?.label ?? "";activeProvider = translator?.provider
         let fetch = fetchImage
         let work = Task.detached(priority:.userInitiated) { () throws -> ClipboardImageLoad in
             if let selection { return try await selection.loadReport(plain:plain,fetch:fetch) }
@@ -176,9 +182,16 @@ struct NativeImageTranslator {
                 self.status = summaries.isEmpty ? "번역할 글자를 찾지 못해 원본을 유지했습니다." : summaries.joined(separator:" · ")
                 if self.image == nil,layout.regions.isEmpty { self.stage = .failed;self.status = "읽을 수 있는 글이나 이미지가 없습니다." }
             } catch is CancellationError {
+                work.cancel()
+                guard self.generation == token else { return }
+                self.importOperation = nil;self.activeProvider = nil
+                self.streamID = nil;self.busy = false;self.isImporting = false;self.complete = false
+                self.stage = .failed;self.activeRegionID = nil;self.draftText = "";self.failureKind = "cancelled"
+                self.status = "번역이 중단됐습니다. 다시 번역을 눌러 시도해 주세요."
             } catch {
                 work.cancel()
                 guard self.generation == token else { return }
+                self.importOperation = nil;self.activeProvider = nil
                 self.streamID = nil;self.busy = false;self.complete = false;self.isImporting = false
                 self.stage = .failed;self.activeRegionID = nil;self.draftText = ""
                 self.failureKind = String(describing:type(of:error))
@@ -276,10 +289,18 @@ struct NativeImageTranslator {
     func cancel() {
         generation = UUID(); streamID = nil; operation?.cancel(); operation = nil
         importOperation?.cancel();importOperation = nil
+        isImporting = false;activeProvider = nil
         renderTask?.cancel(); renderTask = nil; rendererPreparation?.cancel(); rendererPreparation = nil; renderer = nil; busy = false
     }
-    func clear() {
-        cancel(); scanner.clear(); image = nil; renderedImage = nil; regions = []; translations = [:]; isImporting = false; selectionText = ""
+    func providerDisconnected(_ provider:TranslationProvider) {
+        guard activeProvider == provider else { return }
+        activeProvider = nil
+        guard busy else { return }
+        cancel();complete = false;stage = .failed;activeRegionID = nil;draftText = "";failureKind = "provider-disconnected"
+        status = "제공자 연결을 해제해 번역을 중단했습니다. 설정에서 다시 연결해 주세요."
+    }
+    func clear(preserveScanner:Bool = false) {
+        cancel();if !preserveScanner { scanner.clear() };image = nil; renderedImage = nil; regions = []; translations = [:]; isImporting = false; selectionText = ""
         activeSelection = false;retrySelection = nil;textLayout = SelectionTextLayout(text:"");inlineImages = []
         importNotice = "";failedImages = 0;failedIcons = 0;imagesWithoutText = 0
         recognizedText = ""; status = ""; warning = nil; complete = false
@@ -344,6 +365,9 @@ struct NativeImageTranslator {
                 .font(.system(size: 10)).foregroundStyle(.tertiary).lineLimit(2)
             if let message = input.scanner.message {
                 Text(message).font(.system(size: 11)).foregroundStyle(.secondary).lineLimit(2)
+                if !input.scanner.permissionAllowed {
+                    Button("화면 기록 허용") { input.scanner.openPermissionSettings() }.controlSize(.small)
+                }
             }
         }.padding(.horizontal, 16).padding(.vertical, 6)
             .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in input.scanner.refreshPermission() }

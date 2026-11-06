@@ -89,7 +89,6 @@ xcrun swiftc -swift-version 6 -warnings-as-errors -O -whole-module-optimization 
   "$POC_ROOT/NativeImageTests.swift" \
   "$POC_ROOT/SyntheticDemo.swift" \
   "$POC_ROOT/ImageFeedbackBenchmark.swift" \
-  "$POC_ROOT/ImageProgress.swift" \
   "$POC_ROOT/ChatLayoutTests.swift" \
   -o "$APP_PATH/Contents/MacOS/ImageTranslationPOC" -framework AppKit -framework SwiftUI -framework Vision -framework ScreenCaptureKit -framework CoreML -lxml2
 cat > "$APP_PATH/Contents/Info.plist" <<'PLIST'

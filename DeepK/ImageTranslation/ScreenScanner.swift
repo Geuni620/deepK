@@ -176,7 +176,8 @@ enum POCScreenCapture {
         if !permissionAllowed {
             NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture")!)
         }
-        message = "화면 기록에서 ‘deepK Rich POC’를 허용한 뒤 돌아와 화면 스캔을 다시 누르세요. 필요하면 POC를 다시 열어 주세요."
+        let name = Bundle.main.object(forInfoDictionaryKey:"CFBundleDisplayName") as? String ?? AppIdentity.displayName
+        message = "화면 기록에서 ‘\(name)’를 허용한 뒤 돌아와 화면 스캔을 다시 누르세요. 필요하면 앱을 다시 열어 주세요."
     }
     func showAppLocation() { NSWorkspace.shared.activateFileViewerSelecting([Bundle.main.bundleURL]) }
 
@@ -210,10 +211,7 @@ enum POCScreenCapture {
                 let image = try await POCScreenCapture.capture(region)
                 try Task.checkCancellation()
                 guard self.generation == token else { return }
-                self.lastRegion = region
-                self.message = "선택한 화면을 가져왔습니다. 원본과 번역을 전환해 확인하세요."
-                self.picker.restoreWindows()
-                onImage(image)
+                self.completeCapture(image,region:region,onImage:onImage)
             } catch is CancellationError {
                 if self.generation == token { self.message = "화면 선택을 취소했습니다." }
             } catch {
@@ -224,6 +222,12 @@ enum POCScreenCapture {
         }
     }
 
+    func completeCapture(_ image:POCImage,region:POCScanRegion,onImage:@MainActor (POCImage)->Void) {
+        lastRegion = region
+        message = "선택한 화면을 가져왔습니다. 원본과 번역을 전환해 확인하세요."
+        picker.restoreWindows()
+        onImage(image)
+    }
     func clear() {
         generation = UUID(); task?.cancel(); task = nil
         picker.cancel(); lastRegion = nil; busy = false; message = nil

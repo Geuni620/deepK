@@ -27,6 +27,7 @@ enum ImageReadingGeometry {
     let input: NativeImageInput
     private var title: String {
         if !input.busy {
+            if case .failed = input.stage { return input.status }
             if input.complete { return input.image == nil ? "글 번역 완료" : "번역 완료" }
             if input.textReady { return "글 번역 완료 · 일부 이미지는 원본 유지 또는 읽기 실패" }
             return input.warning != nil ? "일부 영역은 원본을 유지했어요" : input.status

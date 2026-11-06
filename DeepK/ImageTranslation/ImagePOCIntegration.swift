@@ -9,17 +9,15 @@ import AppKit
         #if DEEPK_IMAGE_TRANSLATION_POC
         guard !POCSyntheticDemo.armed else { return }
         #endif
-        cancelImport()
         let app = AppModel.shared
-        app.imageInput.scanner.start { image in app.acceptInputImage(image) }
+        app.imageInput.scanner.start { image in app.acceptScannedImage(image) }
     }
     @objc func rescan() {
         #if DEEPK_IMAGE_TRANSLATION_POC
         guard !POCSyntheticDemo.armed else { return }
         #endif
-        cancelImport()
         let app = AppModel.shared
-        app.imageInput.scanner.start(repeatLast:true) { image in app.acceptInputImage(image) }
+        app.imageInput.scanner.start(repeatLast:true) { image in app.acceptScannedImage(image) }
     }
     func cancelImport() { AppModel.shared.imageInput.cancel() }
     @discardableResult func accept(plain:String,html:String?,sourceURL:URL? = nil) -> Bool {
