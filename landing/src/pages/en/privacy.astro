@@ -18,6 +18,16 @@ import { release } from '../../data/release';
     </p>
   </section>
   <section>
+    <h2>Screen Recording is used to read your selected region</h2>
+    <p>
+      To translate text in images or games that cannot be copied, deepK takes one screenshot of the
+      rectangle you explicitly select. It does not record video or continuously monitor the screen.
+      Ordinary text and clipboard images do not need this permission. OCR runs on your Mac; only
+      recognized text goes to your chosen provider. Loading an original X image makes a request to
+      its image server.
+    </p>
+  </section>
+  <section>
     <h2>Source text is sent to the AI provider you choose</h2>
     <p>
       deepK uses the official CLI installed on your Mac to send the translation instructions and the
@@ -33,9 +43,10 @@ import { release } from '../../data/release';
   <section>
     <h2>Translations stay in memory for a short time</h2>
     <p>
-      Successful translations are kept in app memory for up to 32 items and 5 minutes. They are
-      cleared when the app restarts. Anything you copy or insert into another app follows that app
-      and the macOS clipboard.
+      The ordinary text translation cache holds up to 32 results for 5 minutes in app memory and
+      clears when the app restarts. Images and their results stay in the memory needed to display
+      and process the current translation window. No content history is sent to the operator.
+      Anything you copy or insert into another app follows that app and the macOS clipboard.
     </p>
   </section>
   <section>
@@ -53,10 +64,42 @@ import { release } from '../../data/release';
   <section>
     <h2>External connections on this site</h2>
     <p>
-      The home and setup pages do not have a feature that takes or sends text to translate, and no
-      analytics tools are connected. The translation window on the home page plays prepared examples
-      inside your browser. Fonts are requested from Google Fonts, and download and issue links go to
-      GitHub.
+      The home page's translation window plays prepared examples inside your browser without
+      requesting a translation. Fonts are requested from Google Fonts, and download and issue links
+      go to GitHub.
+    </p>
+  </section>
+  <section id="website-analytics">
+    <h2>Website statistics are measured only if you allow them</h2>
+    <p>
+      If you allow statistics on the official home, setup, and privacy pages, Google Analytics 4
+      counts visits, opening install guidance, successful copies of the Homebrew command, and ZIP
+      download clicks. This analytics tool is not added to the translation app. Source text, images,
+      OCR text, translations, input fields, clipboard content, and screen recordings are excluded.
+      Design previews and editable demo pages are excluded too.
+    </p>
+    <p>
+      No Google Analytics script or measurement request is sent before you allow it. Your choice is
+      remembered in this browser for up to 180 days and can be withdrawn below in
+      <strong>Website analytics settings</strong>. Measurement is disabled when the browser's Do Not
+      Track or Global Privacy Control preference is detected. Once allowed, a fixed source category
+      is also kept for the tab session so internal navigation is not counted as a new referral. It
+      is cleared when you withdraw consent.
+    </p>
+    <p>
+      Once allowed, Google may process visitor cookies, device and browser information, and
+      approximate location. Page addresses sent by this site are limited to fixed public paths
+      without query strings or fragments; referrer addresses are reduced to their origin. Ad
+      personalization, Google Signals, User IDs, and automatic form collection are not used.
+      Google's processing and retention follow its policies. Web hosting and external links have
+      separate access records regardless of this choice.
+    </p>
+    <p>
+      Consent and tracking blockers affect visitor counts. Download clicks do not prove installation
+      or app use. These statistics help improve acquisition and setup guidance.
+      <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">
+        Google Privacy Policy ↗
+      </a>
     </p>
   </section>
   <section>

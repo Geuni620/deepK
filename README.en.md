@@ -83,6 +83,8 @@ Permissions apply to different actions:
 
 When screen capture requests it, use “화면 기록 허용” (Allow Screen Recording) and follow macOS instructions. Reading an image already on the clipboard and capturing the screen are separate input paths.
 
+“Screen Recording” is the macOS permission needed to take one screenshot of the rectangle you select to read text in images or games that cannot be copied. deepK does not record video or continuously watch your screen. Ordinary text and clipboard images do not need this permission. OCR runs on your Mac; only recognized text goes to your chosen provider.
+
 **If nothing appears after launch**
 
 - With many menu bar icons, the deepK icon can be hidden behind the notch or other icons. Hide or rearrange some menu bar icons and look again.
@@ -121,6 +123,8 @@ Insertion back into the original input is available for ordinary text translatio
 deepK sends translation instructions, text you type or copy, and text recognized in images to the provider you selected. It does not add original image files, their file paths, or image metadata to translation requests. OCR and background restoration run on the Mac; web images are fetched from their original image servers. deepK uses the official CLI you signed in to and never switches automatically to another provider or to API-key billing. Credentials, local environment files, and signing keys are not part of this repository.
 
 deepK provides no feature for its operator to collect, store, or view your source text, images, recognized text, or translations. User content is excluded from analytics and automatic diagnostic reports, and no translation history is sent to the operator. The AI provider's handling and retention follow your account and that service's policies.
+
+The official website uses GA4 only with a visitor's permission to count visits, install-guide interactions, and download clicks. The Mac app does not send translation content or usage to this analytics tool. See the [website privacy notice](https://deepk.geuni.me/en/privacy/#website-analytics) and [measurement scope](landing/docs/measurement.md).
 
 - **Codex global instructions:** if `~/.codex/AGENTS.md` exists, its contents are included in requests. Do not put company secrets or tokens in that file. Project instructions and skill blocking do not remove this global file.
 - **Sensitive copies:** copies that a password manager marks as concealed or transient are rejected. Copies that are marked late or not marked at all, and text pasted directly into the source field, are not protected. This clipboard-marker check also does not apply to regions you select on screen. Testing against specific password managers is still pending.

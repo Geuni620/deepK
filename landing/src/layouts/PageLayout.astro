@@ -1,7 +1,9 @@
 ---
 import '../styles/global.css';
 import InstallDialog from '../components/shared/InstallDialog.astro';
+import WebsiteAnalytics from '../components/shared/WebsiteAnalytics.astro';
 import type { Theme } from '../data/variants';
+import { release } from '../data/release';
 import { defaultLocale, locales, useMessages, type Locale } from '../i18n';
 interface Props {
   title: string;
@@ -34,6 +36,44 @@ const alternateLinks =
     : [];
 const canonical = indexable && Astro.site ? new URL(Astro.url.pathname, Astro.site) : undefined;
 const socialImage = Astro.site ? new URL('/brand/deepk-icon.png', Astro.site) : undefined;
+const googleVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION;
+const structuredData = canonical
+  ? {
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'WebSite',
+          '@id': `${Astro.site}#website`,
+          url: Astro.site,
+          name: 'deepK',
+          inLanguage: ['ko', 'en'],
+        },
+        {
+          '@type': 'WebPage',
+          '@id': canonical.href,
+          url: canonical.href,
+          name: `${title} · deepK`,
+          description,
+          inLanguage: t.htmlLang,
+          isPartOf: { '@id': `${Astro.site}#website` },
+        },
+        ...(Astro.url.pathname === '/' || Astro.url.pathname === '/en/'
+          ? [
+              {
+                '@type': 'SoftwareApplication',
+                name: 'deepK',
+                url: Astro.site,
+                applicationCategory: 'UtilitiesApplication',
+                operatingSystem: `macOS ${release.minimumMacOS}+ (Apple Silicon)`,
+                softwareVersion: release.version,
+                downloadUrl: release.downloadUrl,
+                description,
+              },
+            ]
+          : []),
+      ],
+    }
+  : undefined;
 ---
 
 <!doctype html>
@@ -43,6 +83,10 @@ const socialImage = Astro.site ? new URL('/brand/deepk-icon.png', Astro.site) : 
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="robots" content={indexable ? 'index,follow' : 'noindex,nofollow'} />
     <meta name="description" content={description} />
+    <meta name="referrer" content="strict-origin" />
+    {indexable && googleVerification && (
+      <meta name="google-site-verification" content={googleVerification} />
+    )}
     <meta property="og:type" content="website" />
     <meta property="og:locale" content={t.ogLocale} />
     <meta property="og:site_name" content="deepK" />
@@ -54,7 +98,17 @@ const socialImage = Astro.site ? new URL('/brand/deepk-icon.png', Astro.site) : 
       <link rel="alternate" hreflang={link.hreflang} href={link.href} />
     ))}
     {socialImage && <meta property="og:image" content={socialImage} />}
+    {socialImage && <meta property="og:image:alt" content="deepK" />}
     <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={`${title} · deepK`} />
+    <meta name="twitter:description" content={description} />
+    {socialImage && <meta name="twitter:image" content={socialImage} />}
+    {structuredData && (
+      <script
+        type="application/ld+json"
+        set:html={JSON.stringify(structuredData).replace(/</g, '\\u003c')}
+      />
+    )}
     <link rel="icon" href="/brand/deepk-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -91,6 +145,7 @@ const socialImage = Astro.site ? new URL('/brand/deepk-icon.png', Astro.site) : 
     )}
     <slot />
     <InstallDialog locale={locale} />
+    {indexable && <WebsiteAnalytics locale={locale} />}
     <script>
       import '../scripts/preview-actions';
     </script>

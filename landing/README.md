@@ -1,6 +1,6 @@
 # deepK 랜딩페이지
 
-deepK 앱과 같은 저장소에서 랜딩페이지를 관리하는 영역이다. 선택한 Playful Bear 디자인을 메인 페이지에 적용하고, 공개한 0.2.0 앱의 Homebrew 설치와 ZIP 다운로드를 연결한다. 운영 주소는 [deepk.geuni.me](https://deepk.geuni.me)이며 Astro 정적 빌드를 별도 Vercel 프로젝트로 배포한다. 기존 18개 디자인·반응형·체험 예시는 `/designs/`에 보존했다. 이전 Cloudflare `deepk-landing` Worker는 2026-11-07에 삭제했다. 실제 웹 번역 API·분석 도구는 연결하지 않았다. 앱 설치 파일은 이 저장소의 GitHub Releases와 `Geuni620/homebrew-tap`에서 배포한다.
+deepK 앱과 같은 저장소에서 랜딩페이지를 관리하는 영역이다. 선택한 Playful Bear 디자인을 메인 페이지에 적용하고, 공개한 0.2.0 앱의 Homebrew 설치와 ZIP 다운로드를 연결한다. 운영 주소는 [deepk.geuni.me](https://deepk.geuni.me)이며 Astro 정적 빌드를 별도 Vercel 프로젝트로 배포한다. 기존 18개 디자인·반응형·체험 예시는 `/designs/`에 보존했다. 이전 Cloudflare `deepk-landing` Worker는 2026-11-07에 삭제했다. 웹 번역 API는 없으며, 방문자가 허용한 경우에만 Google Analytics 4로 웹사이트 방문과 설치 관심 행동을 측정한다. 앱 설치 파일은 이 저장소의 GitHub Releases와 `Geuni620/homebrew-tap`에서 배포한다.
 
 ## 디렉터리와 책임
 
@@ -44,9 +44,9 @@ landing/
 
 ## 현재 운영 검토
 
-[A/B 테스트와 배포 검토안](plans/experimentation-and-deployment.md)은 이전 사전 검토 기록이다. 문서 안의 Cloudflare 배포·토큰·롤백 설명은 현재 운영 절차가 아니며, 현재 배포 기준은 아래 [공식 도메인 배포](#공식-도메인-배포) 절이다. 정적 페이지는 운영 중이며 실제 계측과 A/B 실험은 연결하지 않았다.
+[A/B 테스트와 배포 검토안](plans/experimentation-and-deployment.md)은 이전 사전 검토 기록이다. 문서 안의 Cloudflare 배포·토큰·롤백 설명은 현재 운영 절차가 아니며, 현재 배포 기준은 아래 [공식 도메인 배포](#공식-도메인-배포) 절이다. A/B 실험은 연결하지 않았다.
 
-측정의 검토 대상은 사용 흐름 체험 완료와 앱 설치·다운로드 행동이다. 현재 구현에는 계측을 추가하지 않았다.
+실제 측정 범위·수집 제외 항목·지표를 개선에 활용하는 방법은 [웹사이트 측정 안내](docs/measurement.md)를 따른다. 자동 재생 예시는 체험 완료로 집계하지 않으며, 다운로드 클릭을 실제 설치 수로 표시하지 않는다.
 
 ## 현재 페이지
 
@@ -93,7 +93,13 @@ pnpm build
 
 운영 환경의 `SITE_URL`은 `https://deepk.geuni.me`로 지정한다. 미지정 또는 빈 값이면 같은 주소를 기본값으로 사용한다. 별도 주소로 빌드할 때는 `SITE_URL`로 덮어쓸 수 있다. 메인·설치·개인정보 페이지는 언어별 canonical·hreflang과 절대 OG URL을 생성하며, 비교 시안은 `noindex,nofollow`를 유지한다.
 
+`/robots.txt`와 `/sitemap.xml`은 한·영 공식 6개 페이지만 검색엔진에 안내한다. 공식 페이지에는 WebSite·WebPage JSON-LD를, 메인에는 사실에 근거한 SoftwareApplication 정보를 추가한다. 별점·리뷰·유료 구독을 무시한 무료 가격 표시는 만들지 않는다. 사이트맵 제공만으로 색인이나 순위를 보장하지 않는다.
+
+통계를 활성화하려면 운영 빌드 환경에 공개 측정 ID `PUBLIC_GA_MEASUREMENT_ID=G-…`를 지정한다. 비밀 API 키는 사용하지 않는다. ID가 없으면 통계 UI와 Google Analytics가 활성화되지 않는다. 실제 측정은 HTTPS `deepk.geuni.me`의 공식 6개 경로에만 제한하며, localhost·Vercel 미리보기·`embed`·시안·입력 가능한 체험은 제외한다. GA4 전용 웹 스트림의 향상된 측정은 꺼 두고 [측정 안내](docs/measurement.md)의 설정·검증 절차를 함께 따른다.
+
 도메인을 연결한 뒤 HTTPS, 한영 메인·설치·개인정보 페이지, canonical·언어 전환, 이미지와 0.2.0 다운로드 링크를 확인한다. DNS 설정 화면의 저장 완료와 실제 공개 HTTPS 응답을 구분해 검증한다.
+
+Search Console의 URL 접두어 속성 `https://deepk.geuni.me/`은 공개 HTML 메타태그로 소유권을 확인한다. 운영 빌드에 `PUBLIC_GOOGLE_SITE_VERIFICATION` 값을 지정하며, 이는 비밀키가 아닌 공개 검증 문자열이다. 개인 블로그 속성이나 DNS를 바꾸지 않는다. 확인 후 `/sitemap.xml`을 제출하되 제출 성공과 실제 검색 색인 완료는 구분한다.
 
 ## 다음 단계에서 정할 내용
 

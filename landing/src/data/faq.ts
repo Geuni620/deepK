@@ -12,7 +12,13 @@ const ko: FaqItem[] = [
     id: 'permissions',
     question: '어떤 권한이 필요한가요?',
     answer:
-      '두 번 복사 감지에는 입력 모니터링, 원래 위치에 삽입하려면 손쉬운 사용 권한이 필요합니다.',
+      '두 번 복사 감지에는 입력 모니터링, 원래 위치에 삽입하려면 손쉬운 사용 권한이 필요합니다. 화면에서 직접 영역을 가져올 때만 화면 기록 권한을 추가로 사용합니다.',
+  },
+  {
+    id: 'screen-recording',
+    question: '번역 앱에 왜 화면 기록 권한이 필요한가요?',
+    answer:
+      '복사할 수 없는 이미지나 게임 속 글자를 읽기 위해, 사용자가 직접 고른 사각형을 한 번 캡처합니다. 동영상을 녹화하거나 화면을 계속 감시하지 않습니다. 글자 인식(OCR)은 Mac에서 처리하고 인식한 글자만 선택한 AI 제공자에게 보냅니다. 일반 텍스트·클립보드 이미지 번역에는 이 권한이 필요하지 않습니다.',
   },
   {
     id: 'provider',
@@ -24,7 +30,7 @@ const ko: FaqItem[] = [
     id: 'privacy',
     question: '입력한 내용이 남나요?',
     answer:
-      '번역 결과는 메모리에 최대 32개·5분간 보관하고 앱을 재시작하면 비워집니다. 원문은 선택한 AI 제공자에게 전송됩니다. Codex는 전역 지침이 있으면 함께 전송할 수 있습니다. 자세한 내용은 개인정보 안내에서 확인하세요.',
+      'deepK 운영자는 원문·이미지·인식한 글자·번역문을 수집하지 않습니다. 일반 텍스트 번역 캐시는 메모리에 최대 32개·5분간 유지하고, 이미지와 결과는 현재 창에서 처리하는 동안 메모리에 둡니다. 번역할 글자는 선택한 AI 제공자에게 전송되며 제공자의 보관 정책은 별도로 적용됩니다. 자세한 내용은 개인정보 안내에서 확인하세요.',
   },
   {
     id: 'availability',
@@ -50,7 +56,13 @@ const en: FaqItem[] = [
     id: 'permissions',
     question: 'Which permissions does it need?',
     answer:
-      'Input Monitoring to detect the double copy, and Accessibility to insert text back where you were typing.',
+      'Input Monitoring to detect the double copy, and Accessibility to insert text back where you were typing. Screen Recording is only needed when you capture a region directly from the screen.',
+  },
+  {
+    id: 'screen-recording',
+    question: 'Why does a translation app need Screen Recording?',
+    answer:
+      'To read text in images or games that cannot be copied, deepK takes one screenshot of the rectangle you explicitly select. It does not record video or continuously monitor your screen. OCR runs on your Mac; only the recognized text goes to your chosen AI provider. Ordinary text and clipboard-image translation do not need this permission.',
   },
   {
     id: 'provider',
@@ -62,7 +74,7 @@ const en: FaqItem[] = [
     id: 'privacy',
     question: 'Does it keep what I translate?',
     answer:
-      'Results stay in memory for up to 32 items and 5 minutes, and are cleared when the app restarts. The source text is sent to the AI provider you selected. With Codex, your global instructions may be sent as well. See the privacy page for details.',
+      'The deepK operator does not collect source text, images, recognized text, or translations. The ordinary text cache holds up to 32 results for 5 minutes in memory; images and their results stay in memory while the current window processes them. Text goes to your chosen AI provider, whose retention policy applies separately. See the privacy page for details.',
   },
   {
     id: 'availability',
