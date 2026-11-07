@@ -1,12 +1,12 @@
 export const release = {
-  version: '0.1.1',
+  version: '0.2.0',
   minimumMacOS: '15',
   architecture: 'Apple Silicon',
   installCommand: 'brew install --cask Geuni620/tap/deepk',
   downloadUrl:
-    'https://github.com/Geuni620/deepK/releases/download/v0.1.1/deepK-distribution-0.1.1-arm64-9f63f81ce2b0.zip',
-  notesUrl: 'https://github.com/Geuni620/deepK/releases/tag/v0.1.1',
+    'https://github.com/Geuni620/deepK/releases/download/v0.2.0/deepK-distribution-0.2.0-arm64-8ab106a271a1.zip',
+  notesUrl: 'https://github.com/Geuni620/deepK/releases/tag/v0.2.0',
   repositoryUrl: 'https://github.com/Geuni620/deepK',
   noticesUrl: 'https://github.com/Geuni620/deepK/blob/main/THIRD-PARTY-NOTICES.txt',
-  sha256: '602b76e1f9cb40ae1dbe6674733eb4b28c508da51fbd1b8fa3db09f4b78b249f',
+  sha256: '21cb2b52f677e8d01421e2c9b8fd1909aea776cad2fc4124d29e72d7201d1787',
 } as const;

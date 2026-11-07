@@ -1,6 +1,6 @@
 # deepK 랜딩페이지
 
-deepK 앱과 같은 저장소에서 랜딩페이지를 관리하는 영역이다. 선택한 Playful Bear 디자인을 메인 페이지에 적용하고, 공개한 0.1.1 앱의 Homebrew 설치와 ZIP 다운로드를 연결했다. 기존 18개 디자인·반응형·체험 예시는 `/designs/`에 보존했다. 정적 페이지는 [기존 Cloudflare Workers](https://deepk-landing.dlrmsgnl620.workers.dev/)에 배포했다. 실제 웹 번역 API·분석 도구는 연결하지 않았다. 앱 설치 파일은 이 저장소의 GitHub Releases와 `Geuni620/homebrew-tap`에서 배포한다.
+deepK 앱과 같은 저장소에서 랜딩페이지를 관리하는 영역이다. 선택한 Playful Bear 디자인을 메인 페이지에 적용하고, 공개한 0.2.0 앱의 Homebrew 설치와 ZIP 다운로드를 연결한다. 운영 도메인은 [deepk.geuni.me](https://deepk.geuni.me)로 지정하며, Astro 정적 빌드를 별도 Vercel 프로젝트로 배포한다. 기존 18개 디자인·반응형·체험 예시는 `/designs/`에 보존했다. 이전 [Cloudflare Workers 주소](https://deepk-landing.dlrmsgnl620.workers.dev/)와 배포 설정도 유지한다. 실제 웹 번역 API·분석 도구는 연결하지 않았다. 앱 설치 파일은 이 저장소의 GitHub Releases와 `Geuni620/homebrew-tap`에서 배포한다.
 
 ## 디렉터리와 책임
 
@@ -16,7 +16,8 @@ landing/
 |-- public/                      # 기존 아이콘·앱 화면·원본 시안 썸네일
 |-- tests/                       # 예시 누락·선택 복원·예시 번역 검증
 |-- astro.config.mjs             # Astro 정적 빌드
-|-- wrangler.jsonc               # Cloudflare Workers 정적 자산 설정
+|-- vercel.json                  # 공식 도메인의 Vercel 정적 배포 설정
+|-- wrangler.jsonc               # 이전 Cloudflare Workers 정적 자산 설정
 `-- plans/
     |-- experimentation-and-deployment.md
     |                            # A/B 테스트·배포 운영 검토안
@@ -35,7 +36,9 @@ landing/
 - 기존 Mac 앱의 디렉터리와 빌드 경로를 유지하고 `landing/`을 추가한다.
 - 웹 의존성과 빌드 설정은 `landing/`에서 관리한다. 현재 루트에 JavaScript 패키지나 워크스페이스 설정을 추가하지 않는다.
 - 사용자가 확인한 기존 pen.dev 시안을 디자인 기준으로 사용한다.
-- 배포 대상은 Cloudflare Workers의 기존 `deepk-landing` Worker다. 0.1.1 다운로드 정보를 반영한 운영 배포와 공개 페이지 응답을 확인했다.
+- 공식 도메인의 배포 대상은 별도 Vercel 프로젝트다. Git 연동 시 Root Directory를 `landing`으로 지정하며, CLI로 직접 배포할 때는 `landing/`에서 해당 프로젝트에 연결한다. 기존 `geuni.me` 블로그 프로젝트의 설정은 변경하지 않는다.
+- 가비아의 기존 DNS 관리를 유지하고 `deepk` CNAME을 Vercel 프로젝트에서 안내한 값으로 연결한다. 다른 프로젝트의 CNAME 값을 재사용하지 않는다.
+- `wrangler.jsonc`와 `pnpm deploy`는 이전 `deepk-landing` Worker 배포용이다. Vercel 배포는 연결된 Git 저장소 또는 Vercel CLI를 사용한다.
 - 제작 후 A/B 테스트와 배포 운영을 고려해 구현한다. 도구·지표·계정·비용은 아래 검토안에서 별도로 정한다.
 
 ## 현재 운영 검토
@@ -79,9 +82,17 @@ pnpm build
 
 체험은 준비된 표본만 번역 결과를 제공한다. 직접 입력한 새 문장은 실제 API 연결 전까지 번역하지 않으며, 원문·결과를 분석 도구나 서버로 보내지 않는다.
 
-## 다음 단계에서 정할 내용
+## 공식 도메인 배포
 
-운영 주소를 바꿀 때 `SITE_URL=https://실제도메인`도 빌드 환경에서 함께 갱신한다. 이번 배포는 기존 canonical 주소를 유지했다. 메인·설치·개인정보 페이지는 고유 제목·설명·OG 태그를 제공하며, `SITE_URL`이 있을 때 canonical과 절대 OG URL을 생성한다. 비교 시안은 `noindex,nofollow`를 유지한다.
+Git 연동은 이 저장소의 Root Directory `landing`, Framework `Astro`, Output Directory `dist`를 사용한다. CLI로 직접 배포할 때는 `landing/`에서 새 프로젝트를 연결한 뒤 `vercel --prod`를 실행한다. 이 경우 업로드한 `landing/` 자체가 프로젝트 루트다. `.vercel/`의 연결 정보와 내려받은 환경변수는 커밋하지 않는다.
+
+프로젝트의 Node.js는 `package.json`의 최소 버전을 충족해야 한다. `ENABLE_EXPERIMENTAL_COREPACK=1`을 설정해 `packageManager`에 고정한 pnpm 버전을 사용한다.
+
+운영 환경의 `SITE_URL`은 `https://deepk.geuni.me`로 지정한다. 미지정 또는 빈 값이면 같은 주소를 기본값으로 사용한다. 별도 주소로 빌드할 때는 `SITE_URL`로 덮어쓸 수 있다. 메인·설치·개인정보 페이지는 언어별 canonical·hreflang과 절대 OG URL을 생성하며, 비교 시안은 `noindex,nofollow`를 유지한다.
+
+도메인을 연결한 뒤 HTTPS, 한영 메인·설치·개인정보 페이지, canonical·언어 전환, 이미지와 0.2.0 다운로드 링크를 확인한다. DNS 설정 화면의 저장 완료와 실제 공개 HTTPS 응답을 구분해 검증한다.
+
+## 다음 단계에서 정할 내용
 
 실제 웹 번역을 추가하려면 체험 범위·API·모델·비용을 별도로 정한다. 현재 서버나 모델을 호출하는 체험으로 표시하지 않는다.
 
