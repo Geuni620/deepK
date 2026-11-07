@@ -1,6 +1,6 @@
 # deepK 랜딩페이지
 
-deepK 앱과 같은 저장소에서 랜딩페이지를 관리하는 영역이다. 선택한 Playful Bear 디자인을 메인 페이지에 적용하고, 공개한 0.2.0 앱의 Homebrew 설치와 ZIP 다운로드를 연결한다. 운영 도메인은 [deepk.geuni.me](https://deepk.geuni.me)로 지정하며, Astro 정적 빌드를 별도 Vercel 프로젝트로 배포한다. 기존 18개 디자인·반응형·체험 예시는 `/designs/`에 보존했다. 이전 [Cloudflare Workers 주소](https://deepk-landing.dlrmsgnl620.workers.dev/)와 배포 설정도 유지한다. 실제 웹 번역 API·분석 도구는 연결하지 않았다. 앱 설치 파일은 이 저장소의 GitHub Releases와 `Geuni620/homebrew-tap`에서 배포한다.
+deepK 앱과 같은 저장소에서 랜딩페이지를 관리하는 영역이다. 선택한 Playful Bear 디자인을 메인 페이지에 적용하고, 공개한 0.2.0 앱의 Homebrew 설치와 ZIP 다운로드를 연결한다. 운영 주소는 [deepk.geuni.me](https://deepk.geuni.me)이며 Astro 정적 빌드를 별도 Vercel 프로젝트로 배포한다. 기존 18개 디자인·반응형·체험 예시는 `/designs/`에 보존했다. 이전 Cloudflare `deepk-landing` Worker는 2026-11-07에 삭제했다. 실제 웹 번역 API·분석 도구는 연결하지 않았다. 앱 설치 파일은 이 저장소의 GitHub Releases와 `Geuni620/homebrew-tap`에서 배포한다.
 
 ## 디렉터리와 책임
 
@@ -17,7 +17,7 @@ landing/
 |-- tests/                       # 예시 누락·선택 복원·예시 번역 검증
 |-- astro.config.mjs             # Astro 정적 빌드
 |-- vercel.json                  # 공식 도메인의 Vercel 정적 배포 설정
-|-- wrangler.jsonc               # 이전 Cloudflare Workers 정적 자산 설정
+|-- wrangler.jsonc               # 저장소에 남은 구 Cloudflare 배포 설정
 `-- plans/
     |-- experimentation-and-deployment.md
     |                            # A/B 테스트·배포 운영 검토안
@@ -38,12 +38,13 @@ landing/
 - 사용자가 확인한 기존 pen.dev 시안을 디자인 기준으로 사용한다.
 - 공식 도메인의 배포 대상은 별도 Vercel 프로젝트다. Git 연동 시 Root Directory를 `landing`으로 지정하며, CLI로 직접 배포할 때는 `landing/`에서 해당 프로젝트에 연결한다. 기존 `geuni.me` 블로그 프로젝트의 설정은 변경하지 않는다.
 - 가비아의 기존 DNS 관리를 유지하고 `deepk` CNAME을 Vercel 프로젝트에서 안내한 값으로 연결한다. 다른 프로젝트의 CNAME 값을 재사용하지 않는다.
-- `wrangler.jsonc`와 `pnpm deploy`는 이전 `deepk-landing` Worker 배포용이다. Vercel 배포는 연결된 Git 저장소 또는 Vercel CLI를 사용한다.
+- 현재 운영은 Vercel CLI로 배포한다. GitHub App의 저장소 접근 범위를 변경하거나 Git 자동 배포를 연결하지 않았다.
+- `wrangler.jsonc`와 `package.json`의 `deploy` 스크립트는 저장소에 남은 구 Cloudflare 배포 경로다. 현재 배포 명령은 `landing/`에서 실행하는 `vercel --prod`이며, 구 Worker를 다시 만들 목적으로 이전 스크립트를 실행하지 않는다.
 - 제작 후 A/B 테스트와 배포 운영을 고려해 구현한다. 도구·지표·계정·비용은 아래 검토안에서 별도로 정한다.
 
 ## 현재 운영 검토
 
-[A/B 테스트와 배포 검토안](plans/experimentation-and-deployment.md)에 기준 페이지의 계측, 실험 배정·성과, 미리보기·운영 분리와 롤백을 정리했다. 정적 페이지는 운영 중이며 실제 계측과 A/B 실험은 연결하지 않았다.
+[A/B 테스트와 배포 검토안](plans/experimentation-and-deployment.md)은 이전 사전 검토 기록이다. 문서 안의 Cloudflare 배포·토큰·롤백 설명은 현재 운영 절차가 아니며, 현재 배포 기준은 아래 [공식 도메인 배포](#공식-도메인-배포) 절이다. 정적 페이지는 운영 중이며 실제 계측과 A/B 실험은 연결하지 않았다.
 
 측정의 검토 대상은 사용 흐름 체험 완료와 앱 설치·다운로드 행동이다. 현재 구현에는 계측을 추가하지 않았다.
 
@@ -84,7 +85,9 @@ pnpm build
 
 ## 공식 도메인 배포
 
-Git 연동은 이 저장소의 Root Directory `landing`, Framework `Astro`, Output Directory `dist`를 사용한다. CLI로 직접 배포할 때는 `landing/`에서 새 프로젝트를 연결한 뒤 `vercel --prod`를 실행한다. 이 경우 업로드한 `landing/` 자체가 프로젝트 루트다. `.vercel/`의 연결 정보와 내려받은 환경변수는 커밋하지 않는다.
+현재 운영 프로젝트는 `deepk`이며 `landing/`에서 이 프로젝트에 연결한 뒤 `vercel --prod`를 실행한다. 업로드한 `landing/` 자체가 프로젝트 루트다. 기존 `geuni-me` 블로그 프로젝트에 연결하지 않는다. `.vercel/`의 연결 정보와 내려받은 환경변수는 커밋하지 않는다.
+
+나중에 Git 연동을 추가할 경우에는 Root Directory `landing`, Framework `Astro`, Output Directory `dist`를 지정한다. 현재 CLI 배포에서 쓰는 빈 Root Directory 설정과 구분한다.
 
 프로젝트의 Node.js도 `package.json`과 같은 24.x로 지정한다. `ENABLE_EXPERIMENTAL_COREPACK=1`을 설정해 `packageManager`에 고정한 pnpm 버전을 사용한다.
 
