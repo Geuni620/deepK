@@ -12,6 +12,8 @@
   <img alt="Apple silicon" src="https://img.shields.io/badge/Apple_silicon-native-5e5ce6?style=flat-square">
 </p>
 
+<p align="center"><a href="https://deepk.geuni.me/">공식 웹사이트 ↗</a></p>
+
 ```sh
 brew install --cask Geuni620/tap/deepk
 ```
