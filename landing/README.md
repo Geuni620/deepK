@@ -60,7 +60,7 @@ landing/
 
 ## 실행과 검증
 
-Node.js 22.23.4 이상과 `package.json`에 고정한 pnpm 12.15.0을 사용한다. 이 폴더에서 실행한다.
+Node.js 24.x(검증 환경: 24.14.1)와 `package.json`에 고정한 pnpm 12.15.0을 사용한다. 이 폴더에서 실행한다.
 
 ```sh
 pnpm install
@@ -86,7 +86,7 @@ pnpm build
 
 Git 연동은 이 저장소의 Root Directory `landing`, Framework `Astro`, Output Directory `dist`를 사용한다. CLI로 직접 배포할 때는 `landing/`에서 새 프로젝트를 연결한 뒤 `vercel --prod`를 실행한다. 이 경우 업로드한 `landing/` 자체가 프로젝트 루트다. `.vercel/`의 연결 정보와 내려받은 환경변수는 커밋하지 않는다.
 
-프로젝트의 Node.js는 `package.json`의 최소 버전을 충족해야 한다. `ENABLE_EXPERIMENTAL_COREPACK=1`을 설정해 `packageManager`에 고정한 pnpm 버전을 사용한다.
+프로젝트의 Node.js도 `package.json`과 같은 24.x로 지정한다. `ENABLE_EXPERIMENTAL_COREPACK=1`을 설정해 `packageManager`에 고정한 pnpm 버전을 사용한다.
 
 운영 환경의 `SITE_URL`은 `https://deepk.geuni.me`로 지정한다. 미지정 또는 빈 값이면 같은 주소를 기본값으로 사용한다. 별도 주소로 빌드할 때는 `SITE_URL`로 덮어쓸 수 있다. 메인·설치·개인정보 페이지는 언어별 canonical·hreflang과 절대 OG URL을 생성하며, 비교 시안은 `noindex,nofollow`를 유지한다.
 
