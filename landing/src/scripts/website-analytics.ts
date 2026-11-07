@@ -36,6 +36,12 @@ if (root && banner && measurementId && /^G-[A-Z0-9]+$/.test(measurementId) && pa
   let consent: Consent | undefined;
   let initialized = false;
   let countedPage = false;
+  const cookieOptions = {
+    cookie_domain: 'deepk.geuni.me',
+    cookie_prefix: 'deepk',
+    cookie_expires: 90 * 24 * 60 * 60,
+    cookie_flags: 'SameSite=Lax;Secure',
+  };
 
   const track = (name: string) => {
     if (consent !== 'granted' || privateBrowser) return;
@@ -46,9 +52,12 @@ if (root && banner && measurementId && /^G-[A-Z0-9]+$/.test(measurementId) && pa
   const clearCookies = () => {
     for (const part of document.cookie.split(';')) {
       const name = part.split('=')[0].trim();
-      if (!name.startsWith('deepk_ga')) continue;
+      const legacySession = name === `_ga_${measurementId.slice(2)}`;
+      if (!/^deepk_+ga(?:_|$)/.test(name) && !legacySession) continue;
       document.cookie = `${name}=; Max-Age=0; Path=/; SameSite=Lax; Secure`;
       document.cookie = `${name}=; Max-Age=0; Domain=deepk.geuni.me; Path=/; SameSite=Lax; Secure`;
+      if (legacySession)
+        document.cookie = `${name}=; Max-Age=0; Domain=geuni.me; Path=/; SameSite=Lax; Secure`;
     }
   };
 
@@ -100,6 +109,7 @@ if (root && banner && measurementId && /^G-[A-Z0-9]+$/.test(measurementId) && pa
       });
       window.gtag('set', {
         ...page,
+        ...cookieOptions,
         allow_google_signals: false,
         allow_ad_personalization_signals: false,
       });
@@ -110,10 +120,7 @@ if (root && banner && measurementId && /^G-[A-Z0-9]+$/.test(measurementId) && pa
         send_page_view: false,
         allow_google_signals: false,
         allow_ad_personalization_signals: false,
-        cookie_domain: 'deepk.geuni.me',
-        cookie_prefix: 'deepk',
-        cookie_expires: 90 * 24 * 60 * 60,
-        cookie_flags: 'SameSite=Lax;Secure',
+        ...cookieOptions,
       });
       const script = document.createElement('script');
       script.async = true;

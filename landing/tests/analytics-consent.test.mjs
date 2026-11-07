@@ -37,6 +37,8 @@ function browser({ choice, url = 'https://deepk.geuni.me/', dnt, gpc, noStorage 
     ['_ga', 'unrelated'],
     ['deepk_ga', 'synthetic'],
     ['deepk_ga_SYNTHETIC', 'synthetic'],
+    ['deepk__ga_SYNTHETIC', 'synthetic'],
+    ['_ga_SYNTHETIC', 'synthetic-legacy-session'],
   ]);
   Object.defineProperty(document, 'cookie', {
     get: () => [...cookies].map(([name, value]) => `${name}=${value}`).join('; '),
@@ -139,6 +141,9 @@ test('granting consent loads one tag, disables advertising and automatic page vi
   assert.equal(config.allow_ad_personalization_signals, false);
   assert.equal(config.cookie_domain, 'deepk.geuni.me');
   assert.equal(config.cookie_prefix, 'deepk');
+  const globalSettings = b.actions().find(([action]) => action === 'set')[1];
+  assert.equal(globalSettings.cookie_prefix, 'deepk');
+  assert.equal(globalSettings.cookie_domain, 'deepk.geuni.me');
   assert.equal(JSON.stringify(b.actions()).includes('SYNTHETIC_PRIVATE'), false);
   const initialConsent = b
     .actions()
