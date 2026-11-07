@@ -3,9 +3,9 @@ export const ko = {
   ogLocale: 'ko_KR',
   languageName: '한국어',
   meta: {
-    homeTitle: '복사 두 번으로 이어가는 Mac 번역',
+    homeTitle: 'Mac 텍스트·이미지 번역 — Codex·Claude 구독으로',
     homeDescription:
-      '읽던 문장을 선택하고 ⌘C를 두 번. deepK는 기존 AI 구독으로 한국어와 영어를 번역하는 Mac 메뉴 막대 앱입니다. Homebrew 또는 공증된 ZIP으로 설치하세요.',
+      '⌘C 두 번으로 글과 이미지를 같은 창에서 번역하세요. deepK는 Apple Vision OCR과 기존 Codex·Claude 구독을 사용하는 Mac 번역 앱입니다. Homebrew·공증 ZIP으로 설치할 수 있습니다.',
   },
   layout: {
     skipLink: '본문으로 바로가기',
@@ -24,7 +24,7 @@ export const ko = {
   hero: {
     badge: '⌘ macOS 메뉴 막대 번역기',
     headline: ['모르는 문장? ⌘C ⌘C 하면', '쿼카가 읽어 줘요.'],
-    description: '영어든 한국어든, 고른 문장만 작은 창에 번역해 주는 Mac 메뉴 막대 친구.',
+    description: '문장부터 이미지 속 글자까지, 같은 작은 창에서 번역하는 Mac 메뉴 막대 친구.',
     cta: 'Mac용 deepK 받기',
     requirement: (macOS: string, version: string) =>
       `Apple Silicon · macOS ${macOS} 이상 · v${version}`,
@@ -54,7 +54,7 @@ export const ko = {
   app: {
     eyebrow: '작은 창, 이어지는 생각',
     title: ['번역은 잠깐,', '하던 일은 그대로.'],
-    body: '읽던 문장을 작은 창에서 확인하세요. 번역문을 복사하거나, 직접 선택해 원래 입력 위치에 넣을 수 있어요.',
+    body: '글과 이미지를 같은 창으로 가져오세요. 이미지 속 글자는 Mac에서 읽고 선택한 AI 제공자로 번역해요. 텍스트 번역문은 복사하거나 원래 입력 위치에 넣을 수 있어요.',
     guideLink: '처음 설치하는 분을 위한 안내',
     caption: 'Mac 앱의 번역 창을 재현한 예시 화면입니다.',
     window: {

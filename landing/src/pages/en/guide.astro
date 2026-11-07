@@ -73,7 +73,21 @@ import { release } from '../../data/release';
       <li>
         <strong>Accessibility:</strong> needed to insert a translation where you were typing.
       </li>
+      <li>
+        <strong>Screen Recording (screen-region translation only):</strong> takes one screenshot of
+        the rectangle you select to read text in images or games that cannot be copied. In the
+        translation window, choose <strong>화면에서 이미지 가져오기</strong> (Get image from
+        screen), then <strong>화면 기록 허용</strong> (Allow Screen Recording). Ordinary text and
+        clipboard images do not need this permission.
+      </li>
     </ul>
+    <p>
+      macOS calls this permission “Screen Recording,” but deepK does not record video or
+      continuously watch your screen. It reads your selected region once, or once again when you
+      click
+      <strong>다시 읽기</strong> (Read again). OCR runs on your Mac; only recognized text goes to
+      your chosen official CLI provider.
+    </p>
     <p>
       If pressing ⌘C twice is still not detected after you allow it, click
       <strong>감시 다시 연결</strong> (Reconnect Monitoring) on the same screen, or reopen deepK
@@ -90,6 +104,21 @@ import { release } from '../../data/release';
       the result in the small translation window, then copy it or insert it where you were typing if
       you need to. You can also type text in directly to translate it. Translating on a double copy
       is on by default, and you can turn it off in Settings.
+    </p>
+  </section>
+  <section>
+    <h2>5. Translate images in the same window</h2>
+    <p>
+      In apps that copy text and images together, select both and press ⌘C twice to bring them into
+      the same translation window. Supported X image URLs are loaded from the original server; small
+      decorative icons are skipped. If your browser leaves the image out of the copy, or you are
+      reading a game that cannot be copied, choose <strong>화면에서 이미지 가져오기</strong>
+      (Get image from screen) and draw a rectangle around the text and image.
+    </p>
+    <p>
+      Compare the original and translation side by side. Regions with complex backgrounds or layouts
+      may keep the original when they cannot be replaced safely. Loading original images
+      automatically is not supported on every website.
     </p>
   </section>
   <section>
@@ -114,10 +143,9 @@ brew upgrade --cask Geuni620/tap/deepk</code></pre>
   <section>
     <h2>About the current release</h2>
     <p>
-      {release.version} separates permissions for the development and released apps, unifies the app
-      name, and improves reconnecting the shortcut monitor. Signing, Apple notarization, and keeping
-      Input Monitoring after an update on this Mac have been checked. The full flow on other Macs
-      and real keyboard triggering and insertion in this version have not been verified yet.
+      {release.version} brings text and image translation into one window. The release is signed and
+      notarized by Apple. Copy formats and screen permissions vary by app; the full flow has not
+      been verified on every website, game, or other Mac.
     </p>
     <p>
       <a href={release.notesUrl} target="_blank" rel="noopener noreferrer">

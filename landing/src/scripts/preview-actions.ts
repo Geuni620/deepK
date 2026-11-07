@@ -10,7 +10,12 @@ document.addEventListener('click', async (event) => {
     )
       return;
     event.preventDefault();
-    if (!installDialog.open) installDialog.showModal();
+    if (!installDialog.open) {
+      installDialog.showModal();
+      document.dispatchEvent(
+        new CustomEvent('deepk:website-action', { detail: 'install_guide_open' }),
+      );
+    }
   }
   if (target.closest('[data-close-install]')) installDialog?.close();
   const installCopy = target.closest<HTMLButtonElement>('[data-copy-install]');
@@ -21,6 +26,9 @@ document.addEventListener('click', async (event) => {
     const label = installCopy.querySelector('[data-copy-label]');
     try {
       await navigator.clipboard.writeText(installCopy.dataset.copyInstall);
+      document.dispatchEvent(
+        new CustomEvent('deepk:website-action', { detail: 'install_command_copy' }),
+      );
       if (label) label.textContent = installCopy.dataset.copyDone ?? '복사됨';
       if (status) status.textContent = installCopy.dataset.copySuccess ?? '';
     } catch {

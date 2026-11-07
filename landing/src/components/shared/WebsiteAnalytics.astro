@@ -1,0 +1,86 @@
+---
+import { routes, type Locale } from '../../i18n';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const measurementId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
+const enabled = typeof measurementId === 'string' && /^G-[A-Z0-9]+$/.test(measurementId);
+const en = locale === 'en';
+---
+
+{enabled && (
+  <aside data-website-analytics data-measurement-id={measurementId}>
+    <div class="mx-auto max-w-6xl px-6 pb-6 text-xs text-muted">
+      <button type="button" data-analytics-settings class="min-h-11 underline underline-offset-4">
+        {en ? 'Website analytics settings' : '웹사이트 통계 설정'}
+      </button>
+      <span data-analytics-status role="status" class="ml-3"></span>
+    </div>
+    <section
+      data-analytics-banner
+      hidden
+      aria-labelledby="analytics-title"
+      class="analytics-banner"
+    >
+      <div>
+        <h2 id="analytics-title" class="text-sm font-semibold">
+          {en ? 'Help improve this website?' : '웹사이트 개선에 방문 통계를 허용할까요?'}
+        </h2>
+        <p class="mt-2 text-xs leading-6 text-muted">
+          {en
+            ? 'Google Analytics measures visits and install-guide / download clicks after you allow it. Translation text and images are never included. You can change this choice below.'
+            : '허용하면 Google Analytics로 방문·설치 안내·다운로드 클릭만 측정합니다. 번역 원문과 이미지는 포함하지 않습니다. 아래 통계 설정에서 언제든 바꿀 수 있습니다.'}{' '}
+          <a href={routes.privacy[locale]} class="underline underline-offset-4">
+            {en ? 'Privacy' : '개인정보 안내'}
+          </a>
+        </p>
+      </div>
+      <div class="flex shrink-0 gap-2">
+        <button
+          type="button"
+          data-analytics-choice="denied"
+          class="rounded-xl border border-line bg-page px-4 py-3 text-xs font-semibold"
+        >
+          {en ? 'Do not allow' : '허용 안 함'}
+        </button>
+        <button
+          type="button"
+          data-analytics-choice="granted"
+          class="rounded-xl border border-line bg-page px-4 py-3 text-xs font-semibold"
+        >
+          {en ? 'Allow statistics' : '통계 허용'}
+        </button>
+      </div>
+    </section>
+  </aside>
+)}
+<script>
+  import '../../scripts/website-analytics';
+</script>
+<style>
+  .analytics-banner:not([hidden]) {
+    position: fixed;
+    z-index: 60;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    max-width: 960px;
+    margin-inline: auto;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    background: var(--page);
+    padding: 20px;
+    box-shadow: 0 8px 40px #302a2026;
+  }
+  @media (max-width: 640px) {
+    .analytics-banner:not([hidden]) {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+</style>

@@ -5,9 +5,9 @@ export const en: Messages = {
   ogLocale: 'en_US',
   languageName: 'English',
   meta: {
-    homeTitle: 'Mac translation with a double copy',
+    homeTitle: 'Mac text and image translation with Codex or Claude',
     homeDescription:
-      'Select a sentence and press ⌘C twice. deepK is a Mac menu bar app that translates between Korean and English with the AI subscription you already have. Install it with Homebrew or a notarized ZIP.',
+      'Press ⌘C twice to translate text and images in one window. deepK combines on-device Apple Vision OCR with your Codex or Claude subscription. Install on Mac with Homebrew or a notarized ZIP.',
   },
   layout: {
     skipLink: 'Skip to content',
@@ -27,7 +27,7 @@ export const en: Messages = {
     badge: '⌘ macOS menu bar translator',
     headline: ['Stuck on a sentence?', 'Press ⌘C ⌘C and the quokka reads it.'],
     description:
-      'Korean or English, a little Mac menu bar friend that translates just the sentence you picked in a small window.',
+      'A little Mac menu bar friend that translates selected text and words in images in the same small window.',
     cta: 'Get deepK for Mac',
     requirement: (macOS: string, version: string) =>
       `Apple Silicon · macOS ${macOS} or later · v${version}`,
@@ -65,7 +65,7 @@ export const en: Messages = {
   app: {
     eyebrow: 'A small window, an unbroken thought',
     title: ['A quick translation,', 'and you carry on.'],
-    body: 'Check the sentence you were reading in a small window. Copy the translation, or choose to insert it where you were typing.',
+    body: 'Bring text and images into the same window. Words in images are read on your Mac and translated by your chosen AI provider. Copy text translations or insert them where you were typing.',
     guideLink: 'Setup guide for first-time users',
     caption: 'An illustration recreating the translation window of the Mac app.',
     window: {
