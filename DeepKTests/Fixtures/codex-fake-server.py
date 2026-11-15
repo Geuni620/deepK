@@ -45,6 +45,14 @@ def record_environment():
 record_environment()
 
 
+def configured_mcp_names():
+    path = os.environ.get("DEEPK_MCP_NAMES_FILE")
+    if path:
+        with open(path, encoding="utf-8") as handle:
+            return json.load(handle)
+    return ["fixture-mcp"]
+
+
 def is_false(value, *path):
     for key in path:
         if not isinstance(value, dict):
@@ -58,7 +66,8 @@ def thread_config_is_safe(params):
     features = config.get("features", {})
     apps = config.get("apps", {}).get("_default", {})
     return (
-        is_false(config, "mcp_servers", "fixture-mcp", "enabled")
+        set(config.get("mcp_servers", {})) == set(configured_mcp_names())
+        and all(is_false(config, "mcp_servers", name, "enabled") for name in configured_mcp_names())
         and isinstance(features, dict)
         and set(features) == DISABLED_FEATURES
         and all(value is False for value in features.values())
@@ -164,7 +173,7 @@ for line in sys.stdin:
         respond(
             request_id,
             {
-                "config": {"mcp_servers": {"fixture-mcp": {"command": "ignored"}}},
+                "config": {"mcp_servers": {name: {"command": "ignored"} for name in configured_mcp_names()}},
                 "origins": {},
                 "layers": None,
             },
@@ -225,6 +234,14 @@ for line in sys.stdin:
         )
     elif method == "thread/start":
         THREAD_COUNT += 1
+        if MODE == "mcp-removal-race" and THREAD_COUNT == 1:
+            with open(os.environ["DEEPK_MCP_NAMES_FILE"], "w", encoding="utf-8") as handle:
+                json.dump(["fixture-mcp"], handle)
+            respond(request_id, error={"code": -32600, "message": "failed to load configuration: invalid transport in `mcp_servers.paper`"})
+            continue
+        if MODE == "mcp-invalid-stable":
+            respond(request_id, error={"code": -32600, "message": "failed to load configuration: invalid transport in `mcp_servers.paper`"})
+            continue
         if MODE == "prewarm-fail-once" and THREAD_COUNT == 1:
             respond(request_id, error={"code": -32000, "message": "fixture preparation failure"})
             continue
@@ -354,8 +371,8 @@ for line in sys.stdin:
                     },
                 }
             )
-        elif MODE in ("normal", "late", "auth-error", "account-switch", "literal-echo") or IS_PREWARM or retried:
-            text = "안녕하세요" if MODE in ("normal", "auth-error", "account-switch") or retried else ("첫 번째" if TURN_COUNT == 1 else "두 번째")
+        elif MODE in ("normal", "late", "auth-error", "account-switch", "literal-echo", "mcp-removal-race") or IS_PREWARM or retried:
+            text = "안녕하세요" if MODE in ("normal", "auth-error", "account-switch", "mcp-removal-race") or retried else ("첫 번째" if TURN_COUNT == 1 else "두 번째")
             if IS_PREWARM:
                 text = "안녕하세요"
             if MODE == "literal-echo":
