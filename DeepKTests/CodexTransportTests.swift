@@ -1102,7 +1102,9 @@ private enum CodexTransportTests {
                 executableURL: fixture,
                 arguments: [mode],
                 environment: environment,
-                requestTimeout: 2,
+                // CLI startup under parallel macOS build load is not the timeout behavior under test.
+                // Explicit turn-timeout tests keep their own short translationTimeout.
+                requestTimeout: 10,
                 translationTimeout: translationTimeout,
                 modelCacheTTL: modelCacheTTL,
                 prewarmLifetime: prewarmLifetime,
