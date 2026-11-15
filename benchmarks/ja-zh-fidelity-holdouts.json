@@ -1,0 +1,47 @@
+[
+  {
+    "source": "ja",
+    "target": "Korean (한국어)",
+    "input": "更新には2分かかる場合があります。完了後にもう一度お試しください。"
+  },
+  {
+    "source": "ja",
+    "target": "Korean (한국어)",
+    "input": "処理には3分かかることがあります。時間の上限は示していません。"
+  },
+  {
+    "source": "ja",
+    "target": "Korean (한국어)",
+    "input": "保存せずに閉じないでください。保存後は閉じてもかまいません。"
+  },
+  {
+    "source": "ko",
+    "target": "Traditional Chinese (Taiwan; use Taiwanese vocabulary and traditional characters)",
+    "input": "백업을 지우지 마세요. 새 파일만 삭제해 주세요."
+  },
+  {
+    "source": "zh-Hans",
+    "target": "Korean (한국어)",
+    "input": "请勿删除备份，也不要修改原始文件。只删除临时文件。"
+  },
+  {
+    "source": "ko",
+    "target": "Traditional Chinese (Taiwan; use Taiwanese vocabulary and traditional characters)",
+    "input": "이 작업은 5분이 걸릴 수 있으며 최대 소요 시간은 정해져 있지 않습니다."
+  },
+  {
+    "source": "ko",
+    "target": "Traditional Chinese (Taiwan; use Taiwanese vocabulary and traditional characters)",
+    "input": "고객에게 백업 파일을 보내지 마세요. 보내도 되는 것은 안내 문서뿐입니다."
+  },
+  {
+    "source": "zh-Hant",
+    "target": "Korean (한국어)",
+    "input": "可能需要4分鐘，不代表最多只要4分鐘。請保留備份。"
+  },
+  {
+    "source": "ja",
+    "target": "Korean (한국어)",
+    "input": "3分ほどかかる可能性がありますが、最大時間は保証できません。"
+  }
+]

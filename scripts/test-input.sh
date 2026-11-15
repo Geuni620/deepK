@@ -12,13 +12,13 @@ cleanup() { if [[ -n "$HOST_PID" ]]; then kill "$HOST_PID" 2>/dev/null || true; 
 trap cleanup EXIT
 trap 'exit 130' INT
 trap 'exit 143' TERM
-swiftc -swift-version 6 -warnings-as-errors -module-cache-path "$TEST_DIR/cache" \
+swiftc "$PROJECT_ROOT/DeepK/Localization.swift" -swift-version 6 -warnings-as-errors -module-cache-path "$TEST_DIR/cache" \
   "$PROJECT_ROOT/DeepK/Translation/SourceEditor.swift" "$PROJECT_ROOT/DeepK/Translation/TranslationLists.swift" \
   "$PROJECT_ROOT/DeepKTests/Fixtures/SourceEditorIMESmoke.swift" -o "$TEST_DIR/ime"
 "$TEST_DIR/ime"
-swiftc -swift-version 6 -module-cache-path "$TEST_DIR/cache" \
+swiftc "$PROJECT_ROOT/DeepK/Localization.swift" -swift-version 6 -module-cache-path "$TEST_DIR/cache" \
   "$PROJECT_ROOT/DeepKTests/Fixtures/NativeTextHost.swift" -o "$TEST_DIR/deepk-test-host"
-swiftc -swift-version 6 -warnings-as-errors -module-cache-path "$TEST_DIR/cache" \
+swiftc "$PROJECT_ROOT/DeepK/Localization.swift" -swift-version 6 -warnings-as-errors -module-cache-path "$TEST_DIR/cache" \
   "$PROJECT_ROOT/DeepK/MacIntegration/DoubleCopyDetector.swift" \
   "$PROJECT_ROOT/DeepK/MacIntegration/DoubleCopyMonitor.swift" \
   "$PROJECT_ROOT/DeepK/Translation/CopiedMathNormalizer.swift" \

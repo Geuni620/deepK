@@ -1,0 +1,65 @@
+[
+  {
+    "fidelityRevisions" : "0",
+    "input" : "更新には2分かかる場合があります。完了後にもう一度お試しください。",
+    "output" : "업데이트에는 2분이 걸릴 수 있습니다. 완료된 후 다시 시도해 주세요.",
+    "source" : "ja",
+    "target" : "Korean (한국어)"
+  },
+  {
+    "fidelityRevisions" : "0",
+    "input" : "処理には3分かかることがあります。時間の上限は示していません。",
+    "output" : "처리에는 3분이 걸릴 수 있습니다. 시간 상한은 명시하지 않았습니다.",
+    "source" : "ja",
+    "target" : "Korean (한국어)"
+  },
+  {
+    "fidelityRevisions" : "0",
+    "input" : "保存せずに閉じないでください。保存後は閉じてもかまいません。",
+    "output" : "저장하지 않으면 닫지 마세요. 저장한 후에는 닫으셔도 됩니다.",
+    "source" : "ja",
+    "target" : "Korean (한국어)"
+  },
+  {
+    "fidelityRevisions" : "0",
+    "input" : "백업을 지우지 마세요. 새 파일만 삭제해 주세요.",
+    "output" : "不要刪除備份。請只刪除新檔案。",
+    "source" : "ko",
+    "target" : "Traditional Chinese (Taiwan; use Taiwanese vocabulary and traditional characters)"
+  },
+  {
+    "fidelityRevisions" : "0",
+    "input" : "请勿删除备份，也不要修改原始文件。只删除临时文件。",
+    "output" : "백업을 삭제하지 마십시오. 원본 파일도 수정하지 마십시오. 임시 파일만 삭제하십시오.",
+    "source" : "zh-Hans",
+    "target" : "Korean (한국어)"
+  },
+  {
+    "fidelityRevisions" : "0",
+    "input" : "이 작업은 5분이 걸릴 수 있으며 최대 소요 시간은 정해져 있지 않습니다.",
+    "output" : "這項作業可能需要 5 分鐘，但最長所需時間並未設定。",
+    "source" : "ko",
+    "target" : "Traditional Chinese (Taiwan; use Taiwanese vocabulary and traditional characters)"
+  },
+  {
+    "fidelityRevisions" : "0",
+    "input" : "고객에게 백업 파일을 보내지 마세요. 보내도 되는 것은 안내 문서뿐입니다.",
+    "output" : "不要把備份檔案寄給客戶。客戶只能收到說明文件。",
+    "source" : "ko",
+    "target" : "Traditional Chinese (Taiwan; use Taiwanese vocabulary and traditional characters)"
+  },
+  {
+    "fidelityRevisions" : "0",
+    "input" : "可能需要4分鐘，不代表最多只要4分鐘。請保留備份。",
+    "output" : "이 작업에는 4분이 걸릴 수 있으며, 최대 4분만 걸린다는 뜻은 아닙니다. 백업은 유지해 주세요.",
+    "source" : "zh-Hant",
+    "target" : "Korean (한국어)"
+  },
+  {
+    "fidelityRevisions" : "0",
+    "input" : "3分ほどかかる可能性がありますが、最大時間は保証できません。",
+    "output" : "약 3분 정도 걸릴 수 있지만, 최대 시간은 보장할 수 없습니다.",
+    "source" : "ja",
+    "target" : "Korean (한국어)"
+  }
+]

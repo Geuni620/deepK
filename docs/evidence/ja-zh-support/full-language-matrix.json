@@ -1,0 +1,860 @@
+[
+  {
+    "failures" : [
+
+    ],
+    "input" : "バックアップを削除しないでください。123個のファイルを2026-11-30まで保管してください。",
+    "milliseconds" : 5407.065125,
+    "model" : "gpt-5.6-luna",
+    "output" : "백업을 삭제하지 마세요. 파일 123개를 2026-11-30까지 보관하세요.",
+    "provider" : "codex",
+    "sample" : "negation-date",
+    "source" : "ja",
+    "target" : "ko"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "設定\n\n`config.json`を変更しないでください。\n`npm test`を実行してください。",
+    "milliseconds" : 4336.896167,
+    "model" : "gpt-5.6-luna",
+    "output" : "설정\n\n`config.json`을 변경하지 마세요.  \n`npm test`를 실행하세요.",
+    "provider" : "codex",
+    "sample" : "paragraphs-code",
+    "source" : "ja",
+    "target" : "ko"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "更新には2分かかる場合があります。完了後にもう一度お試しください。",
+    "milliseconds" : 4648.76375,
+    "model" : "gpt-5.6-luna",
+    "output" : "업데이트에 2분이 걸릴 수 있습니다. 완료된 후 다시 시도해 주세요.",
+    "provider" : "codex",
+    "sample" : "modality-request",
+    "source" : "ja",
+    "target" : "ko"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "請勿刪除備份。請將 123 個檔案保留至 2026-11-30。",
+    "milliseconds" : 3628.841,
+    "model" : "gpt-5.6-luna",
+    "output" : "백업을 삭제하지 마세요. 123개의 파일을 2026-11-30까지 보관해 주세요.",
+    "provider" : "codex",
+    "sample" : "negation-date",
+    "source" : "zh-Hant",
+    "target" : "ko"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "設定\n\n請勿變更 `config.json`。\n請執行 `npm test`。",
+    "milliseconds" : 4225.455458,
+    "model" : "gpt-5.6-luna",
+    "output" : "설정\n\n`config.json`을 변경하지 마세요.  \n`npm test`를 실행하세요.",
+    "provider" : "codex",
+    "sample" : "paragraphs-code",
+    "source" : "zh-Hant",
+    "target" : "ko"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "更新可能需要 2 分鐘。請在完成後再試一次。",
+    "milliseconds" : 2914.664834,
+    "model" : "gpt-5.6-luna",
+    "output" : "업데이트에 2분 정도 걸릴 수 있습니다. 완료된 후 다시 시도해 주세요.",
+    "provider" : "codex",
+    "sample" : "modality-request",
+    "source" : "zh-Hant",
+    "target" : "ko"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "请勿删除备份。请将 123 个文件保留至 2026-11-30。",
+    "milliseconds" : 3810.279125,
+    "model" : "gpt-5.6-luna",
+    "output" : "백업을 삭제하지 마세요. 123개의 파일을 2026-11-30까지 보관해 주세요.",
+    "provider" : "codex",
+    "sample" : "negation-date",
+    "source" : "zh-Hans",
+    "target" : "ko"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "设置\n\n请勿更改 `config.json`。\n请运行 `npm test`。",
+    "milliseconds" : 2907.641209,
+    "model" : "gpt-5.6-luna",
+    "output" : "설정\n\n`config.json`을 변경하지 마세요.\n`npm test`를 실행하세요.",
+    "provider" : "codex",
+    "sample" : "paragraphs-code",
+    "source" : "zh-Hans",
+    "target" : "ko"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "更新可能需要 2 分钟。请在完成后重试。",
+    "milliseconds" : 3218.538041,
+    "model" : "gpt-5.6-luna",
+    "output" : "업데이트에 2분 정도 걸릴 수 있습니다. 완료된 후 다시 시도해 주세요.",
+    "provider" : "codex",
+    "sample" : "modality-request",
+    "source" : "zh-Hans",
+    "target" : "ko"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "백업을 삭제하지 마세요. 파일 123개를 2026-11-30까지 보관하세요.",
+    "milliseconds" : 3518.109791,
+    "model" : "gpt-5.6-luna",
+    "output" : "バックアップを削除しないでください。ファイル123個を2026-11-30まで保管してください。",
+    "provider" : "codex",
+    "sample" : "negation-date",
+    "source" : "ko",
+    "target" : "ja"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "설정\n\n`config.json`을 변경하지 마세요.\n`npm test`를 실행하세요.",
+    "milliseconds" : 4691.239292,
+    "model" : "gpt-5.6-luna",
+    "output" : "設定\n\n`config.json`を変更しないでください。  \n`npm test`を実行してください。",
+    "provider" : "codex",
+    "sample" : "paragraphs-code",
+    "source" : "ko",
+    "target" : "ja"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "업데이트에 2분이 걸릴 수 있습니다. 완료된 뒤 다시 시도해 주세요.",
+    "milliseconds" : 5627.942375,
+    "model" : "gpt-5.6-luna",
+    "output" : "アップデートには2分かかる場合があります。完了後、もう一度お試しください。",
+    "provider" : "codex",
+    "sample" : "modality-request",
+    "source" : "ko",
+    "target" : "ja"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "백업을 삭제하지 마세요. 파일 123개를 2026-11-30까지 보관하세요.",
+    "milliseconds" : 4707.735875,
+    "model" : "gpt-5.6-luna",
+    "output" : "請勿刪除備份。請將 123 個檔案保留至 2026-11-30。",
+    "provider" : "codex",
+    "sample" : "negation-date",
+    "source" : "ko",
+    "target" : "zh-Hant"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "설정\n\n`config.json`을 변경하지 마세요.\n`npm test`를 실행하세요.",
+    "milliseconds" : 4417.951958,
+    "model" : "gpt-5.6-luna",
+    "output" : "設定\n\n請勿變更 `config.json`。\n請執行 `npm test`。",
+    "provider" : "codex",
+    "sample" : "paragraphs-code",
+    "source" : "ko",
+    "target" : "zh-Hant"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "업데이트에 2분이 걸릴 수 있습니다. 완료된 뒤 다시 시도해 주세요.",
+    "milliseconds" : 4179.393958,
+    "model" : "gpt-5.6-luna",
+    "output" : "更新可能需要 2 分鐘。完成後請再試一次。",
+    "provider" : "codex",
+    "sample" : "modality-request",
+    "source" : "ko",
+    "target" : "zh-Hant"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "백업을 삭제하지 마세요. 파일 123개를 2026-11-30까지 보관하세요.",
+    "milliseconds" : 3477.057041,
+    "model" : "gpt-5.6-luna",
+    "output" : "请勿删除备份。请将 123 个文件保留至 2026-11-30。",
+    "provider" : "codex",
+    "sample" : "negation-date",
+    "source" : "ko",
+    "target" : "zh-Hans"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "설정\n\n`config.json`을 변경하지 마세요.\n`npm test`를 실행하세요.",
+    "milliseconds" : 3646.64975,
+    "model" : "gpt-5.6-luna",
+    "output" : "设置\n\n请勿更改 `config.json`。\n请运行 `npm test`。",
+    "provider" : "codex",
+    "sample" : "paragraphs-code",
+    "source" : "ko",
+    "target" : "zh-Hans"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "업데이트에 2분이 걸릴 수 있습니다. 완료된 뒤 다시 시도해 주세요.",
+    "milliseconds" : 3972.672917,
+    "model" : "gpt-5.6-luna",
+    "output" : "更新可能需要 2 分钟。完成后请重试。",
+    "provider" : "codex",
+    "sample" : "modality-request",
+    "source" : "ko",
+    "target" : "zh-Hans"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "Do not delete the backup. Keep 123 files until 2026-11-30.",
+    "milliseconds" : 3164.541625,
+    "model" : "gpt-5.6-luna",
+    "output" : "バックアップを削除しないでください。2026-11-30まで123個のファイルを保持してください。",
+    "provider" : "codex",
+    "sample" : "negation-date",
+    "source" : "en",
+    "target" : "ja"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "Setup\n\nKeep `config.json` unchanged.\nRun `npm test`.",
+    "milliseconds" : 4028.48475,
+    "model" : "gpt-5.6-luna",
+    "output" : "セットアップ\n\n`config.json` を変更しないでください。\n```bash\nnpm test\n```",
+    "provider" : "codex",
+    "sample" : "paragraphs-code",
+    "source" : "en",
+    "target" : "ja"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "The update may take 2 minutes. Please try again after it finishes.",
+    "milliseconds" : 3510.872458,
+    "model" : "gpt-5.6-luna",
+    "output" : "更新には2分かかる場合があります。完了後、もう一度お試しください。",
+    "provider" : "codex",
+    "sample" : "modality-request",
+    "source" : "en",
+    "target" : "ja"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "Do not delete the backup. Keep 123 files until 2026-11-30.",
+    "milliseconds" : 5477.92875,
+    "model" : "gpt-5.6-luna",
+    "output" : "請勿刪除備份。保留 123 個檔案至 2026-11-30。",
+    "provider" : "codex",
+    "sample" : "negation-date",
+    "source" : "en",
+    "target" : "zh-Hant"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "Setup\n\nKeep `config.json` unchanged.\nRun `npm test`.",
+    "milliseconds" : 3228.653084,
+    "model" : "gpt-5.6-luna",
+    "output" : "設定\n\n請勿修改 `config.json`。\n\n執行：\n```bash\nnpm test\n```",
+    "provider" : "codex",
+    "sample" : "paragraphs-code",
+    "source" : "en",
+    "target" : "zh-Hant"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "The update may take 2 minutes. Please try again after it finishes.",
+    "milliseconds" : 3046.892208,
+    "model" : "gpt-5.6-luna",
+    "output" : "更新可能需要 2 分鐘。完成後請再試一次。",
+    "provider" : "codex",
+    "sample" : "modality-request",
+    "source" : "en",
+    "target" : "zh-Hant"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "Do not delete the backup. Keep 123 files until 2026-11-30.",
+    "milliseconds" : 3356.914208,
+    "model" : "gpt-5.6-luna",
+    "output" : "不要删除备份。保留 123 个文件，直到 2026-11-30。",
+    "provider" : "codex",
+    "sample" : "negation-date",
+    "source" : "en",
+    "target" : "zh-Hans"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "Setup\n\nKeep `config.json` unchanged.\nRun `npm test`.",
+    "milliseconds" : 3569.451583,
+    "model" : "gpt-5.6-luna",
+    "output" : "设置\n\n保持 `config.json` 不变。  \n运行 `npm test`。",
+    "provider" : "codex",
+    "sample" : "paragraphs-code",
+    "source" : "en",
+    "target" : "zh-Hans"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "The update may take 2 minutes. Please try again after it finishes.",
+    "milliseconds" : 3316.585416,
+    "model" : "gpt-5.6-luna",
+    "output" : "更新可能需要 2 分钟。完成后请重试。",
+    "provider" : "codex",
+    "sample" : "modality-request",
+    "source" : "en",
+    "target" : "zh-Hans"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "請勿刪除備份。請將 123 個檔案保留至 2026-11-30。",
+    "milliseconds" : 2990.179583,
+    "model" : "gpt-5.6-luna",
+    "output" : "请勿删除备份。请将 123 个文件保留至 2026-11-30。",
+    "provider" : "codex",
+    "sample" : "negation-date",
+    "source" : "zh-Hant",
+    "target" : "zh-Hans"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "設定\n\n請勿變更 `config.json`。\n請執行 `npm test`。",
+    "milliseconds" : 3397.4915419999998,
+    "model" : "gpt-5.6-luna",
+    "output" : "设置\n\n请勿更改 `config.json`。  \n请执行 `npm test`。",
+    "provider" : "codex",
+    "sample" : "paragraphs-code",
+    "source" : "zh-Hant",
+    "target" : "zh-Hans"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "更新可能需要 2 分鐘。請在完成後再試一次。",
+    "milliseconds" : 6049.902333,
+    "model" : "gpt-5.6-luna",
+    "output" : "更新可能需要 2 分钟。请在完成后再试一次。",
+    "provider" : "codex",
+    "sample" : "modality-request",
+    "source" : "zh-Hant",
+    "target" : "zh-Hans"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "请勿删除备份。请将 123 个文件保留至 2026-11-30。",
+    "milliseconds" : 4694.605875,
+    "model" : "gpt-5.6-luna",
+    "output" : "請勿刪除備份。請將 123 個檔案保留至 2026-11-30。",
+    "provider" : "codex",
+    "sample" : "negation-date",
+    "source" : "zh-Hans",
+    "target" : "zh-Hant"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "设置\n\n请勿更改 `config.json`。\n请运行 `npm test`。",
+    "milliseconds" : 3206.539083,
+    "model" : "gpt-5.6-luna",
+    "output" : "設定\n\n請勿更改 `config.json`。\n請執行 `npm test`。",
+    "provider" : "codex",
+    "sample" : "paragraphs-code",
+    "source" : "zh-Hans",
+    "target" : "zh-Hant"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "更新可能需要 2 分钟。请在完成后重试。",
+    "milliseconds" : 3144.394167,
+    "model" : "gpt-5.6-luna",
+    "output" : "更新可能需要 2 分鐘。請完成後再試一次。",
+    "provider" : "codex",
+    "sample" : "modality-request",
+    "source" : "zh-Hans",
+    "target" : "zh-Hant"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "バックアップを削除しないでください。123個のファイルを2026-11-30まで保管してください。",
+    "milliseconds" : 4263.3123749999995,
+    "model" : "claude-haiku-5-5",
+    "output" : "백업을 삭제하지 마세요. 123개의 파일을 2026-11-30까지 보관해 주세요.",
+    "provider" : "claude",
+    "sample" : "negation-date",
+    "source" : "ja",
+    "target" : "ko"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "設定\n\n`config.json`を変更しないでください。\n`npm test`を実行してください。",
+    "milliseconds" : 12023.402084,
+    "model" : "claude-haiku-5-5",
+    "output" : "설정\n\n`config.json`을 변경하지 마세요.\n`npm test`를 실행하세요.",
+    "provider" : "claude",
+    "sample" : "paragraphs-code",
+    "source" : "ja",
+    "target" : "ko"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "更新には2分かかる場合があります。完了後にもう一度お試しください。",
+    "milliseconds" : 11818.3275,
+    "model" : "claude-haiku-5-5",
+    "output" : "업데이트에는 최대 2분이 걸릴 수 있습니다. 완료된 후 다시 시도해 주세요.",
+    "provider" : "claude",
+    "sample" : "modality-request",
+    "source" : "ja",
+    "target" : "ko"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "請勿刪除備份。請將 123 個檔案保留至 2026-11-30。",
+    "milliseconds" : 5180.137084,
+    "model" : "claude-haiku-5-5",
+    "output" : "백업을 삭제하지 마세요. 123개 파일을 2026-11-30까지 보관해 주세요.",
+    "provider" : "claude",
+    "sample" : "negation-date",
+    "source" : "zh-Hant",
+    "target" : "ko"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "設定\n\n請勿變更 `config.json`。\n請執行 `npm test`。",
+    "milliseconds" : 10310.439208,
+    "model" : "claude-haiku-5-5",
+    "output" : "설정\n\n`config.json`을 변경하지 마세요.\n`npm test`를 실행하세요.",
+    "provider" : "claude",
+    "sample" : "paragraphs-code",
+    "source" : "zh-Hant",
+    "target" : "ko"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "更新可能需要 2 分鐘。請在完成後再試一次。",
+    "milliseconds" : 7617.210166,
+    "model" : "claude-haiku-5-5",
+    "output" : "업데이트에는 2분 정도 걸릴 수 있습니다. 완료된 후에 다시 시도해 주세요.",
+    "provider" : "claude",
+    "sample" : "modality-request",
+    "source" : "zh-Hant",
+    "target" : "ko"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "请勿删除备份。请将 123 个文件保留至 2026-11-30。",
+    "milliseconds" : 6877.995625,
+    "model" : "claude-haiku-5-5",
+    "output" : "삭제하지 마세요. 123개 파일을 2026-11-30까지 보관하세요.",
+    "provider" : "claude",
+    "sample" : "negation-date",
+    "source" : "zh-Hans",
+    "target" : "ko"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "设置\n\n请勿更改 `config.json`。\n请运行 `npm test`。",
+    "milliseconds" : 13019.310208,
+    "model" : "claude-haiku-5-5",
+    "output" : "설정\n\n`config.json`을 변경하지 마세요.\n`npm test`를 실행하세요.",
+    "provider" : "claude",
+    "sample" : "paragraphs-code",
+    "source" : "zh-Hans",
+    "target" : "ko"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "更新可能需要 2 分钟。请在完成后重试。",
+    "milliseconds" : 3571.779458,
+    "model" : "claude-haiku-5-5",
+    "output" : "업데이트에는 2분 정도 걸릴 수 있습니다. 완료된 후 다시 시도해 주세요.",
+    "provider" : "claude",
+    "sample" : "modality-request",
+    "source" : "zh-Hans",
+    "target" : "ko"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "백업을 삭제하지 마세요. 파일 123개를 2026-11-30까지 보관하세요.",
+    "milliseconds" : 3729.502584,
+    "model" : "claude-haiku-5-5",
+    "output" : "バックアップを削除しないでください。ファイル123個を2026-11-30まで保管してください。",
+    "provider" : "claude",
+    "sample" : "negation-date",
+    "source" : "ko",
+    "target" : "ja"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "설정\n\n`config.json`을 변경하지 마세요.\n`npm test`를 실행하세요.",
+    "milliseconds" : 4908.971167,
+    "model" : "claude-haiku-5-5",
+    "output" : "設定\n\n`config.json` を変更しないでください。\n`npm test` を実行してください。",
+    "provider" : "claude",
+    "sample" : "paragraphs-code",
+    "source" : "ko",
+    "target" : "ja"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "업데이트에 2분이 걸릴 수 있습니다. 완료된 뒤 다시 시도해 주세요.",
+    "milliseconds" : 3887.937666,
+    "model" : "claude-haiku-5-5",
+    "output" : "アップデートには2分ほどかかる場合があります。完了後にもう一度お試しください。",
+    "provider" : "claude",
+    "sample" : "modality-request",
+    "source" : "ko",
+    "target" : "ja"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "백업을 삭제하지 마세요. 파일 123개를 2026-11-30까지 보관하세요.",
+    "milliseconds" : 4038.425459,
+    "model" : "claude-haiku-5-5",
+    "output" : "刪除備份。請保留這 123 個檔案，直到 2026-11-30。",
+    "provider" : "claude",
+    "sample" : "negation-date",
+    "source" : "ko",
+    "target" : "zh-Hant"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "설정\n\n`config.json`을 변경하지 마세요.\n`npm test`를 실행하세요.",
+    "milliseconds" : 3481.093291,
+    "model" : "claude-haiku-5-5",
+    "output" : "設定\n\n請勿變更 `config.json`。\n請執行 `npm test`。",
+    "provider" : "claude",
+    "sample" : "paragraphs-code",
+    "source" : "ko",
+    "target" : "zh-Hant"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "업데이트에 2분이 걸릴 수 있습니다. 완료된 뒤 다시 시도해 주세요.",
+    "milliseconds" : 3514.5631670000002,
+    "model" : "claude-haiku-5-5",
+    "output" : "更新可能需要 2 分鐘。完成後請再試一次。",
+    "provider" : "claude",
+    "sample" : "modality-request",
+    "source" : "ko",
+    "target" : "zh-Hant"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "백업을 삭제하지 마세요. 파일 123개를 2026-11-30까지 보관하세요.",
+    "milliseconds" : 2035.687083,
+    "model" : "claude-haiku-5-5",
+    "output" : "不要删除备份。请将123个文件保留至2026-11-30。",
+    "provider" : "claude",
+    "sample" : "negation-date",
+    "source" : "ko",
+    "target" : "zh-Hans"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "설정\n\n`config.json`을 변경하지 마세요.\n`npm test`를 실행하세요.",
+    "milliseconds" : 3358.245667,
+    "model" : "claude-haiku-5-5",
+    "output" : "设置\n\n不要修改 `config.json`。\n运行 `npm test`。",
+    "provider" : "claude",
+    "sample" : "paragraphs-code",
+    "source" : "ko",
+    "target" : "zh-Hans"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "업데이트에 2분이 걸릴 수 있습니다. 완료된 뒤 다시 시도해 주세요.",
+    "milliseconds" : 2452.204959,
+    "model" : "claude-haiku-5-5",
+    "output" : "更新可能需要2分钟。完成后请重试。",
+    "provider" : "claude",
+    "sample" : "modality-request",
+    "source" : "ko",
+    "target" : "zh-Hans"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "Do not delete the backup. Keep 123 files until 2026-11-30.",
+    "milliseconds" : 2003.957542,
+    "model" : "claude-haiku-5-5",
+    "output" : "バックアップを削除しないでください。2026-11-30まで123個のファイルを保持してください。",
+    "provider" : "claude",
+    "sample" : "negation-date",
+    "source" : "en",
+    "target" : "ja"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "Setup\n\nKeep `config.json` unchanged.\nRun `npm test`.",
+    "milliseconds" : 3035.4535,
+    "model" : "claude-haiku-5-5",
+    "output" : "セットアップ\n\n`config.json` は変更しないでください。\n`npm test` を実行してください。",
+    "provider" : "claude",
+    "sample" : "paragraphs-code",
+    "source" : "en",
+    "target" : "ja"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "The update may take 2 minutes. Please try again after it finishes.",
+    "milliseconds" : 1827.505208,
+    "model" : "claude-haiku-5-5",
+    "output" : "アップデートには2分ほどかかる場合があります。完了後に再度お試しください。",
+    "provider" : "claude",
+    "sample" : "modality-request",
+    "source" : "en",
+    "target" : "ja"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "Do not delete the backup. Keep 123 files until 2026-11-30.",
+    "milliseconds" : 1777.294333,
+    "model" : "claude-haiku-5-5",
+    "output" : "不要刪除備份。請保留 123 個檔案，直到 2026-11-30。",
+    "provider" : "claude",
+    "sample" : "negation-date",
+    "source" : "en",
+    "target" : "zh-Hant"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "Setup\n\nKeep `config.json` unchanged.\nRun `npm test`.",
+    "milliseconds" : 1495.927708,
+    "model" : "claude-haiku-5-5",
+    "output" : "設定\n\n請保持 `config.json` 不變。\n執行 `npm test`。",
+    "provider" : "claude",
+    "sample" : "paragraphs-code",
+    "source" : "en",
+    "target" : "zh-Hant"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "The update may take 2 minutes. Please try again after it finishes.",
+    "milliseconds" : 2091.588708,
+    "model" : "claude-haiku-5-5",
+    "output" : "更新可能需要 2 分鐘。請在更新完成後再試一次。",
+    "provider" : "claude",
+    "sample" : "modality-request",
+    "source" : "en",
+    "target" : "zh-Hant"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "Do not delete the backup. Keep 123 files until 2026-11-30.",
+    "milliseconds" : 1658.0797499999999,
+    "model" : "claude-haiku-5-5",
+    "output" : "不要删除备份。请保留123个文件，直到2026-11-30。",
+    "provider" : "claude",
+    "sample" : "negation-date",
+    "source" : "en",
+    "target" : "zh-Hans"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "Setup\n\nKeep `config.json` unchanged.\nRun `npm test`.",
+    "milliseconds" : 1542.91825,
+    "model" : "claude-haiku-5-5",
+    "output" : "设置\n\n保持 `config.json` 不变。\n运行 `npm test`。",
+    "provider" : "claude",
+    "sample" : "paragraphs-code",
+    "source" : "en",
+    "target" : "zh-Hans"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "The update may take 2 minutes. Please try again after it finishes.",
+    "milliseconds" : 2208.540042,
+    "model" : "claude-haiku-5-5",
+    "output" : "更新可能需要 2 分钟。请等待更新完成后再重试。",
+    "provider" : "claude",
+    "sample" : "modality-request",
+    "source" : "en",
+    "target" : "zh-Hans"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "請勿刪除備份。請將 123 個檔案保留至 2026-11-30。",
+    "milliseconds" : 1819.836,
+    "model" : "claude-haiku-5-5",
+    "output" : "请勿删除备份。请将 123 个文件保留至 2026-11-30。",
+    "provider" : "claude",
+    "sample" : "negation-date",
+    "source" : "zh-Hant",
+    "target" : "zh-Hans"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "設定\n\n請勿變更 `config.json`。\n請執行 `npm test`。",
+    "milliseconds" : 1543.839583,
+    "model" : "claude-haiku-5-5",
+    "output" : "设置\n\n请勿变更 `config.json`。\n请执行 `npm test`。",
+    "provider" : "claude",
+    "sample" : "paragraphs-code",
+    "source" : "zh-Hant",
+    "target" : "zh-Hans"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "更新可能需要 2 分鐘。請在完成後再試一次。",
+    "milliseconds" : 1744.327084,
+    "model" : "claude-haiku-5-5",
+    "output" : "更新可能需要 2 分钟。请在完成后再试一次。",
+    "provider" : "claude",
+    "sample" : "modality-request",
+    "source" : "zh-Hant",
+    "target" : "zh-Hans"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "请勿删除备份。请将 123 个文件保留至 2026-11-30。",
+    "milliseconds" : 2243.273458,
+    "model" : "claude-haiku-5-5",
+    "output" : "請勿刪除備份。請將 123 個檔案保留至 2026-11-30。",
+    "provider" : "claude",
+    "sample" : "negation-date",
+    "source" : "zh-Hans",
+    "target" : "zh-Hant"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "设置\n\n请勿更改 `config.json`。\n请运行 `npm test`。",
+    "milliseconds" : 1595.217666,
+    "model" : "claude-haiku-5-5",
+    "output" : "設定\n\n請勿變更 `config.json`。\n請執行 `npm test`。",
+    "provider" : "claude",
+    "sample" : "paragraphs-code",
+    "source" : "zh-Hans",
+    "target" : "zh-Hant"
+  },
+  {
+    "failures" : [
+
+    ],
+    "input" : "更新可能需要 2 分钟。请在完成后重试。",
+    "milliseconds" : 1903.221875,
+    "model" : "claude-haiku-5-5",
+    "output" : "更新可能需要 2 分鐘。請在完成後重試。",
+    "provider" : "claude",
+    "sample" : "modality-request",
+    "source" : "zh-Hans",
+    "target" : "zh-Hant"
+  }
+]

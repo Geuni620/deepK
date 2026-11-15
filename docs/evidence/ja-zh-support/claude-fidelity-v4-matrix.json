@@ -1,0 +1,464 @@
+[
+  {
+    "failures" : [
+
+    ],
+    "fidelityRevisions" : 0,
+    "input" : "バックアップを削除しないでください。123個のファイルを2026-11-30まで保管してください。",
+    "milliseconds" : 7265.338375,
+    "model" : "claude-haiku-5-5",
+    "output" : "백업을 삭제하지 마세요. 123개의 파일을 2026-11-30까지 보관해 주세요.",
+    "provider" : "claude",
+    "sample" : "negation-date",
+    "source" : "ja",
+    "target" : "ko"
+  },
+  {
+    "failures" : [
+
+    ],
+    "fidelityRevisions" : 0,
+    "input" : "設定\n\n`config.json`を変更しないでください。\n`npm test`を実行してください。",
+    "milliseconds" : 2627.646459,
+    "model" : "claude-haiku-5-5",
+    "output" : "설정\n\n`config.json`을 변경하지 마세요.\n`npm test`를 실행하세요.",
+    "provider" : "claude",
+    "sample" : "paragraphs-code",
+    "source" : "ja",
+    "target" : "ko"
+  },
+  {
+    "failures" : [
+
+    ],
+    "fidelityRevisions" : 0,
+    "input" : "更新には2分かかる場合があります。完了後にもう一度お試しください。",
+    "milliseconds" : 2809.929459,
+    "model" : "claude-haiku-5-5",
+    "output" : "업데이트에는 2분이 걸릴 수 있습니다. 완료된 후 다시 시도해 주세요.",
+    "provider" : "claude",
+    "sample" : "modality-request",
+    "source" : "ja",
+    "target" : "ko"
+  },
+  {
+    "failures" : [
+
+    ],
+    "fidelityRevisions" : 0,
+    "input" : "請勿刪除備份。請將 123 個檔案保留至 2026-11-30。",
+    "milliseconds" : 3146.503875,
+    "model" : "claude-haiku-5-5",
+    "output" : "백업을 삭제하지 마십시오. 123개의 파일을 2026-11-30까지 보관하십시오.",
+    "provider" : "claude",
+    "sample" : "negation-date",
+    "source" : "zh-Hant",
+    "target" : "ko"
+  },
+  {
+    "failures" : [
+
+    ],
+    "fidelityRevisions" : 0,
+    "input" : "設定\n\n請勿變更 `config.json`。\n請執行 `npm test`。",
+    "milliseconds" : 4267.689583,
+    "model" : "claude-haiku-5-5",
+    "output" : "설정\n\n`config.json`을 변경하지 마세요.\n`npm test`를 실행하세요.",
+    "provider" : "claude",
+    "sample" : "paragraphs-code",
+    "source" : "zh-Hant",
+    "target" : "ko"
+  },
+  {
+    "failures" : [
+
+    ],
+    "fidelityRevisions" : 0,
+    "input" : "更新可能需要 2 分鐘。請在完成後再試一次。",
+    "milliseconds" : 5511.782667,
+    "model" : "claude-haiku-5-5",
+    "output" : "업데이트에는 2분이 걸릴 수 있습니다. 완료된 후 다시 시도해 주세요.",
+    "provider" : "claude",
+    "sample" : "modality-request",
+    "source" : "zh-Hant",
+    "target" : "ko"
+  },
+  {
+    "failures" : [
+
+    ],
+    "fidelityRevisions" : 0,
+    "input" : "请勿删除备份。请将 123 个文件保留至 2026-11-30。",
+    "milliseconds" : 4538.028,
+    "model" : "claude-haiku-5-5",
+    "output" : "백업을 삭제하지 마십시오. 123개 파일을 2026-11-30까지 보관하십시오.",
+    "provider" : "claude",
+    "sample" : "negation-date",
+    "source" : "zh-Hans",
+    "target" : "ko"
+  },
+  {
+    "failures" : [
+
+    ],
+    "fidelityRevisions" : 0,
+    "input" : "设置\n\n请勿更改 `config.json`。\n请运行 `npm test`。",
+    "milliseconds" : 2939.243917,
+    "model" : "claude-haiku-5-5",
+    "output" : "설정\n\n`config.json`을 변경하지 마세요.\n`npm test`를 실행하세요.",
+    "provider" : "claude",
+    "sample" : "paragraphs-code",
+    "source" : "zh-Hans",
+    "target" : "ko"
+  },
+  {
+    "failures" : [
+
+    ],
+    "fidelityRevisions" : 0,
+    "input" : "更新可能需要 2 分钟。请在完成后重试。",
+    "milliseconds" : 3959.765292,
+    "model" : "claude-haiku-5-5",
+    "output" : "업데이트에 2분 정도 걸릴 수 있습니다. 완료된 후 다시 시도해 주세요.",
+    "provider" : "claude",
+    "sample" : "modality-request",
+    "source" : "zh-Hans",
+    "target" : "ko"
+  },
+  {
+    "failures" : [
+
+    ],
+    "fidelityRevisions" : 0,
+    "input" : "백업을 삭제하지 마세요. 파일 123개를 2026-11-30까지 보관하세요.",
+    "milliseconds" : 4144.634,
+    "model" : "claude-haiku-5-5",
+    "output" : "バックアップを削除しないでください。ファイル123個を2026-11-30まで保管してください。",
+    "provider" : "claude",
+    "sample" : "negation-date",
+    "source" : "ko",
+    "target" : "ja"
+  },
+  {
+    "failures" : [
+
+    ],
+    "fidelityRevisions" : 0,
+    "input" : "설정\n\n`config.json`을 변경하지 마세요.\n`npm test`를 실행하세요.",
+    "milliseconds" : 1756.676917,
+    "model" : "claude-haiku-5-5",
+    "output" : "設定\n\n`config.json`は変更しないでください。\n`npm test`を実行してください。",
+    "provider" : "claude",
+    "sample" : "paragraphs-code",
+    "source" : "ko",
+    "target" : "ja"
+  },
+  {
+    "failures" : [
+
+    ],
+    "fidelityRevisions" : 0,
+    "input" : "업데이트에 2분이 걸릴 수 있습니다. 완료된 뒤 다시 시도해 주세요.",
+    "milliseconds" : 1600.364583,
+    "model" : "claude-haiku-5-5",
+    "output" : "アップデートには2分かかる場合があります。完了後にもう一度お試しください。",
+    "provider" : "claude",
+    "sample" : "modality-request",
+    "source" : "ko",
+    "target" : "ja"
+  },
+  {
+    "failures" : [
+
+    ],
+    "fidelityRevisions" : 0,
+    "input" : "백업을 삭제하지 마세요. 파일 123개를 2026-11-30까지 보관하세요.",
+    "milliseconds" : 2216.580166,
+    "model" : "claude-haiku-5-5",
+    "output" : "請勿刪除備份。請將 123 個檔案保留至 2026-11-30。",
+    "provider" : "claude",
+    "sample" : "negation-date",
+    "source" : "ko",
+    "target" : "zh-Hant"
+  },
+  {
+    "failures" : [
+
+    ],
+    "fidelityRevisions" : 0,
+    "input" : "설정\n\n`config.json`을 변경하지 마세요.\n`npm test`를 실행하세요.",
+    "milliseconds" : 1489.290583,
+    "model" : "claude-haiku-5-5",
+    "output" : "設定\n\n請勿變更 `config.json`。\n執行 `npm test`。",
+    "provider" : "claude",
+    "sample" : "paragraphs-code",
+    "source" : "ko",
+    "target" : "zh-Hant"
+  },
+  {
+    "failures" : [
+
+    ],
+    "fidelityRevisions" : 0,
+    "input" : "업데이트에 2분이 걸릴 수 있습니다. 완료된 뒤 다시 시도해 주세요.",
+    "milliseconds" : 3349.540542,
+    "model" : "claude-haiku-5-5",
+    "output" : "更新可能需要 2 分鐘。完成後請再試一次。",
+    "provider" : "claude",
+    "sample" : "modality-request",
+    "source" : "ko",
+    "target" : "zh-Hant"
+  },
+  {
+    "failures" : [
+
+    ],
+    "fidelityRevisions" : 0,
+    "input" : "백업을 삭제하지 마세요. 파일 123개를 2026-11-30까지 보관하세요.",
+    "milliseconds" : 3988.746084,
+    "model" : "claude-haiku-5-5",
+    "output" : "不要删除备份。请将123个文件保存至2026-11-30。",
+    "provider" : "claude",
+    "sample" : "negation-date",
+    "source" : "ko",
+    "target" : "zh-Hans"
+  },
+  {
+    "failures" : [
+
+    ],
+    "fidelityRevisions" : 0,
+    "input" : "설정\n\n`config.json`을 변경하지 마세요.\n`npm test`를 실행하세요.",
+    "milliseconds" : 4354.697,
+    "model" : "claude-haiku-5-5",
+    "output" : "设置\n\n不要修改 `config.json`。\n运行 `npm test`。",
+    "provider" : "claude",
+    "sample" : "paragraphs-code",
+    "source" : "ko",
+    "target" : "zh-Hans"
+  },
+  {
+    "failures" : [
+
+    ],
+    "fidelityRevisions" : 0,
+    "input" : "업데이트에 2분이 걸릴 수 있습니다. 완료된 뒤 다시 시도해 주세요.",
+    "milliseconds" : 2668.991,
+    "model" : "claude-haiku-5-5",
+    "output" : "更新可能需要 2 分钟。完成后请重试。",
+    "provider" : "claude",
+    "sample" : "modality-request",
+    "source" : "ko",
+    "target" : "zh-Hans"
+  },
+  {
+    "failures" : [
+
+    ],
+    "fidelityRevisions" : 0,
+    "input" : "Do not delete the backup. Keep 123 files until 2026-11-30.",
+    "milliseconds" : 1744.230583,
+    "model" : "claude-haiku-5-5",
+    "output" : "バックアップを削除しないでください。2026-11-30まで123件のファイルを保管してください。",
+    "provider" : "claude",
+    "sample" : "negation-date",
+    "source" : "en",
+    "target" : "ja"
+  },
+  {
+    "failures" : [
+
+    ],
+    "fidelityRevisions" : 0,
+    "input" : "Setup\n\nKeep `config.json` unchanged.\nRun `npm test`.",
+    "milliseconds" : 3545.191875,
+    "model" : "claude-haiku-5-5",
+    "output" : "セットアップ\n\n`config.json` は変更しないでください。\n`npm test` を実行してください。",
+    "provider" : "claude",
+    "sample" : "paragraphs-code",
+    "source" : "en",
+    "target" : "ja"
+  },
+  {
+    "failures" : [
+
+    ],
+    "fidelityRevisions" : 0,
+    "input" : "The update may take 2 minutes. Please try again after it finishes.",
+    "milliseconds" : 3144.91375,
+    "model" : "claude-haiku-5-5",
+    "output" : "アップデートには2分ほどかかる場合があります。完了後に再度お試しください。",
+    "provider" : "claude",
+    "sample" : "modality-request",
+    "source" : "en",
+    "target" : "ja"
+  },
+  {
+    "failures" : [
+
+    ],
+    "fidelityRevisions" : 0,
+    "input" : "Do not delete the backup. Keep 123 files until 2026-11-30.",
+    "milliseconds" : 6872.214125,
+    "model" : "claude-haiku-5-5",
+    "output" : "請勿刪除備份。在 2026-11-30 之前保留 123 個檔案。",
+    "provider" : "claude",
+    "sample" : "negation-date",
+    "source" : "en",
+    "target" : "zh-Hant"
+  },
+  {
+    "failures" : [
+
+    ],
+    "fidelityRevisions" : 0,
+    "input" : "Setup\n\nKeep `config.json` unchanged.\nRun `npm test`.",
+    "milliseconds" : 4173.504667,
+    "model" : "claude-haiku-5-5",
+    "output" : "## 設定\n\n保持 `config.json` 不變。\n執行 `npm test`。",
+    "provider" : "claude",
+    "sample" : "paragraphs-code",
+    "source" : "en",
+    "target" : "zh-Hant"
+  },
+  {
+    "failures" : [
+
+    ],
+    "fidelityRevisions" : 0,
+    "input" : "The update may take 2 minutes. Please try again after it finishes.",
+    "milliseconds" : 3463.358542,
+    "model" : "claude-haiku-5-5",
+    "output" : "更新可能需要 2 分鐘。更新完成後請再試一次。",
+    "provider" : "claude",
+    "sample" : "modality-request",
+    "source" : "en",
+    "target" : "zh-Hant"
+  },
+  {
+    "failures" : [
+
+    ],
+    "fidelityRevisions" : 0,
+    "input" : "Do not delete the backup. Keep 123 files until 2026-11-30.",
+    "milliseconds" : 3275.364584,
+    "model" : "claude-haiku-5-5",
+    "output" : "不要删除备份。在2026-11-30之前保留123个文件。",
+    "provider" : "claude",
+    "sample" : "negation-date",
+    "source" : "en",
+    "target" : "zh-Hans"
+  },
+  {
+    "failures" : [
+
+    ],
+    "fidelityRevisions" : 0,
+    "input" : "Setup\n\nKeep `config.json` unchanged.\nRun `npm test`.",
+    "milliseconds" : 1727.1922909999998,
+    "model" : "claude-haiku-5-5",
+    "output" : "设置\n\n保持 `config.json` 不变。\n运行 `npm test`。",
+    "provider" : "claude",
+    "sample" : "paragraphs-code",
+    "source" : "en",
+    "target" : "zh-Hans"
+  },
+  {
+    "failures" : [
+
+    ],
+    "fidelityRevisions" : 0,
+    "input" : "The update may take 2 minutes. Please try again after it finishes.",
+    "milliseconds" : 2431.688125,
+    "model" : "claude-haiku-5-5",
+    "output" : "更新可能需要 2 分钟。更新完成后请再试一次。",
+    "provider" : "claude",
+    "sample" : "modality-request",
+    "source" : "en",
+    "target" : "zh-Hans"
+  },
+  {
+    "failures" : [
+
+    ],
+    "fidelityRevisions" : 0,
+    "input" : "請勿刪除備份。請將 123 個檔案保留至 2026-11-30。",
+    "milliseconds" : 1893.20625,
+    "model" : "claude-haiku-5-5",
+    "output" : "请勿删除备份。请将 123 个文件保留至 2026-11-30。",
+    "provider" : "claude",
+    "sample" : "negation-date",
+    "source" : "zh-Hant",
+    "target" : "zh-Hans"
+  },
+  {
+    "failures" : [
+
+    ],
+    "fidelityRevisions" : 0,
+    "input" : "設定\n\n請勿變更 `config.json`。\n請執行 `npm test`。",
+    "milliseconds" : 3657.166375,
+    "model" : "claude-haiku-5-5",
+    "output" : "设置\n\n请勿修改 `config.json`。\n请运行 `npm test`。",
+    "provider" : "claude",
+    "sample" : "paragraphs-code",
+    "source" : "zh-Hant",
+    "target" : "zh-Hans"
+  },
+  {
+    "failures" : [
+
+    ],
+    "fidelityRevisions" : 0,
+    "input" : "更新可能需要 2 分鐘。請在完成後再試一次。",
+    "milliseconds" : 2931.222416,
+    "model" : "claude-haiku-5-5",
+    "output" : "更新可能需要 2 分钟。请在完成后再试一次。",
+    "provider" : "claude",
+    "sample" : "modality-request",
+    "source" : "zh-Hant",
+    "target" : "zh-Hans"
+  },
+  {
+    "failures" : [
+
+    ],
+    "fidelityRevisions" : 0,
+    "input" : "请勿删除备份。请将 123 个文件保留至 2026-11-30。",
+    "milliseconds" : 2363.288208,
+    "model" : "claude-haiku-5-5",
+    "output" : "請勿刪除備份。請將 123 個檔案保留至 2026-11-30。",
+    "provider" : "claude",
+    "sample" : "negation-date",
+    "source" : "zh-Hans",
+    "target" : "zh-Hant"
+  },
+  {
+    "failures" : [
+
+    ],
+    "fidelityRevisions" : 0,
+    "input" : "设置\n\n请勿更改 `config.json`。\n请运行 `npm test`。",
+    "milliseconds" : 1716.6932080000001,
+    "model" : "claude-haiku-5-5",
+    "output" : "設定\n\n請勿變更 `config.json`。\n請執行 `npm test`。",
+    "provider" : "claude",
+    "sample" : "paragraphs-code",
+    "source" : "zh-Hans",
+    "target" : "zh-Hant"
+  },
+  {
+    "failures" : [
+
+    ],
+    "fidelityRevisions" : 0,
+    "input" : "更新可能需要 2 分钟。请在完成后重试。",
+    "milliseconds" : 2953.462834,
+    "model" : "claude-haiku-5-5",
+    "output" : "更新可能需要 2 分鐘。請在完成後重試。",
+    "provider" : "claude",
+    "sample" : "modality-request",
+    "source" : "zh-Hans",
+    "target" : "zh-Hant"
+  }
+]

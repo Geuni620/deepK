@@ -24,14 +24,14 @@ actor TranslationProbe {
         })
     }
 
-    func nextRequest() async -> TranslationRequest {
+    func nextRequest(file: StaticString = #fileID, line: UInt = #line) async -> TranslationRequest {
         if !requests.isEmpty {
             return requests.removeFirst()
         }
 
         let watchdog = Task {
             try? await Task.sleep(for: .seconds(5))
-            if !Task.isCancelled { fatalError("Expected translation request did not arrive within five seconds") }
+            if !Task.isCancelled { fatalError("Expected translation request did not arrive within five seconds at \(file):\(line)") }
         }
         defer { watchdog.cancel() }
         return await withCheckedContinuation { continuation in
@@ -69,6 +69,7 @@ actor TranslationProbe {
 @MainActor
 private enum TranslationStoreTests {
     static func runAll() async {
+        await multilingualSupport()
         await IncrementalTranslationTests.runAll()
         await OutputCheckStoreTests.runAll()
         await CodeBlockStoreTests.runAll()
@@ -110,6 +111,70 @@ private enum TranslationStoreTests {
         await singleWordChatCommandsSurviveCompletionAndInsertion()
         await unknownTagsAreNeverInserted()
         await appFencesKeepThePrompt()
+    }
+
+    private static func multilingualSupport() async {
+        let samples: [(String, TranslationLanguage)] = [
+            ("英単語学習法と記憶成績の関係を調べる高校の探究研究「見る単」の公式アカウントです…", .japanese),
+            ("このアプリで英語を勉強しています。", .japanese),
+            ("這個軟體可以翻譯日文，並保留段落格式。", .traditionalChinese),
+            ("这个软件可以翻译日文，并保留段落格式。", .simplifiedChinese),
+            ("今日はAPIの設定を確認します。", .japanese),
+            ("這個 API 支援 JSON 回應。", .traditionalChinese)
+        ]
+        for (text, language) in samples {
+            require(TranslationStore.detectedLanguage(in: text) == language, "detect multilingual sample: \(text)")
+            let probe = TranslationProbe(), store = makeStore(probe: probe, engineReady: true)
+            store.invokeCopiedText(text)
+            let request = await probe.nextRequest()
+            require(request.sourceLanguage == language && request.targetLanguage == .korean, "new source reaches translator")
+            await probe.complete(request.id, with: "번역 결과입니다.")
+            await waitForSuccess(store)
+        }
+        for text in ["中文", "東京", "12345", "https://example.com", "```swift\nlet value = 42\n```"] {
+            require(TranslationStore.detectedLanguage(in: text) == nil, "ambiguous input requires manual source")
+        }
+        require(DKUILanguage(preferredLanguages: ["zh-Hans-CN"]) == "en", "simplified UI uses English")
+        require(DKUILanguage(preferredLanguages: ["zh-TW"]) == "zh-Hant", "Taiwan UI uses traditional Chinese")
+        require(DKUILanguage(preferredLanguages: ["ja-JP"]) == "ja", "Japanese UI")
+        require(TranslationLanguage.preferred(in: ["zh-TW"]) == .traditionalChinese, "Taiwan default")
+        require(TranslationLanguage.preferred(in: ["zh-Hans-CN"]) == .simplifiedChinese, "simplified default")
+        require(TranslationLanguage.preferred(in: ["fr", "ja-JP"]) == .japanese, "first supported preference")
+        let suite = "deepk.languages.tests." + UUID().uuidString
+        let defaults = UserDefaults(suiteName: suite)!
+        defer { defaults.removePersistentDomain(forName: suite) }
+        defaults.set("ko-en", forKey: "translationDirection")
+        let probe = TranslationProbe(), store = makeStore(probe: probe, engineReady: true)
+        store.loadLanguageSettings(from: defaults, preferredLanguages: ["ko"])
+        require(store.sourceOverride == .korean && store.targetOverride == .english, "legacy direction migrates")
+        let restored = makeStore(probe: TranslationProbe(), engineReady: true)
+        restored.loadLanguageSettings(from: defaults, preferredLanguages: ["ko"])
+        require(restored.sourceOverride == .korean && restored.defaultTarget == .english, "legacy fixed pair survives restart")
+        store.setDefaultTarget(.english)
+        store.setLanguages(source: nil, target: nil)
+        store.invokeCopiedText("This application preserves the original paragraph structure.")
+        require(store.status == .error(.sameLanguage), "English to English requires a target")
+        store.setLanguages(source: nil, target: .japanese)
+        store.retranslateSelection()
+        let request = await probe.nextRequest()
+        require(request.targetLanguage == .japanese, "manual target overrides default")
+        store.setLanguages(source: nil, target: .traditionalChinese)
+        await probe.complete(request.id, with: "これは古い結果です。")
+        await settle()
+        require(store.resultText == nil, "late response from old target ignored")
+        store.retranslateSelection()
+        let next = await probe.nextRequest()
+        require(next.targetLanguage == .traditionalChinese, "new target request isolated")
+        await probe.complete(next.id, with: "這個軟體會保留原始段落格式。")
+        await waitForSuccess(store)
+        require(store.resultText == "這個軟體會保留原始段落格式。", "Chinese output is not repaired to Korean")
+        store.setLanguages(source: .traditionalChinese, target: .simplifiedChinese)
+        store.invokeCopiedText("這個軟體可以翻譯日文，並保留段落格式。")
+        let conversion = await probe.nextRequest()
+        await probe.complete(conversion.id, with: "这个软件可以翻译日文，并保留段落格式。")
+        await waitForSuccess(store)
+        require(!store.isRetryingAfterEcho, "script conversion is not an echo")
+        require(TranslationLanguage.traditionalChinese.promptName.contains("Taiwan"), "Taiwan instruction is explicit")
     }
 
     private static func providerErrorsShowGuidanceAndRemainRetryable() async {
@@ -553,7 +618,7 @@ private enum TranslationStoreTests {
         }
 
         // Neither a confident Latin-language result nor a non-Latin alphabet is coerced to English.
-        for input in ["Hola mundo", "Bonjour tout le monde", "Jeg er veldig glad", "こんにちは世界", "你好世界", "Привет мир", "مرحبا بالعالم", "12345 — !"] {
+        for input in ["Hola mundo", "Bonjour tout le monde", "Jeg er veldig glad", "Привет мир", "مرحبا بالعالم", "12345 — !"] {
             let probe = TranslationProbe(), store = makeStore(probe: probe, engineReady: true)
             store.invokeCopiedText(input)
             require(store.status == .error(.unsupportedLanguage), "unsupported input stays unsupported: \(input)")

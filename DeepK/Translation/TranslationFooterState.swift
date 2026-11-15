@@ -70,14 +70,14 @@ struct TranslationFooterState: Equatable {
 
     /// The shortcut messages the footer stays quiet about: the normal states and double copy turned off in the
     /// settings, which is the user's choice rather than a fault. AppModel sets these.
-    static let shortcutChecking = "단축키 확인 중"
-    static let shortcutWatching = "⌘C 두 번 · 감지 중"
-    static let shortcutDisabled = "두 번 복사 꺼짐"
-    static let retranslationMessage = "선택한 제공자·모델로 다시 번역할 수 있습니다"
+    static let shortcutChecking = DKLocalized("단축키 확인 중")
+    static let shortcutWatching = DKLocalized("⌘C 두 번 · 감지 중")
+    static let shortcutDisabled = DKLocalized("두 번 복사 꺼짐")
+    static let retranslationMessage = DKLocalized("선택한 제공자·모델로 다시 번역할 수 있습니다")
     /// Copy and insertion stay available; the user is only told.
-    static let unresolvedEchoMessage = "원문이 그대로 남아 있을 수 있습니다"
+    static let unresolvedEchoMessage = DKLocalized("원문이 그대로 남아 있을 수 있습니다")
     /// What an idle, empty result pane says where the translation will appear.
-    static let resultPlaceholder = "번역 결과"
+    static let resultPlaceholder = DKLocalized("번역 결과")
 
     init(_ input: Input) {
         let capture = input.captureMessage.map { Line(text: $0, showsProgress: true) }
@@ -107,19 +107,19 @@ struct TranslationFooterState: Equatable {
     /// Seconds with one decimal, rounded half up: 5,811 ms → "5.8초".
     static func seconds(fromMilliseconds milliseconds: Int) -> String {
         let tenths = (max(0, milliseconds) + 50) / 100
-        return tenths == 0 ? "0.1초 미만" : "\(tenths / 10).\(tenths % 10)초"
+        return tenths == 0 ? "0.1초 미만" : DKFormat("%1$@.%2$@초", tenths / 10, tenths % 10)
     }
 
     /// The store's state while the translation is not done. A copyable result is done, so nothing is said.
     private static func unfinishedStatus(_ input: Input) -> Line? {
         guard !input.canCopy else { return nil }
         let text: String? = switch input.status {
-        case .idle: input.hasPartialResult ? "추가 내용이 번역되지 않았습니다"
-            : input.isShowingSupersededText ? "번역이 완료되지 않았습니다" : nil
-        case .disconnected: input.connecting ? "연결 확인 중…" : "번역 제공자 연결 전"
-        case .waiting: input.hasPartialResult ? "추가 내용 입력 중…" : "입력 중…"
-        case .translating: input.isRetryingAfterEcho ? "원문이 그대로 나와 다시 번역하는 중…"
-            : input.hasPartialResult ? "추가 내용 번역 중…" : "번역 중…"
+        case .idle: input.hasPartialResult ? DKLocalized("추가 내용이 번역되지 않았습니다")
+            : input.isShowingSupersededText ? DKLocalized("번역이 완료되지 않았습니다") : nil
+        case .disconnected: input.connecting ? DKLocalized("연결 확인 중…") : DKLocalized("번역 제공자 연결 전")
+        case .waiting: input.hasPartialResult ? DKLocalized("추가 내용 입력 중…") : DKLocalized("입력 중…")
+        case .translating: input.isRetryingAfterEcho ? DKLocalized("원문이 그대로 나와 다시 번역하는 중…")
+            : input.hasPartialResult ? DKLocalized("추가 내용 번역 중…") : DKLocalized("번역 중…")
         case .success: nil
         case .error(let error): error.localizedDescription
         }

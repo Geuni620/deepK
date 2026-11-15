@@ -120,7 +120,7 @@ struct TranslationResultTextView: NSViewRepresentable {
         // Folded code is laid out as nothing while its characters stay in the storage, and is not drawn.
         view.textContainer?.replaceLayoutManager(CodeFoldLayoutManager())
         view.layoutManager?.delegate = view.foldLayout
-        view.setAccessibilityLabel(preview ? "코드 스타일 미리보기" : "번역 결과")
+        view.setAccessibilityLabel(preview ? DKLocalized("코드 스타일 미리보기") : "번역 결과")
         view.setAccessibilityIdentifier(preview ? "code-style-preview-text" : "translation-result-text")
         scroll.documentView = view
         scroll.contentView.postsBoundsChangedNotifications = true
@@ -274,7 +274,7 @@ struct TranslationResultTextView: NSViewRepresentable {
            let tail = tailStart, lineTop(ofFirstTextFrom: tail, in: view) != nil {
             scroll.announcementCount += 1
             NSAccessibility.post(element: view, notification: .announcementRequested, userInfo: [
-                .announcement: "추가 번역이 완료되었습니다", .priority: NSAccessibilityPriorityLevel.medium.rawValue
+                .announcement: DKLocalized("추가 번역이 완료되었습니다"), .priority: NSAccessibilityPriorityLevel.medium.rawValue
             ])
         }
         if displayChanged, previous != nil { scroll.displayChangedAt = .now }
@@ -891,7 +891,7 @@ final class ResultTextView: NSTextView, NSViewToolTipOwner {
                 guard markup.links.indices.contains(index) else { continue }
                 let link = markup.links[index]
                 let color = stale ? NSColor.secondaryLabelColor : style.link.color?.nsColor ?? proseColor
-                storage.addAttributes([.toolTip: "\(link.url.absoluteString)\n원문: \(link.text)", .foregroundColor: color], range: span.range)
+                storage.addAttributes([.toolTip: DKFormat("%1$@\n원문: %2$@", link.url.absoluteString, link.text), .foregroundColor: color], range: span.range)
                 // Superseded text can be read, not used.
                 if !stale, let url = markup.url(of: span) { storage.addAttribute(.link, value: url, range: span.range) }
             }
@@ -1281,7 +1281,7 @@ final class ResultTextView: NSTextView, NSViewToolTipOwner {
             guard pasteboard.setString(code, forType: .string) else { return false }
             markCopied(key)
             NSAccessibility.post(element: self, notification: .announcementRequested, userInfo: [
-                .announcement: "코드를 복사했습니다", .priority: NSAccessibilityPriorityLevel.high.rawValue
+                .announcement: DKLocalized("코드를 복사했습니다"), .priority: NSAccessibilityPriorityLevel.high.rawValue
             ])
             return true
         case .fold(let key):
@@ -1327,7 +1327,7 @@ final class ResultTextView: NSTextView, NSViewToolTipOwner {
         scroll?.refreshHint()
         needsDisplay = true
         NSAccessibility.post(element: self, notification: .announcementRequested, userInfo: [
-            .announcement: expandedBlocks.contains(key) ? "코드를 모두 펼쳤습니다" : "코드를 접었습니다",
+            .announcement: expandedBlocks.contains(key) ? DKLocalized("코드를 모두 펼쳤습니다") : DKLocalized("코드를 접었습니다"),
             .priority: NSAccessibilityPriorityLevel.medium.rawValue
         ])
         return true
@@ -1374,7 +1374,7 @@ final class ResultTextView: NSTextView, NSViewToolTipOwner {
     /// streamed chunk that moves no box leaves them.
     func refreshChromeRegions() {
         let boxes = codeBoxes()
-        let tips = boxes.filter { isCopyable($0.block) }.map { (rect: $0.geometry.copyHit, text: "코드 복사") }
+        let tips = boxes.filter { isCopyable($0.block) }.map { (rect: $0.geometry.copyHit, text: DKLocalized("코드 복사")) }
             + boxes.compactMap { box in headerToolTip(of: box).map { (rect: box.geometry.label, text: $0) } }
         guard !tips.elementsEqual(chromeToolTips, by: { $0.rect == $1.rect && $0.text == $1.text }) else { return }
         chromeToolTips.forEach { removeToolTip($0.tag) }

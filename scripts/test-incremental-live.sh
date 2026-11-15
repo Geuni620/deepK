@@ -7,7 +7,7 @@ fi
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 TEST_DIR="$(mktemp -d /private/tmp/deepk-incremental-live.XXXXXX)"
-swiftc -swift-version 6 -warnings-as-errors -module-cache-path "$TEST_DIR/cache" \
+swiftc "$PROJECT_ROOT/DeepK/Localization.swift" -swift-version 6 -warnings-as-errors -module-cache-path "$TEST_DIR/cache" \
   "$PROJECT_ROOT/DeepK/Translation/TranslationStore.swift" \
   "$PROJECT_ROOT/DeepK/Translation/TranslationMarkup.swift" "$PROJECT_ROOT/DeepK/Translation/TranslationLists.swift" \
   "$PROJECT_ROOT/DeepK/Translation/TranslationDocument.swift" \

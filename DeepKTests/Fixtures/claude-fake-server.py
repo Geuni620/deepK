@@ -259,6 +259,7 @@ def stream_main() -> None:
         sys.stderr.write("Error: Expected message role 'user'\n")
         raise SystemExit(1)
     append_marker(START_MARKER, "translation\n")
+    append_marker(os.environ.get("DEEPK_CLAUDE_TRANSLATION_PID_FILE"), f"{os.getpid()}\n")
 
     if mode in {"timeout", "cancellation"}:
         hang()
@@ -379,6 +380,12 @@ def stream_main() -> None:
         emit(stream_result(model, ""))
         wait_for_eof_and_exit()
 
+    if mode in {"duration-once", "duration-always"}:
+        text = "최대 2분이 걸릴 수 있습니다." if mode == "duration-always" or translation_count() == 1 else "2분이 걸릴 수 있습니다."
+        emit(text_delta(text))
+        emit(stream_result(model, text))
+        wait_for_eof_and_exit()
+
     for chunk in ("안", "녕", "하세요"):
         emit(text_delta(chunk))
     emit(
@@ -414,6 +421,11 @@ if INPUT_MARKER:
     content = sys.stdin.read()
     append_marker(INPUT_MARKER, json.dumps({"transport": "json", "content": content}, ensure_ascii=False) + "\n")
 
+
+if MODE in {"duration-once", "duration-always"}:
+    text = "최대 2분이 걸릴 수 있습니다." if MODE == "duration-always" or translation_count() == 1 else "2분이 걸릴 수 있습니다."
+    emit(stream_result(argument_value("--model") or DEFAULT_MODEL, text))
+    raise SystemExit(0)
 
 if MODE in {"timeout", "cancellation"}:
     hang()

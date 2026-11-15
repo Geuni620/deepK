@@ -75,17 +75,17 @@ struct TranslationView: View {
                 }.padding(.horizontal, TranslationLayout.textInset(expanded: true)).frame(width: (width - 1) / 2)
                 Divider().frame(width: 1)
                 HStack {
-                    Text(targetLanguageTitle).font(.system(size: 13))
+                    Menu { targetOptions } label: { Text(targetLanguageTitle) }.menuStyle(.borderlessButton).fixedSize()
                     Spacer(minLength: 8)
                     windowControls(expanded: true)
                 }.padding(.horizontal, TranslationLayout.textInset(expanded: true)).frame(width: (width - 1) / 2)
             } else {
                 HStack(spacing: 10) {
-                    Picker("언어 방향", selection: Binding(get: { store.direction }, set: { model.changeDirection($0) })) {
-                        Text("자동 · 한국어 ↔ English").tag(TranslationDirection.automatic)
-                        Text("English → 한국어").tag(TranslationDirection.englishToKorean)
-                        Text("한국어 → English").tag(TranslationDirection.koreanToEnglish)
-                    }.labelsHidden().controlSize(.small).fixedSize()
+                    Menu { directionOptions } label: { Text(sourceLanguageTitle) }
+                        .menuStyle(.borderlessButton).fixedSize()
+                    Text("→")
+                    Menu { targetOptions } label: { Text(targetLanguageTitle) }
+                        .menuStyle(.borderlessButton).fixedSize()
                     Spacer(minLength: 4)
                     windowControls(expanded: false)
                 }.padding(.horizontal, TranslationLayout.textInset(expanded: false))
@@ -93,36 +93,62 @@ struct TranslationView: View {
         }.font(.system(size: 12)).foregroundStyle(.secondary).frame(height: 40)
     }
 
-    private var sourceLanguageTitle: String {
+    private var imageLanguages: (source: String?, target: String?)? {
         #if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
-        if model.imageInput.isActive {
-            let label = model.imageInput.sourceLanguage.map { $0 == "ko" ? "한국어" : "English" } ?? "원문"
-            return store.direction == .automatic ? "자동 · " + label : label
-        }
+        if model.imageInput.isActive { return (model.imageInput.sourceLanguage, model.imageInput.targetLanguage) }
         #endif
-        return switch store.direction {
-        case .englishToKorean: "English"
-        case .koreanToEnglish: "한국어"
-        case .automatic: "자동 · \(store.displayedSourceLanguage == .korean ? "한국어" : (store.displayedSourceLanguage == nil ? "원문" : "English"))"
-        }
+        return nil
+    }
+
+    private var sourceLanguageTitle: String {
+        if let image = imageLanguages { return image.source.flatMap(TranslationLanguage.init(rawValue:))?.title ?? DKLocalized("원문") }
+        if let source = store.sourceOverride { return source.title }
+        if store.direction == .englishToKorean { return "English" }
+        if store.direction == .koreanToEnglish { return "한국어" }
+        return DKLocalized("자동") + " · " + (store.displayedSourceLanguage?.title ?? DKLocalized("원문"))
     }
 
     private var targetLanguageTitle: String {
-        #if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
-        if model.imageInput.isActive { return model.imageInput.targetLanguage.map { $0 == "ko" ? "한국어" : "English" } ?? "번역" }
-        #endif
-        return switch store.direction {
-        case .englishToKorean: "한국어"
-        case .koreanToEnglish: "English"
-        case .automatic: store.displayedTargetLanguage.map { $0 == .korean ? "한국어" : "English" } ?? "번역"
+        if let image = imageLanguages { return image.target.flatMap(TranslationLanguage.init(rawValue:))?.title ?? DKLocalized("번역") }
+        return store.targetOverride?.title ?? store.displayedTargetLanguage?.title ?? store.defaultTarget.title
+    }
+
+    private func selectLanguages(source: TranslationLanguage?, target: TranslationLanguage?) {
+        store.setLanguages(source: source, target: target)
+        store.saveLanguageSettings(to: .standard)
+    }
+
+    private var legacyImageDirections: some View {
+        Group {
+            Button(DKLocalized("자동 · 한국어 ↔ English")) { model.changeDirection(.automatic) }
+            Button("English → 한국어") { model.changeDirection(.englishToKorean) }
+            Button("한국어 → English") { model.changeDirection(.koreanToEnglish) }
         }
     }
 
     private var directionOptions: some View {
         Group {
-            Button("자동 · 한국어 ↔ English") { model.changeDirection(.automatic) }
-            Button("English → 한국어") { model.changeDirection(.englishToKorean) }
-            Button("한국어 → English") { model.changeDirection(.koreanToEnglish) }
+            if imageLanguages != nil {
+                legacyImageDirections
+            } else {
+                Button(DKLocalized("자동")) { selectLanguages(source: nil, target: store.targetOverride) }
+                ForEach(TranslationLanguage.selectable, id: \.rawValue) { language in
+                    Button(language.title) { selectLanguages(source: language, target: store.targetOverride) }
+                }
+            }
+        }
+    }
+
+    private var targetOptions: some View {
+        Group {
+            if imageLanguages != nil {
+                legacyImageDirections
+            } else {
+                Button(DKLocalized("기본 대상 언어")) { selectLanguages(source: store.sourceOverride, target: nil) }
+                ForEach(TranslationLanguage.selectable, id: \.rawValue) { language in
+                    Button(language.title) { selectLanguages(source: store.sourceOverride, target: language) }
+                }
+            }
         }
     }
 
@@ -130,20 +156,20 @@ struct TranslationView: View {
         HStack(spacing: 10) {
             #if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
             if model.imageInput.isActive {
-                Button { ImagePOCIntegration.shared.cancelImport(); model.imageInput.clear() } label: { Image(systemName: "xmark") }.accessibilityLabel("입력 이미지 지우기")
+                Button { ImagePOCIntegration.shared.cancelImport(); model.imageInput.clear() } label: { Image(systemName: "xmark") }.accessibilityLabel(DKLocalized("입력 이미지 지우기"))
             }
             #endif
             if !store.sourceText.isEmpty {
                 Button { model.edit("", composing: false) } label: { Image(systemName: "xmark") }
-                    .accessibilityLabel("원문 지우기")
+                    .accessibilityLabel(DKLocalized("원문 지우기"))
             }
             Button { model.toggleWindowSize() } label: {
                 Image(systemName: expanded ? "arrow.down.right.and.arrow.up.left" : "arrow.up.left.and.arrow.down.right")
             }
-            .accessibilityLabel(expanded ? "작게 보기" : "크게 보기")
-            .help("\(expanded ? "작게" : "크게") 보기 · ⌘⇧E")
+            .accessibilityLabel(expanded ? DKLocalized("작게 보기") : DKLocalized("크게 보기"))
+            .help(DKFormat("%1$@ 보기 · ⌘⇧E", expanded ? "작게" : "크게"))
             Button { model.presentSettingsWindow() } label: { Image(systemName: "gearshape") }
-                .accessibilityLabel("설정")
+                .accessibilityLabel(DKLocalized("설정"))
         }.buttonStyle(.plain)
     }
 
@@ -166,11 +192,11 @@ struct TranslationView: View {
                          onEdit: { model.edit($0, composing: $1) }, onEscape: { model.hideAndRestore() })
             if store.sourceText.isEmpty {
                 #if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
-                Text("문장을 입력하거나 글·이미지를 선택하고 ⌘C를 두 번 누르세요")
+                Text(DKLocalized("문장을 입력하거나 글·이미지를 선택하고 ⌘C를 두 번 누르세요"))
                     .font(.system(size: expanded ? 14 : 13)).foregroundStyle(.tertiary)
                     .padding(.top, 5).allowsHitTesting(false)
                 #else
-                Text("문장을 입력하거나 다른 앱에서 ⌘C를 두 번 누르세요")
+                Text(DKLocalized("문장을 입력하거나 다른 앱에서 ⌘C를 두 번 누르세요"))
                     .font(.system(size: expanded ? 14 : 13)).foregroundStyle(.tertiary)
                     .padding(.top, 5).allowsHitTesting(false)
                 #endif
@@ -219,7 +245,7 @@ private struct ResultPane: View {
 
     /// In the result text's own right-click menu (a SwiftUI `.contextMenu` would never open over the text).
     private var wholeDocumentRetranslation: ResultMenuAction {
-        ResultMenuAction(title: "전체 다시 번역",
+        ResultMenuAction(title: DKLocalized("전체 다시 번역"),
                          isEnabled: { [model] in model.canRetranslateWholeDocument },
                          perform: { [model] in model.retranslateWholeDocument() })
     }
@@ -290,7 +316,7 @@ private struct FooterBar: View {
             if let action = state.action { actionButton(action) }
             HStack(spacing: 8) {
                 if model.canInsert {
-                    Button("삽입") { Task { await model.insertResult() } }
+                    Button(DKLocalized("삽입")) { Task { await model.insertResult() } }
                         .buttonStyle(PillButtonStyle(prominent: false))
                         .disabled(model.inserting)
                 }
@@ -320,7 +346,7 @@ private struct FooterBar: View {
                     .font(.system(size: 11)).foregroundStyle(.tertiary)
                     .lineLimit(1).truncationMode(.middle)
                     .opacity(hovering ? 1 : 0)
-                    .help(ifPresent: state.detailHasElapsedTime ? "입력 또는 두 번째 복사부터 전체 번역 완료까지의 시간" : nil)
+                    .help(ifPresent: state.detailHasElapsedTime ? DKLocalized("입력 또는 두 번째 복사부터 전체 번역 완료까지의 시간") : nil)
                     .accessibilityLabel(state.detail)
             }
         }
@@ -337,13 +363,13 @@ private struct FooterBar: View {
         let confirmed = model.copyConfirmed && canCopy
         return Button(action: model.copyResult) {
             ZStack {
-                Text("복사됨").hidden()
-                Text(confirmed ? "복사됨" : "복사")
+                Text(DKLocalized("복사됨")).hidden()
+                Text(confirmed ? DKLocalized("복사됨") : DKLocalized("복사"))
             }
         }
         .buttonStyle(PillButtonStyle(prominent: true))
         .disabled(!canCopy)
-        .accessibilityLabel(confirmed ? "복사됨" : "복사")
+        .accessibilityLabel(confirmed ? DKLocalized("복사됨") : DKLocalized("복사"))
         // Why 삽입 is missing, for an invocation that cannot insert.
         .help(ifPresent: model.insertionNote)
     }
@@ -351,16 +377,16 @@ private struct FooterBar: View {
     @ViewBuilder private func actionButton(_ action: TranslationFooterState.Action) -> some View {
         switch action {
         case .connectProvider:
-            textAction("번역 제공자 연결 설정") { model.presentSettingsWindow() }
+            textAction(DKLocalized("번역 제공자 연결 설정")) { model.presentSettingsWindow() }
         case .retranslate(let enabled):
-            textAction("다시 번역", enabled: enabled) { model.retranslateSelection() }
+            textAction(DKLocalized("다시 번역"), enabled: enabled) { model.retranslateSelection() }
         case .retry:
-            textAction("다시 시도") { model.retry() }
+            textAction(DKLocalized("다시 시도")) { model.retry() }
         case .revealNewContent:
-            textAction("↓ 새 번역 보기") { scrollProxy.revealNewContent() }
-                .accessibilityLabel("아래에 추가된 번역으로 이동")
+            textAction(DKLocalized("↓ 새 번역 보기")) { scrollProxy.revealNewContent() }
+                .accessibilityLabel(DKLocalized("아래에 추가된 번역으로 이동"))
         case .retranslateWholeDocument(let enabled):
-            textAction("전체 다시 번역", enabled: enabled) { model.retranslateWholeDocument() }
+            textAction(DKLocalized("전체 다시 번역"), enabled: enabled) { model.retranslateWholeDocument() }
         }
     }
 

@@ -5,8 +5,8 @@ enum ResultCopyFormat: String, CaseIterable, Identifiable, Sendable {
 
     static let defaultsKey = "resultCopyFormat"
     var id: String { rawValue }
-    var title: String { self == .rich ? "서식 포함" : "마크다운만" }
-    var detail: String { self == .rich ? "코드 서식과 일반 텍스트를 함께 복사합니다" : "``` 펜스가 있는 마크다운으로 복사합니다" }
+    var title: String { self == .rich ? DKLocalized("서식 포함") : DKLocalized("마크다운만") }
+    var detail: String { self == .rich ? DKLocalized("코드 서식과 일반 텍스트를 함께 복사합니다") : DKLocalized("``` 펜스가 있는 마크다운으로 복사합니다") }
 
     static func load(from defaults: UserDefaults) -> Self {
         defaults.string(forKey: defaultsKey).flatMap(Self.init(rawValue:)) ?? .rich

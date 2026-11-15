@@ -7,8 +7,8 @@ enum PermissionGuideKind {
 
     var title: String {
         switch self {
-        case .inputMonitoring: "입력 모니터링"
-        case .accessibility: "손쉬운 사용"
+        case .inputMonitoring: DKLocalized("입력 모니터링")
+        case .accessibility: DKLocalized("손쉬운 사용")
         }
     }
 
@@ -159,14 +159,14 @@ private final class PermissionGuideView: NSVisualEffectView {
         layer?.cornerRadius = 14
         layer?.masksToBounds = true
 
-        let title = NSTextField(labelWithString: "\(AppIdentity.displayName)를 \(kind.title) 목록으로 끌어다 놓으세요")
+        let title = NSTextField(labelWithString: DKFormat("%1$@를 %2$@ 목록으로 끌어다 놓으세요", AppIdentity.displayName, kind.title))
         title.font = .systemFont(ofSize: 13, weight: .semibold)
-        let detail = NSTextField(wrappingLabelWithString: "아래 아이콘을 시스템 설정 목록에 놓고 스위치를 켜 주세요. 목록에 이미 있으면 스위치만 켜면 됩니다.")
+        let detail = NSTextField(wrappingLabelWithString: DKLocalized("아래 아이콘을 시스템 설정 목록에 놓고 스위치를 켜 주세요. 목록에 이미 있으면 스위치만 켜면 됩니다."))
         detail.font = .systemFont(ofSize: 11)
         detail.textColor = .secondaryLabelColor
         let dragSource = AppDragSourceView()
         let close = NSButton(
-            image: NSImage(systemSymbolName: "xmark", accessibilityDescription: "권한 안내 닫기")!,
+            image: NSImage(systemSymbolName: "xmark", accessibilityDescription: DKLocalized("권한 안내 닫기"))!,
             target: nil,
             action: nil
         )
@@ -235,7 +235,7 @@ private final class AppDragSourceView: NSView, NSDraggingSource {
             hint.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
             hint.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
-        setAccessibilityLabel("\(AppIdentity.displayName) 앱 아이콘. 시스템 설정 목록으로 끌어다 놓으세요")
+        setAccessibilityLabel(DKFormat("%1$@ 앱 아이콘. 시스템 설정 목록으로 끌어다 놓으세요", AppIdentity.displayName))
     }
 
     @available(*, unavailable)

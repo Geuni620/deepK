@@ -6,6 +6,7 @@ private enum ClaudeTransportTests {
     typealias Transport = ClaudeTranslationClient.Configuration.Transport
 
     static func runAll() async {
+        await inventedDurationBoundsAreRevisedOnce()
         inlineMarkupOnlyExtendsThePrompt()
         inheritedEnvironmentKeepsOnlyLaunchValues()
         await connectVerifiesSubscriptionWithoutInference()
@@ -107,6 +108,45 @@ private enum ClaudeTransportTests {
         )
     }
 
+    private static func inventedDurationBoundsAreRevisedOnce() async {
+        let source = "更新には2分かかる場合があります。"
+        require(ClaudeTranslationClient.addsUnsupportedTimeBound(source: source, translation: "최대 2분이 걸릴 수 있습니다."), "an invented duration bound is detected")
+        require(!ClaudeTranslationClient.addsUnsupportedTimeBound(source: "最大2分です。", translation: "최대 2분입니다."), "an explicit source bound is retained")
+        require(!ClaudeTranslationClient.addsUnsupportedTimeBound(source: "It may take 2 minutes or less.", translation: "최대 2분이 걸릴 수 있습니다."), "an explicit English upper bound must be preserved")
+        require(!ClaudeTranslationClient.addsUnsupportedTimeBound(source: "It could take as long as 2 minutes.", translation: "최대 2분이 걸릴 수 있습니다."), "an English duration upper bound must be preserved")
+        require(ClaudeTranslationClient.addsUnsupportedTimeBound(source: "It may take 2 minutes as long as backups are kept.", translation: "백업을 보관하면 최대 2분이 걸릴 수 있습니다."), "a condition unrelated to duration is not a source time bound")
+        require(!ClaudeTranslationClient.addsUnsupportedTimeBound(source: "5分以上かかることはありません。", translation: "최대 5분이 걸립니다."), "a bound expressed by source negation is not rewritten")
+        require(!ClaudeTranslationClient.addsUnsupportedTimeBound(source: "2分です。", translation: "최대 2분입니다."), "the narrow guard only claims to check explicit possible durations")
+        require(!ClaudeTranslationClient.addsUnsupportedTimeBound(source: "Show `2min`.", translation: "최대 2분"), "code is not duration prose")
+        require(!ClaudeTranslationClient.addsUnsupportedTimeBound(source: source, translation: "2분이 걸릴 수 있습니다."), "ordinary possibility is accepted")
+        for transport in [Transport.automatic, .oneShotJSON] {
+            let validFixture = Fixture(name: "valid-bound-" + transport.rawValue)
+            let validClient = makeClient(mode: "duration-always", fixture: validFixture, transport: transport)
+            do {
+                let result = try await validClient.translate(text: "It may take 2 minutes or less.", source: "en", target: "ko")
+                require(result == "최대 2분이 걸릴 수 있습니다.", "a faithful upper bound is returned unchanged")
+                require(await validClient.lastFidelityRevisionCount == 0 && count(validFixture.start, "translation") == 1,
+                        "a valid source bound must not spend an extra correction request")
+            } catch { fail("valid source bound was rejected: \(error)") }
+            await validClient.disconnect(); validFixture.cleanup()
+            for mode in ["duration-once", "duration-always"] {
+                let fixture = Fixture(name: "fidelity-" + mode + transport.rawValue)
+                let client = makeClient(mode: mode, fixture: fixture, transport: transport)
+                let partial = PartialProbe()
+                do {
+                    let result = try await client.translate(text: source, source: "ja", target: "ko", onPartialText: { partial.record($0) })
+                    require(mode == "duration-once" && result == "2분이 걸릴 수 있습니다.", "one revision returns the corrected translation")
+                    require(partial.snapshots.allSatisfy { !$0.contains("최대") }, "unsafe draft is never streamed")
+                } catch ClaudeTranslationClient.ClientError.unverifiedTimeBound {
+                    require(mode == "duration-always", "still-invalid revisions are rejected")
+                    require(partial.snapshots.isEmpty, "invalid text is not published as a partial result")
+                } catch { fail("duration fidelity fixture failed: \(error)") }
+                require(count(fixture.start, "translation") == 2, "the fidelity revision is bounded to one extra request")
+                await client.disconnect(); fixture.cleanup()
+            }
+        }
+    }
+
     private static func normalTranslationUsesSubscriptionSafeFlags(transport: Transport) async {
         let argsMarker = temporaryMarker(named: "args")
         let environmentMarker = temporaryMarker(named: "environment")
@@ -152,6 +192,10 @@ private enum ClaudeTransportTests {
             require(result == "안녕하세요", "normal print-mode output should be returned")
 
             let args = try readJSONObject(at: argsMarker)
+            let system = args["system_prompt"] as? String ?? ""
+            require(system.contains("every source clause") && system.contains("never omit the object of a prohibition")
+                    && system.contains("never add time upper bounds"),
+                    "both subscription transports must receive the omission, negation and modality fidelity instructions")
             require(args["tools"] as? String == "", "all built-in tools must be disabled")
             require(args["strict_mcp_config"] as? Bool == true, "MCP config must be strict")
             require(args["setting_sources"] as? String == "", "project and user settings must be excluded")
@@ -997,11 +1041,14 @@ private enum ClaudeTransportTests {
     }
 
     /// 원문 반복을 스트리밍 중에 찾으면 앱(`TranslationStore.retryAfterEcho(early: true)`)은 같은 메인 액터 차례에서 그 번역을
-    /// 취소하고 다시 요청을 보낸다. 취소된 프로세스가 끝나기를 기다리지 않으므로 재요청은 대기 프로세스 없이 바로 띄운
-    /// 프로세스(`onDemandStream`)가 맡는다. 재요청은 자기 글만 돌려주고, 취소된 번역의 조각은 더 오지 않으며 남는 프로세스도 없다.
+    /// 취소하고 다시 요청을 보낸다. 재요청은 별도의 새 프로세스가 맡아야 한다. 취소 정리의 스케줄 순서에 따라
+    /// 새 on-demand 또는 새 대기 프로세스일 수 있다. 자기 응답만 돌려주고 늦은 조각과 남는 프로세스는 없어야 한다.
     private static func cancelMidStreamThenRetranslate() async {
         let fixture = Fixture(name: "partial-cancel")
-        let client = makeClient(mode: "normal", streamMode: "partial-hang-once", fixture: fixture)
+        let translationPIDs = temporaryMarker(named: "partial-cancel-pids")
+        defer { remove(translationPIDs) }
+        let client = makeClient(mode: "normal", streamMode: "partial-hang-once", fixture: fixture,
+                                environment: ["DEEPK_CLAUDE_TRANSLATION_PID_FILE": translationPIDs.path])
         do {
             try await client.connect()
             await client.setPrewarm(model: Client.defaultModel, generation: 1)
@@ -1035,19 +1082,23 @@ private enum ClaudeTransportTests {
             fail("retranslation right after cancellation failed: \(error)")
         }
         let path = await client.lastCompletedTiming?.path
-        require(path == .onDemandStream, "the retranslation cold-starts while the cancelled spare is still in use: \(String(describing: path))")
+        require(path == .onDemandStream || path == .bootingSpare || path == .warmSpare,
+                "the retry uses a stream process without falling back: \(String(describing: path))")
+        let pids = lines(translationPIDs)
+        require(pids.count == 2 && Set(pids).count == 2,
+                "cancelled and retried translations must use distinct processes: \(pids)")
         await waitForMarkerLine(fixture.exit, "terminated", count: 1, label: "the cancelled process terminates")
         await waitForMarkerLine(fixture.start, "spawn", count: 3, label: "a spare after the retranslation")
         await settle()
         require(partials.snapshots == ["원문"], "no partial may arrive after cancellation: \(partials.snapshots)")
         require(
             count(fixture.start, "spawn") == 3 && count(fixture.start, "translation") == 2,
-            "the spare, the cold-started retranslation and the next spare, nothing resent: \(lines(fixture.start))"
+            "the first spare, the separate retry and the next spare, nothing resent: \(lines(fixture.start))"
         )
 
         await client.disconnect()
         await waitForMarkerLine(fixture.exit, "terminated", count: 2, label: "disconnect terminates the new spare")
-        await waitForMarkerLine(fixture.exit, "eof", count: 1, label: "the cold-started process retires on EOF")
+        await waitForMarkerLine(fixture.exit, "eof", count: 1, label: "the retry process retires on EOF")
         // EOF로 물러나던 프로세스가 끝나기 전에 종료 신호를 받으면 "eof" 뒤에 "terminated"도 남기므로 개수는 기동 수 이상이다.
         require(lines(fixture.exit).count >= count(fixture.start, "spawn"), "every spawned process has exited: \(lines(fixture.exit))")
         fixture.cleanup()
@@ -1239,7 +1290,8 @@ private enum ClaudeTransportTests {
                 executableURL: executableURL,
                 arguments: arguments ?? ["python3", fixturePath],
                 environment: environment,
-                requestTimeout: 3,
+                // Process/version startup under build load is separate from the short inference timeout tests.
+                requestTimeout: 10,
                 translationTimeout: translationTimeout,
                 modelCacheTTL: 30,
                 transport: transport,

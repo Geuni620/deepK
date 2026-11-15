@@ -1,0 +1,36 @@
+{
+  "status": "not-passed",
+  "automaticChecks": "66 responses; no transport or number/code failures; semantic correctness is separate",
+  "issues": [
+    {
+      "provider": "claude",
+      "source": "ko",
+      "target": "zh-Hant",
+      "sample": "negation-date",
+      "severity": "blocking",
+      "finding": "Negation reversed: do not delete backup became delete backup.",
+      "input": "백업을 삭제하지 마세요. 파일 123개를 2026-11-30까지 보관하세요.",
+      "output": "刪除備份。請保留這 123 個檔案，直到 2026-11-30。"
+    },
+    {
+      "provider": "claude",
+      "source": "zh-Hans",
+      "target": "ko",
+      "sample": "negation-date",
+      "severity": "blocking",
+      "finding": "The object backup was omitted from the first sentence.",
+      "input": "请勿删除备份。请将 123 个文件保留至 2026-11-30。",
+      "output": "삭제하지 마세요. 123개 파일을 2026-11-30까지 보관하세요."
+    },
+    {
+      "provider": "claude",
+      "source": "ja",
+      "target": "ko",
+      "sample": "modality-request",
+      "severity": "review",
+      "finding": "Added an upper bound (at most 2 minutes) absent from the source.",
+      "input": "更新には2分かかる場合があります。完了後にもう一度お試しください。",
+      "output": "업데이트에는 최대 2분이 걸릴 수 있습니다. 완료된 후 다시 시도해 주세요."
+    }
+  ]
+}
