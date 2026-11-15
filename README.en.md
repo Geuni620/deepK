@@ -55,7 +55,7 @@ After installing, install [Codex CLI](docs/development.md#codex-cli-준비) or [
 
 ## Status
 
-The current release is [v0.2.0](https://github.com/Geuni620/deepK/releases/tag/v0.2.0), and deepK is in an early release stage. Translation speed depends on the provider, model, and input.
+The current release is [v0.3.0](https://github.com/Geuni620/deepK/releases/tag/v0.3.0), and deepK is in an early release stage. Translation speed depends on the provider, model, and input.
 
 - Text input with automatic translation, automatic or manual language direction
 - Selected text and images in the same window; on-device OCR sends only text to the chosen provider
