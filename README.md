@@ -1,4 +1,6 @@
 <p align="center">
+
+0.3.0부터 새 버전을 하루 한 번 확인하고 선택적으로 안내합니다. 설정에서 자동 확인을 끌 수 있으며 업데이트를 미뤄도 번역·복사·삽입은 계속됩니다. GitHub에 릴리스 정보만 요청하며 번역 내용이나 계정 정보를 보내지 않습니다. 0.2.0 이하에는 이 기능이 없으므로 최초 한 번은 `brew update` 후 `brew upgrade --cask Geuni620/tap/deepk`를 실행하세요. [업데이트 안내](docs/app-updates.md) · [0.3.0 변경 내용](docs/releases/0.3.0.md)
   <img src="DeepK/Assets.xcassets/AppIcon.appiconset/icon_128x128@2x.png" width="128" alt="">
 </p>
 

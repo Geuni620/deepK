@@ -1,4 +1,6 @@
 <p align="center">
+
+From 0.3.0, deepK checks for new versions once a day and offers optional update notices. You can disable automatic checks in settings and keep translating, copying, and inserting without updating. Release checks send no translation or account content to GitHub. Versions 0.2.0 and earlier need one manual `brew update` followed by `brew upgrade --cask Geuni620/tap/deepk`.
   <img src="DeepK/Assets.xcassets/AppIcon.appiconset/icon_128x128@2x.png" width="128" alt="">
 </p>
 
