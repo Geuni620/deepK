@@ -450,6 +450,7 @@ public actor CodexTranslationClient {
         let account: Account
         let generation: UInt64
         let createdAt: ContinuousClock.Instant
+        let mcpServerNames: [String]
     }
     private let prewarmClock = ContinuousClock()
     private var prewarmModel: String?
@@ -596,7 +597,7 @@ public actor CodexTranslationClient {
             return nil
         }
         guard !systemAsleep, thread.model == model, thread.fastServiceTier == fastServiceTier, thread.account == account,
-              thread.generation == generation,
+              thread.generation == generation, thread.mcpServerNames == configuredMCPServerNames,
               thread.createdAt.duration(to: prewarmClock.now) < .seconds(configuration.prewarmLifetime) else {
             discardPreparedThread()
             return nil
@@ -609,14 +610,25 @@ public actor CodexTranslationClient {
     private func makeTranslationThread(model: String, fastServiceTier: Bool, account: Account,
                                        generation: UInt64) async throws -> PreparedThread {
         let workingDirectory = try requireWorkingDirectory()
+        // A server can be removed after connection or while a standby thread is waiting.
+        // Refresh before constructing overrides: an orphan enabled=false entry has no transport.
+        try await refreshMCPServerNames()
+        try Task.checkCancellation()
+        var mcpServerNames = configuredMCPServerNames
+        guard generation == transportGeneration else { throw ClientError.notConnected }
         let createdAt = prewarmClock.now
-        let response = try await request(method: "thread/start", params: .object([
-            "cwd": .string(workingDirectory.path), "ephemeral": .bool(true), "model": .string(model),
-            "baseInstructions": .string(Self.translationBaseInstructions),
-            "developerInstructions": .string(Self.translationDeveloperInstructions),
-            "serviceTier": .string(Self.serviceTier(fast: fastServiceTier)), "approvalPolicy": .string("never"),
-            "sandbox": .string("read-only"), "config": translationConfig
-        ]), timeout: configuration.requestTimeout, retainThreadOnCancellation: true)
+        let response: JSONValue
+        do {
+            response = try await startTranslationThread(model: model, fastServiceTier: fastServiceTier, workingDirectory: workingDirectory)
+        } catch ClientError.rpc(let code, let message)
+            where code == -32600 && message.contains("invalid transport") && message.contains("mcp_servers.") {
+            // Handle a removal racing config/read -> thread/start, before any model turn exists.
+            try await refreshMCPServerNames()
+            try Task.checkCancellation()
+            guard configuredMCPServerNames != mcpServerNames else { throw ClientError.rpc(code: code, message: message) }
+            mcpServerNames = configuredMCPServerNames
+            response = try await startTranslationThread(model: model, fastServiceTier: fastServiceTier, workingDirectory: workingDirectory)
+        }
         guard let id = threadID(from: response) else {
             throw ClientError.malformedResponse("thread/start did not return a thread id")
         }
@@ -626,11 +638,21 @@ public actor CodexTranslationClient {
             try await verifyToolsDisabled(threadID: id)
             try Task.checkCancellation()
             return PreparedThread(id: id, model: model, fastServiceTier: fastServiceTier, account: account,
-                                  generation: generation, createdAt: createdAt)
+                                  generation: generation, createdAt: createdAt, mcpServerNames: mcpServerNames)
         } catch {
             await unsubscribeThread(threadID: id, generation: generation)
             throw error
         }
+    }
+
+    private func startTranslationThread(model: String, fastServiceTier: Bool, workingDirectory: URL) async throws -> JSONValue {
+        try await request(method: "thread/start", params: .object([
+            "cwd": .string(workingDirectory.path), "ephemeral": .bool(true), "model": .string(model),
+            "baseInstructions": .string(Self.translationBaseInstructions),
+            "developerInstructions": .string(Self.translationDeveloperInstructions),
+            "serviceTier": .string(Self.serviceTier(fast: fastServiceTier)), "approvalPolicy": .string("never"),
+            "sandbox": .string("read-only"), "config": translationConfig
+        ]), timeout: configuration.requestTimeout, retainThreadOnCancellation: true)
     }
 
     private final class PreparationWait: @unchecked Sendable {
@@ -719,6 +741,7 @@ public actor CodexTranslationClient {
             let refreshedAccount = try await readAccount()
             if let account, account != refreshedAccount { invalidatePrewarm() }
             self.account = refreshedAccount
+            if forceRefresh { try await refreshMCPServerNames() }
         } catch {
             disconnect()
             throw error
@@ -845,6 +868,7 @@ public actor CodexTranslationClient {
         }
 
         let models = try await listModels()
+        try await refreshMCPServerNames()
         let selectedModel = try selectModel(requestedModel, from: models)
         let generation = transportGeneration
         guard let verifiedAccount = account, !systemAsleep else { throw CancellationError() }
@@ -856,6 +880,8 @@ public actor CodexTranslationClient {
             try await refreshAccountForTranslation()
             guard account == verifiedAccount else { throw CancellationError() }
         }
+        // Waiting for preparation yields the actor; recheck configuration before claiming it.
+        if preparedThread != nil { try await refreshMCPServerNames() }
         let cachedThread = claimPreparedThread(model: selectedModel.model, fastServiceTier: fastServiceTier,
                                                generation: generation)
         let preparedAgeMilliseconds = cachedThread.map { thread in
@@ -1922,6 +1948,17 @@ public actor CodexTranslationClient {
         } catch {
             if !(error is CancellationError) { invalidateDiscoveryCache() }
             throw error
+        }
+    }
+
+    private func refreshMCPServerNames() async throws {
+        let generation = transportGeneration
+        let names = try await readConfiguredMCPServerNames(at: requireWorkingDirectory())
+        try Task.checkCancellation()
+        guard generation == transportGeneration else { throw ClientError.notConnected }
+        if names != configuredMCPServerNames {
+            configuredMCPServerNames = names
+            invalidatePrewarm()
         }
     }
 

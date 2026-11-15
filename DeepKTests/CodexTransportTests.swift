@@ -12,6 +12,7 @@ private enum CodexTransportTests {
     static func runAll() async {
         inlineMarkupOnlyExtendsThePrompt()
         await immediateResponseRaceAndFinalText()
+        await mcpConfigurationRefreshesBeforeThreads()
         await cachedDiscoveryIsReusedAndLowEffortIsSelected()
         await disconnectInvalidatesDiscoveryCache()
         await authenticationErrorInvalidatesDiscoveryCache()
@@ -594,7 +595,7 @@ private enum CodexTransportTests {
 
             let calls = await waitForCallCount(callCountFile, method: "turn/start", expected: 2, label: "cached translations")
             require(callCount("initialize", in: calls) == 1, "translations should reuse the live transport")
-            require(callCount("config/read", in: calls) == 1, "translations should reuse the live config snapshot")
+            require(callCount("config/read", in: calls) == 5, "each translation and new thread refreshes MCP names while reusing transport")
             require(callCount("account/read", in: calls) == 2, "each translation should revalidate the shared account")
             require(callCount("model/list", in: calls) == 1, "translations should reuse the model catalog within its TTL")
             require(callCount("mcpServerStatus/list", in: calls) == 2, "each ephemeral thread must verify MCP safety")
@@ -613,6 +614,47 @@ private enum CodexTransportTests {
         }
 
         await client.disconnect()
+    }
+
+    private static func mcpConfigurationRefreshesBeforeThreads() async {
+        for mode in ["normal", "prewarm-normal", "mcp-removal-race", "mcp-invalid-stable"] {
+            let namesFile = temporaryMarker(named: "mcp-names"), configFile = temporaryMarker(named: "mcp-config"), callsFile = temporaryMarker(named: "mcp-calls")
+            defer { for file in [namesFile, configFile, callsFile] { try? FileManager.default.removeItem(at: file) } }
+            do {
+                try Data(#"["fixture-mcp","paper"]"#.utf8).write(to: namesFile)
+                let client = makeClient(mode: mode, callCountFile: callsFile, threadConfigFile: configFile, mcpNamesFile: namesFile)
+                try await client.connect()
+                if mode == "prewarm-normal" {
+                    await client.setPrewarm(model: "fixture-model", generation: 1)
+                    await waitForPreparedThread(client)
+                }
+                if mode == "normal" || mode == "prewarm-normal" {
+                    try Data(#"["fixture-mcp"]"#.utf8).write(to: namesFile)
+                }
+                do {
+                    let result = try await client.translate(text: "Hello world.", source: "en", target: "ko", model: "fixture-model")
+                    require(mode != "mcp-invalid-stable", "unchanged invalid config must not be silently ignored")
+                    require(result == "안녕하세요", "removed server does not break translation")
+                    let config = try JSONSerialization.jsonObject(with: Data(contentsOf: configFile)) as! [String: Any]
+                    require((config["mcp_servers"] as? [String: Any])?["paper"] == nil, "removed MCP name cannot produce an orphan override")
+                    if mode == "prewarm-normal" {
+                        require(await client.lastCompletedTiming?.usedPreparedThread == false, "configuration change discards the old standby")
+                        await waitForPreparedThread(client)
+                        try Data(#"["fixture-mcp","new-server"]"#.utf8).write(to: namesFile)
+                        try await client.connect(forceRefresh: true)
+                        require(await client.hasPreparedThread == false, "explicit connection refresh invalidates stale standby")
+                        _ = try await client.translate(text: "Second translation.", source: "en", target: "ko", model: "fixture-model")
+                        let updated = try JSONSerialization.jsonObject(with: Data(contentsOf: configFile)) as! [String: Any]
+                        require((updated["mcp_servers"] as? [String: Any])?["new-server"] != nil, "new MCP server is explicitly disabled")
+                    }
+                } catch CodexTranslationClient.ClientError.rpc(let code, _) where mode == "mcp-invalid-stable" {
+                    require(code == -32600, "invalid unchanged config is reported")
+                    let calls = try String(contentsOf: callsFile, encoding: .utf8).components(separatedBy: "\n")
+                    require(callCount("thread/start", in: calls) == 1 && callCount("turn/start", in: calls) == 0, "no retry loop or billable turn for unchanged invalid config")
+                }
+                await client.disconnect()
+            } catch { fail("MCP refresh fixture \(mode) failed: \(error)") }
+        }
     }
 
     private static func disconnectInvalidatesDiscoveryCache() async {
@@ -636,7 +678,7 @@ private enum CodexTransportTests {
 
             let calls = await waitForCallCount(callCountFile, method: "turn/start", expected: 2, label: "disconnect cache invalidation")
             require(callCount("initialize", in: calls) == 2, "reconnect should initialize a new transport")
-            require(callCount("config/read", in: calls) == 2, "reconnect should reread config for its new working directory")
+            require(callCount("config/read", in: calls) == 6, "reconnect and each new translation refresh MCP configuration")
             require(callCount("account/read", in: calls) == 2, "each connection should validate the account")
             require(callCount("model/list", in: calls) == 2, "reconnect should refresh the model catalog")
         } catch {
@@ -1028,10 +1070,12 @@ private enum CodexTransportTests {
         prewarmIdleTimeout: TimeInterval = 1800,
         accountTypeFile: URL? = nil,
         threadConfigFile: URL? = nil,
-        environmentFile: URL? = nil
+        environmentFile: URL? = nil,
+        mcpNamesFile: URL? = nil
     ) -> CodexTranslationClient {
         var environment: [String: String] = [:]
         if let environmentFile { environment["DEEPK_ENVIRONMENT_FILE"] = environmentFile.path }
+        if let mcpNamesFile { environment["DEEPK_MCP_NAMES_FILE"] = mcpNamesFile.path }
         if let marker {
             environment["DEEPK_INTERRUPT_MARKER"] = marker.path
         }
