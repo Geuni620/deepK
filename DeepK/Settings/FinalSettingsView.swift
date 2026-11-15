@@ -166,6 +166,8 @@ struct FinalSettingsView: View {
             Divider().padding(.horizontal, 20)
 
             loginItemRow
+            settingToggleRow(title: DKLocalized("새 버전 알림"), subtitle: DKLocalized("하루 한 번 확인합니다. 업데이트는 선택 사항입니다."), isOn: Binding(
+                get: { app.updates.automaticallyChecks }, set: { app.updates.setAutomaticallyChecks($0) }))
         }
         .padding(.top, 8)
         .padding(.bottom, 10)
@@ -589,6 +591,10 @@ struct FinalSettingsView: View {
                 .foregroundStyle(Color(nsColor: .tertiaryLabelColor))
                 .lineLimit(1)
             Spacer(minLength: 0)
+            Button(DKLocalized("업데이트 확인…"), action: app.checkForUpdates)
+                .font(.system(size: 11))
+                .buttonStyle(.link)
+                .disabled(app.updates.isChecking)
         }
         .padding(.horizontal, 20)
         .frame(height: 38)

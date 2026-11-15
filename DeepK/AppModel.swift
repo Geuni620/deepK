@@ -18,6 +18,10 @@ final class AppModel: NSObject, NSWindowDelegate {
     #endif
     let windowPresentation = WindowPresentation()
     let loginItemController = LoginItemController()
+    let updates = AppUpdateController()
+    @ObservationIgnored private let updateNotice = AppUpdateNotice()
+    @ObservationIgnored private var updateCheckTask: Task<Void, Never>?
+    @ObservationIgnored private var updateMenuItem: NSMenuItem?
     /// 편집 메뉴 ⌘↩ '끝에 구분선 넣기'의 target. 덧붙일 글은 경계 규칙(planner)이 정한다.
     let sourceEditor = SourceEditorProxy(insertion: IncrementalTranslationPlanner.boundaryInsertion(after:))
     var models: [CodexTranslationClient.Model] = []
@@ -343,6 +347,13 @@ final class AppModel: NSObject, NSWindowDelegate {
         guard !launched else { return }
         launched = true
         installMenu()
+        updates.onStateChange = { [weak self] in self?.updateShortcutMenu() }
+        updates.onUpdateAvailable = { [weak self] release in
+            guard let self, store.status != .translating, !store.isComposing, !inserting, NSApp.modalWindow == nil,
+                  !NSApp.windows.contains(where: { $0.attachedSheet != nil }) else { return false }
+            return presentUpdateNotice(release)
+        }
+        updates.start()
         monitor.onDiagnostic = { [weak self] state in
             guard let self else { return }
             shortcutReady = state.isReady
@@ -1302,9 +1313,42 @@ final class AppModel: NSObject, NSWindowDelegate {
     }
 
     private func updateShortcutMenu() {
+        updateMenuItem?.title = updates.availableRelease.map { DKFormat("%1$@ 업데이트 안내…", $0.version) }
+            ?? DKLocalized("업데이트 확인…")
+        updateMenuItem?.isEnabled = !updates.isChecking
         shortcutMenuItem?.title = shortcutMessage
         statusItem?.button?.toolTip = "\(AppIdentity.displayName) · \(shortcutMessage)"
         statusItem?.button?.image = menuBarImage()
+    }
+
+    @discardableResult
+    private func presentUpdateNotice(_ release: AppRelease) -> Bool {
+        guard let current = updates.currentVersion else { return false }
+        return updateNotice.present(release, currentVersion: current, near: statusItem?.button?.window?.frame)
+    }
+
+    @objc func checkForUpdates() {
+        guard updateCheckTask == nil else { return }
+        updateCheckTask = Task { [weak self] in
+            guard let self else { return }
+            defer { updateCheckTask = nil }
+            let result = await updates.check(manual: true)
+            guard !Task.isCancelled, result == .checked || result == .failed else { return }
+            if let release = updates.availableRelease {
+                if presentUpdateNotice(release) { updates.didPresent(release) }
+            } else {
+                let alert = NSAlert()
+                alert.messageText = result == .failed ? DKLocalized("업데이트를 확인하지 못했습니다") : DKLocalized("업데이트 확인")
+                alert.informativeText = updates.statusMessage
+                alert.addButton(withTitle: DKLocalized("확인"))
+                if let settingsWindow, settingsWindow.isVisible, settingsWindow.attachedSheet == nil {
+                    await alert.beginSheetModal(for: settingsWindow)
+                } else {
+                    NSApp.activate(ignoringOtherApps: true)
+                    alert.runModal()
+                }
+            }
+        }
     }
 
     private func menuBarImage() -> NSImage? {
@@ -1562,6 +1606,10 @@ final class AppModel: NSObject, NSWindowDelegate {
             menuItem.target = self
             menu.addItem(menuItem)
         }
+        let update = NSMenuItem(title: DKLocalized("업데이트 확인…"), action: #selector(checkForUpdates), keyEquivalent: "")
+        update.target = self
+        menu.addItem(update)
+        updateMenuItem = update
         item.menu = menu
         statusItem = item
     }
@@ -1628,6 +1676,10 @@ final class AppModel: NSObject, NSWindowDelegate {
     }
 
     func shutdown() async {
+        updates.stop()
+        updateCheckTask?.cancel()
+        updateCheckTask = nil
+        updateNotice.dismiss()
         #if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
         imageInput.clear()
         #endif

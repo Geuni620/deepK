@@ -112,6 +112,9 @@ final class DeepKApplicationDelegate: NSObject, NSApplicationDelegate {
         let settings = NSMenuItem(title: DKLocalized("설정…"), action: #selector(AppModel.openSettings), keyEquivalent: ",")
         settings.target = AppModel.shared
         applicationMenu.addItem(settings)
+        let updates = NSMenuItem(title: DKLocalized("업데이트 확인…"), action: #selector(AppModel.checkForUpdates), keyEquivalent: "")
+        updates.target = AppModel.shared
+        applicationMenu.addItem(updates)
         #if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
         let richPOC = NSMenuItem(title: DKLocalized("번역창 열기"), action: #selector(ImagePOCIntegration.show), keyEquivalent: "")
         richPOC.target = ImagePOCIntegration.shared

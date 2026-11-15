@@ -1,5 +1,7 @@
 # deepK
 
+0.3.0以降は新しいバージョンを1日1回確認し、任意で更新できます。設定で自動確認を無効にしても翻訳・コピー・挿入は使えます。GitHubへの確認に翻訳内容やアカウント情報は含めません。0.2.0以前は最初の1回だけ `brew update` と `brew upgrade --cask Geuni620/tap/deepk` を実行してください。
+
 [한국어](README.md) · [English](README.en.md) · 日本語 · [繁體中文](README.zh-TW.md)
 
 選択した文章を **⌘Cで2回コピー**すると翻訳するMacメニューバーアプリです。既存のChatGPTまたはClaudeのサブスクリプションを使用します。

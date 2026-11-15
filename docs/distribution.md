@@ -10,7 +10,7 @@
 ./scripts/package-release.sh --local
 ```
 
-기본 후보 버전은 `VERSION` 파일의 `0.2.0`, CPU는 `arm64`(Apple Silicon)다. `--version 0.2.0 --arch arm64`로 지정할 수 있다. Intel(`x86_64`)·Universal 옵션은 제공하지만 별도 실제 검증 전에는 지원 완료로 안내하지 않는다.
+기본 후보 버전은 `VERSION` 파일의 `0.3.0`, CPU는 `arm64`(Apple Silicon)다. `--version 0.3.0 --arch arm64`로 지정할 수 있다. Intel(`x86_64`)·Universal 옵션은 제공하지만 별도 실제 검증 전에는 지원 완료로 안내하지 않는다.
 
 Debug·Release는 `DEEPK_IMAGE_TRANSLATION`으로 실제 이미지 입력 런타임을 포함한다. 합성 녹화·감사·테스트 CLI는 별도의 `DEEPK_IMAGE_TRANSLATION_POC` 전용이며 정식 앱에 넣지 않는다. 패키징은 실제 실행 파일의 이미지 기능 포함·테스트 코드 제외와 recipient 라이선스 파일을 검사한 후에만 서명·업로드한다.
 

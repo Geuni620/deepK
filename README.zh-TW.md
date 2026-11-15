@@ -1,5 +1,7 @@
 # deepK
 
+0.3.0 起每天檢查一次新版本，您可自行決定是否更新。設定中可關閉自動檢查，延後更新不影響翻譯、複製或插入。向 GitHub 檢查更新時不會傳送翻譯內容或帳號資訊。0.2.0 以前的版本首次需手動執行 `brew update` 及 `brew upgrade --cask Geuni620/tap/deepk`。
+
 [한국어](README.md) · [English](README.en.md) · [日本語](README.ja.md) · 繁體中文
 
 選取文字後**連按兩次 ⌘C** 即可翻譯的 Mac 選單列 App，使用您既有的 ChatGPT 或 Claude 訂閱。
