@@ -346,27 +346,27 @@ struct NativeImageTranslator {
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack(spacing: 8) {
-                Text("글·이미지를 선택하고 ⌘C 두 번")
+                Text(DKLocalized("글·이미지를 선택하고 ⌘C 두 번"))
                     .font(.system(size: 11)).foregroundStyle(.secondary).lineLimit(1)
                 if !app.shortcutReady {
-                    Button("단축키 연결 확인") { app.openInputMonitoringSettings() }.foregroundStyle(.orange)
+                    Button(DKLocalized("단축키 연결 확인")) { app.openInputMonitoringSettings() }.foregroundStyle(.orange)
                 }
                 Spacer(minLength: 0)
                 if input.image != nil {
-                    Button(input.prefersReadableSize ? "화면 맞춤" : "읽기 크기") { input.prefersReadableSize.toggle(); input.zoom = 1 }
-                        .help("읽기 쉬운 크기로 확대하며 원래 배경과 배치는 유지합니다")
-                    Button(input.showsOCR ? "이미지" : "인식한 글자") { input.showsOCR.toggle() }.disabled(input.recognizedText.isEmpty)
+                    Button(input.prefersReadableSize ? DKLocalized("화면 맞춤") : DKLocalized("읽기 크기")) { input.prefersReadableSize.toggle(); input.zoom = 1 }
+                        .help(DKLocalized("읽기 쉬운 크기로 확대하며 원래 배경과 배치는 유지합니다"))
+                    Button(input.showsOCR ? DKLocalized("이미지") : DKLocalized("인식한 글자")) { input.showsOCR.toggle() }.disabled(input.recognizedText.isEmpty)
                 }
                 Button { ImagePOCIntegration.shared.scan() } label: { Image(systemName: "viewfinder") }
-                    .help("화면에서 이미지 가져오기").disabled(input.scanner.busy)
-                if input.scanner.lastRegion != nil { Button("다시 읽기") { ImagePOCIntegration.shared.rescan() }.disabled(input.scanner.busy) }
+                    .help(DKLocalized("화면에서 이미지 가져오기")).disabled(input.scanner.busy)
+                if input.scanner.lastRegion != nil { Button(DKLocalized("다시 읽기")) { ImagePOCIntegration.shared.rescan() }.disabled(input.scanner.busy) }
             }.controlSize(.small)
-            Text("이미지는 Mac에서 읽고, 글자만 선택한 제공자에게 보냅니다. 웹 이미지는 원본 서버에서 불러옵니다.")
+            Text(DKLocalized("이미지는 Mac에서 읽고, 글자만 선택한 제공자에게 보냅니다. 웹 이미지는 원본 서버에서 불러옵니다."))
                 .font(.system(size: 10)).foregroundStyle(.tertiary).lineLimit(2)
             if let message = input.scanner.message {
                 Text(message).font(.system(size: 11)).foregroundStyle(.secondary).lineLimit(2)
                 if !input.scanner.permissionAllowed {
-                    Button("화면 기록 허용") { input.scanner.openPermissionSettings() }.controlSize(.small)
+                    Button(DKLocalized("화면 기록 허용")) { input.scanner.openPermissionSettings() }.controlSize(.small)
                 }
             }
         }.padding(.horizontal, 16).padding(.vertical, 6)
