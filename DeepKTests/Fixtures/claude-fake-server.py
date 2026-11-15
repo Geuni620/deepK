@@ -259,6 +259,7 @@ def stream_main() -> None:
         sys.stderr.write("Error: Expected message role 'user'\n")
         raise SystemExit(1)
     append_marker(START_MARKER, "translation\n")
+    append_marker(os.environ.get("DEEPK_CLAUDE_TRANSLATION_PID_FILE"), f"{os.getpid()}\n")
 
     if mode in {"timeout", "cancellation"}:
         hang()

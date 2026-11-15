@@ -1041,11 +1041,14 @@ private enum ClaudeTransportTests {
     }
 
     /// 원문 반복을 스트리밍 중에 찾으면 앱(`TranslationStore.retryAfterEcho(early: true)`)은 같은 메인 액터 차례에서 그 번역을
-    /// 취소하고 다시 요청을 보낸다. 취소된 프로세스가 끝나기를 기다리지 않으므로 재요청은 대기 프로세스 없이 바로 띄운
-    /// 프로세스(`onDemandStream`)가 맡는다. 재요청은 자기 글만 돌려주고, 취소된 번역의 조각은 더 오지 않으며 남는 프로세스도 없다.
+    /// 취소하고 다시 요청을 보낸다. 재요청은 별도의 새 프로세스가 맡아야 한다. 취소 정리의 스케줄 순서에 따라
+    /// 새 on-demand 또는 새 대기 프로세스일 수 있다. 자기 응답만 돌려주고 늦은 조각과 남는 프로세스는 없어야 한다.
     private static func cancelMidStreamThenRetranslate() async {
         let fixture = Fixture(name: "partial-cancel")
-        let client = makeClient(mode: "normal", streamMode: "partial-hang-once", fixture: fixture)
+        let translationPIDs = temporaryMarker(named: "partial-cancel-pids")
+        defer { remove(translationPIDs) }
+        let client = makeClient(mode: "normal", streamMode: "partial-hang-once", fixture: fixture,
+                                environment: ["DEEPK_CLAUDE_TRANSLATION_PID_FILE": translationPIDs.path])
         do {
             try await client.connect()
             await client.setPrewarm(model: Client.defaultModel, generation: 1)
@@ -1079,19 +1082,23 @@ private enum ClaudeTransportTests {
             fail("retranslation right after cancellation failed: \(error)")
         }
         let path = await client.lastCompletedTiming?.path
-        require(path == .onDemandStream, "the retranslation cold-starts while the cancelled spare is still in use: \(String(describing: path))")
+        require(path == .onDemandStream || path == .bootingSpare || path == .warmSpare,
+                "the retry uses a stream process without falling back: \(String(describing: path))")
+        let pids = lines(translationPIDs)
+        require(pids.count == 2 && Set(pids).count == 2,
+                "cancelled and retried translations must use distinct processes: \(pids)")
         await waitForMarkerLine(fixture.exit, "terminated", count: 1, label: "the cancelled process terminates")
         await waitForMarkerLine(fixture.start, "spawn", count: 3, label: "a spare after the retranslation")
         await settle()
         require(partials.snapshots == ["원문"], "no partial may arrive after cancellation: \(partials.snapshots)")
         require(
             count(fixture.start, "spawn") == 3 && count(fixture.start, "translation") == 2,
-            "the spare, the cold-started retranslation and the next spare, nothing resent: \(lines(fixture.start))"
+            "the first spare, the separate retry and the next spare, nothing resent: \(lines(fixture.start))"
         )
 
         await client.disconnect()
         await waitForMarkerLine(fixture.exit, "terminated", count: 2, label: "disconnect terminates the new spare")
-        await waitForMarkerLine(fixture.exit, "eof", count: 1, label: "the cold-started process retires on EOF")
+        await waitForMarkerLine(fixture.exit, "eof", count: 1, label: "the retry process retires on EOF")
         // EOF로 물러나던 프로세스가 끝나기 전에 종료 신호를 받으면 "eof" 뒤에 "terminated"도 남기므로 개수는 기동 수 이상이다.
         require(lines(fixture.exit).count >= count(fixture.start, "spawn"), "every spawned process has exited: \(lines(fixture.exit))")
         fixture.cleanup()
@@ -1283,7 +1290,8 @@ private enum ClaudeTransportTests {
                 executableURL: executableURL,
                 arguments: arguments ?? ["python3", fixturePath],
                 environment: environment,
-                requestTimeout: 3,
+                // Process/version startup under build load is separate from the short inference timeout tests.
+                requestTimeout: 10,
                 translationTimeout: translationTimeout,
                 modelCacheTTL: 30,
                 transport: transport,
