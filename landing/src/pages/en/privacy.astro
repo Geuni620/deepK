@@ -10,6 +10,16 @@ import { release } from '../../data/release';
   description={`What deepK ${release.version} sends when it translates, and what it keeps on your Mac.`}
 >
   <section>
+    <h2>Checking for new versions is optional</h2>
+    <p>
+      From 0.3.0, deepK requests GitHub's public release API at most once a day after a successful
+      check. It sends no source text, images, translations, account tokens, or user identifiers, and
+      shares no cookies or credentials. GitHub may process ordinary connection information such as
+      IP addresses. You can disable automatic checks in Settings. Postponing an update does not
+      block translation, copying, or insertion.
+    </p>
+  </section>
+  <section>
     <h2>The deepK operator does not collect translation content</h2>
     <p>
       deepK provides no feature for its operator to collect, store, or view your source text,

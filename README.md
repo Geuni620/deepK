@@ -55,7 +55,7 @@ shasum -a 256 deepK-distribution-*.zip
 
 ## 현재 상태
 
-현재 정식 배포는 [v0.2.0](https://github.com/Geuni620/deepK/releases/tag/v0.2.0)이며 초기 배포 단계의 앱입니다. 번역 속도는 제공자·모델·입력에 따라 달라집니다.
+현재 정식 배포는 [v0.3.0](https://github.com/Geuni620/deepK/releases/tag/v0.3.0)이며 초기 배포 단계의 앱입니다. 번역 속도는 제공자·모델·입력에 따라 달라집니다.
 
 - 원문 입력과 자동 번역, 자동·수동 언어 방향 선택
 - 선택한 글·이미지를 같은 창에 가져오기, Mac에서 OCR 후 선택한 제공자에게 글자만 전달
