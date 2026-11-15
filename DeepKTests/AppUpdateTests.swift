@@ -120,6 +120,9 @@ struct AppUpdateTests {
         let installedNewVersion = AppUpdateController(currentVersion: "0.2.2", defaults: defaults,
             automaticallyChecksByDefault: true, now: { clock.date }, fetch: { try await fetcher.next() })
         precondition(installedNewVersion.availableRelease == nil, "installed versions must not retain an old update badge")
+        let installedCheck = await installedNewVersion.check(manual: true)
+        precondition(installedCheck == .checked && installedNewVersion.availableRelease == nil,
+                     "a fresh check must not offer the already installed version")
     }
 
     private static func failureRetryAndOptOut() async throws {
