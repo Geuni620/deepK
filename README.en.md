@@ -3,7 +3,10 @@
 </p>
 
 <h1 align="center">deepK</h1>
-<p align="center"><a href="README.md">한국어</a> · <b>English</b></p>
+
+> In development: text translation now includes Japanese, Traditional Chinese (Taiwan), and Simplified Chinese. These changes are not yet in the Homebrew release. The default target follows your system language and can be changed in Settings. When the source matches the default target, English is used; English-to-English asks you to choose another target. Image OCR language coverage is separate.
+
+<p align="center"><a href="README.md">한국어</a> · <b>English</b> · <a href="README.ja.md">日本語</a> · <a href="README.zh-TW.md">繁體中文</a></p>
 <p align="center"><b>A Mac menu bar app for text and image translation, using the AI subscription you already have. Select text and press ⌘C twice.</b></p>
 
 <p align="center">
@@ -198,3 +201,6 @@ The Hanja reading table includes Unicode Unihan data. The full Unicode License v
 ## Bug and security reports
 
 Use [GitHub Issues](https://github.com/Geuni620/deepK/issues) for ordinary bugs and feature requests, and [private vulnerability reporting](https://github.com/Geuni620/deepK/security/advisories/new) for security vulnerabilities. Do not post vulnerability details, real source text, tokens, or login files in public issues. See the [security policy](SECURITY.md#private-vulnerability-reports) for report details and support scope.
+
+
+For Claude text translation, an invented time limit on an explicitly possible duration can trigger one correction with the same model. This may increase subscription usage and completion time. A still-invalid result is returned as an error. This narrow check does not guarantee general semantic accuracy.

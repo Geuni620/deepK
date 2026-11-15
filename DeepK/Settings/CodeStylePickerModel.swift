@@ -31,14 +31,14 @@ enum CodeStylePickerModel {
     /// One "기본 제공" section for a short list; from `searchThreshold` styles, the ones matching `query` split into
     /// light and dark code, and an empty section is left out.
     static func sections(styles: [ResultStyle], query: String = "") -> [Section] {
-        guard showsSearch(styleCount: styles.count) else { return [Section(title: "기본 제공", styles: styles)] }
+        guard showsSearch(styleCount: styles.count) else { return [Section(title: DKLocalized("기본 제공"), styles: styles)] }
         let needle = query.trimmingCharacters(in: .whitespacesAndNewlines)
         let matching = needle.isEmpty ? styles : styles.filter {
             $0.name.localizedCaseInsensitiveContains(needle) || $0.summary.localizedCaseInsensitiveContains(needle)
         }
         return [
-            Section(title: "밝은 코드", styles: matching.filter { !isDark($0) }),
-            Section(title: "어두운 코드", styles: matching.filter(isDark))
+            Section(title: DKLocalized("밝은 코드"), styles: matching.filter { !isDark($0) }),
+            Section(title: DKLocalized("어두운 코드"), styles: matching.filter(isDark))
         ].filter { !$0.styles.isEmpty }
     }
 
@@ -60,17 +60,17 @@ enum CodeStylePickerModel {
     /// The picker's reminder that the 표시 tab's behaviors apply to every style.
     static func statusChips(_ display: ResultDisplaySettings) -> [StatusChip] {
         [
-            StatusChip(text: display.foldsLongCode ? "접기 \(display.foldLineCount)줄" : "접기 끔", isOn: display.foldsLongCode),
-            StatusChip(text: display.colorsSyntax ? "문법 색" : "문법 색 끔", isOn: display.colorsSyntax),
-            StatusChip(text: display.showsLinkSource ? "출처 표시" : "출처 끔", isOn: display.showsLinkSource)
+            StatusChip(text: display.foldsLongCode ? DKFormat("접기 %1$@줄", display.foldLineCount) : "접기 끔", isOn: display.foldsLongCode),
+            StatusChip(text: display.colorsSyntax ? DKLocalized("문법 색") : DKLocalized("문법 색 끔"), isOn: display.colorsSyntax),
+            StatusChip(text: display.showsLinkSource ? DKLocalized("출처 표시") : DKLocalized("출처 끔"), isOn: display.showsLinkSource)
         ]
     }
 
     static func foldSubtitle(_ display: ResultDisplaySettings) -> String {
-        display.foldsLongCode ? "\(display.foldLineCount)줄이 넘으면 접고 ‘더 보기’로 펼칩니다" : "긴 코드를 모두 펼쳐 보여 줍니다"
+        display.foldsLongCode ? DKFormat("%1$@줄이 넘으면 접고 ‘더 보기’로 펼칩니다", display.foldLineCount) : "긴 코드를 모두 펼쳐 보여 줍니다"
     }
 
-    static func foldChoiceTitle(_ count: Int) -> String { "\(count)줄" }
+    static func foldChoiceTitle(_ count: Int) -> String { DKFormat("%1$@줄", count) }
 
     /// A style whose light card is dark: the card over white has a relative luminance under 0.4. A style without a
     /// card (a rail) is light.

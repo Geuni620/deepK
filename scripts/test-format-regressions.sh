@@ -19,7 +19,7 @@ SOURCE_PATHS=()
 for source_name in "${SOURCES[@]}"; do
   SOURCE_PATHS+=("$PROJECT_ROOT/DeepK/Translation/$source_name.swift")
 done
-swiftc -swift-version 6 -warnings-as-errors -parse-as-library \
+swiftc "$PROJECT_ROOT/DeepK/Localization.swift" -swift-version 6 -warnings-as-errors -parse-as-library \
   -module-cache-path "$FORMAT_TEST_DIR/cache" \
   "${SOURCE_PATHS[@]}" "$PROJECT_ROOT/DeepKTests/FormatRegressionTests.swift" \
   -o "$BINARY_PATH"

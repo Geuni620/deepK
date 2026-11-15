@@ -17,10 +17,10 @@ struct DisplaySettingsTab: View {
             Divider().padding(.horizontal, 20)
             foldRow
             Divider().padding(.horizontal, 20)
-            SettingsToggleRow(title: "링크 출처 표시", subtitle: "링크 뒤에 사이트 주소를 작게 붙입니다",
+            SettingsToggleRow(title: DKLocalized("링크 출처 표시"), subtitle: DKLocalized("링크 뒤에 사이트 주소를 작게 붙입니다"),
                               isOn: binding(\.showsLinkSource))
             Divider().padding(.horizontal, 20)
-            SettingsToggleRow(title: "문법 색", subtitle: "키워드·문자열·주석에 색을 입힙니다", isOn: binding(\.colorsSyntax))
+            SettingsToggleRow(title: DKLocalized("문법 색"), subtitle: DKLocalized("키워드·문자열·주석에 색을 입힙니다"), isOn: binding(\.colorsSyntax))
         }
         .padding(.top, 8)
         .padding(.bottom, 10)
@@ -31,7 +31,7 @@ struct DisplaySettingsTab: View {
             // Tight trailing gaps leave the subtitle its full width next to a long style name.
             HStack(spacing: 0) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("코드 스타일")
+                    Text(DKLocalized("코드 스타일"))
                         .foregroundStyle(Color(nsColor: .labelColor))
                     Text(display.style.summary)
                         .font(.system(size: 11))
@@ -58,14 +58,14 @@ struct DisplaySettingsTab: View {
         }
         .buttonStyle(.plain)
         .onHover { hoversStyleRow = $0 }
-        .accessibilityLabel("코드 스타일 \(display.style.name)")
-        .accessibilityHint("스타일 목록과 미리보기를 엽니다")
+        .accessibilityLabel(DKFormat("코드 스타일 %1$@", display.style.name))
+        .accessibilityHint(DKLocalized("스타일 목록과 미리보기를 엽니다"))
     }
 
     private var foldRow: some View {
         HStack(spacing: 0) {
             VStack(alignment: .leading, spacing: 2) {
-                Text("긴 코드 접기")
+                Text(DKLocalized("긴 코드 접기"))
                 Text(CodeStylePickerModel.foldSubtitle(display))
                     .font(.system(size: 11))
                     .foregroundStyle(Color(nsColor: .secondaryLabelColor))
@@ -74,7 +74,7 @@ struct DisplaySettingsTab: View {
             Spacer(minLength: 10)
             foldCountMenu
                 .padding(.trailing, 8)
-            Toggle("긴 코드 접기", isOn: binding(\.foldsLongCode))
+            Toggle(DKLocalized("긴 코드 접기"), isOn: binding(\.foldsLongCode))
                 .labelsHidden()
                 .toggleStyle(.switch)
                 .tint(.green)
@@ -112,7 +112,7 @@ struct DisplaySettingsTab: View {
         .overlay(RoundedRectangle(cornerRadius: 5).strokeBorder(Color(red: 0xD1 / 255, green: 0xD1 / 255, blue: 0xD6 / 255)))
         .disabled(!display.foldsLongCode)
         .opacity(display.foldsLongCode ? 1 : 0.5)
-        .accessibilityLabel("접을 때 보이는 줄 \(CodeStylePickerModel.foldChoiceTitle(display.foldLineCount))")
+        .accessibilityLabel(DKFormat("접을 때 보이는 줄 %1$@", CodeStylePickerModel.foldChoiceTitle(display.foldLineCount)))
     }
 
     /// The line count menu's choice; the menu builds its items only while open, so the tests call this.
@@ -186,14 +186,14 @@ struct CodeStylePickerView: View {
 
     private var topBar: some View {
         ZStack {
-            Text("코드 스타일")
+            Text(DKLocalized("코드 스타일"))
                 .font(.system(size: 13, weight: .semibold))
             HStack {
                 Button(action: back) {
                     HStack(spacing: 2) {
                         Image(systemName: "chevron.left")
                             .font(.system(size: 12, weight: .semibold))
-                        Text("표시")
+                        Text(DKLocalized("표시"))
                     }
                     .foregroundStyle(Color(nsColor: .secondaryLabelColor))
                     .padding(.leading, 4)
@@ -203,7 +203,7 @@ struct CodeStylePickerView: View {
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
-                .accessibilityLabel("표시 탭으로 돌아가기")
+                .accessibilityLabel(DKLocalized("표시 탭으로 돌아가기"))
                 Spacer(minLength: 0)
             }
             // Clears the window's traffic lights.
@@ -215,7 +215,7 @@ struct CodeStylePickerView: View {
     private var sidebar: some View {
         VStack(alignment: .leading, spacing: 0) {
             if CodeStylePickerModel.showsSearch(styleCount: styles.count) {
-                TextField("스타일 검색", text: $query)
+                TextField(DKLocalized("스타일 검색"), text: $query)
                     .textFieldStyle(.roundedBorder)
                     .controlSize(.small)
                     .padding(.horizontal, 12)
@@ -244,7 +244,7 @@ struct CodeStylePickerView: View {
                 }
             }
             Rectangle().fill(Color.black.opacity(0.1)).frame(height: 1)
-            Text("↑↓로 바로 바꾸기")
+            Text(DKLocalized("↑↓로 바로 바꾸기"))
                 .font(.system(size: 11))
                 .foregroundStyle(Color(nsColor: .tertiaryLabelColor))
                 .padding(.horizontal, 16)
@@ -301,7 +301,7 @@ struct CodeStylePickerView: View {
                 Image(systemName: "info.circle")
                     .font(.system(size: 12))
                     .foregroundStyle(Color(nsColor: .tertiaryLabelColor))
-                Text("표시 탭의 동작 설정이 반영됨:")
+                Text(DKLocalized("표시 탭의 동작 설정이 반영됨:"))
                     .font(.system(size: 11))
                     .foregroundStyle(Color(nsColor: .secondaryLabelColor))
                 ForEach(CodeStylePickerModel.statusChips(display), id: \.text) { chip in

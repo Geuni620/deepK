@@ -28,9 +28,9 @@ cleanup() {
 trap cleanup EXIT
 trap 'exit 130' INT
 trap 'exit 143' TERM
-swiftc -swift-version 6 -module-cache-path "$TEST_DIR/cache" \
+swiftc "$PROJECT_ROOT/DeepK/Localization.swift" -swift-version 6 -module-cache-path "$TEST_DIR/cache" \
   "$PROJECT_ROOT/DeepKTests/Fixtures/NativeTextHost.swift" -o "$TEST_DIR/deepk-test-host"
-swiftc -swift-version 6 -parse-as-library -module-cache-path "$TEST_DIR/cache" \
+swiftc "$PROJECT_ROOT/DeepK/Localization.swift" -swift-version 6 -parse-as-library -module-cache-path "$TEST_DIR/cache" \
   "$PROJECT_ROOT/DeepK/MacIntegration/InvocationSession.swift" \
   "$PROJECT_ROOT/DeepKTests/Fixtures/InvocationSessionSmoke.swift" -o "$TEST_DIR/session-smoke"
 "$TEST_DIR/deepk-test-host" --verification-fixture &

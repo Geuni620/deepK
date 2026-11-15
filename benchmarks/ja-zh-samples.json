@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Author-written synthetic translation samples; no personal or repository content.",
+  "samples": [
+    {"id":"negation-date", "numbers":["123","2026","11","30"], "literals":[], "text": {
+      "en":"Do not delete the backup. Keep 123 files until 2026-11-30.",
+      "ko":"백업을 삭제하지 마세요. 파일 123개를 2026-11-30까지 보관하세요.",
+      "ja":"バックアップを削除しないでください。123個のファイルを2026-11-30まで保管してください。",
+      "zh-Hant":"請勿刪除備份。請將 123 個檔案保留至 2026-11-30。",
+      "zh-Hans":"请勿删除备份。请将 123 个文件保留至 2026-11-30。"
+    }},
+    {"id":"paragraphs-code", "numbers":[], "literals":["config.json","npm test"], "text": {
+      "en":"Setup\n\nKeep `config.json` unchanged.\nRun `npm test`.",
+      "ko":"설정\n\n`config.json`을 변경하지 마세요.\n`npm test`를 실행하세요.",
+      "ja":"設定\n\n`config.json`を変更しないでください。\n`npm test`を実行してください。",
+      "zh-Hant":"設定\n\n請勿變更 `config.json`。\n請執行 `npm test`。",
+      "zh-Hans":"设置\n\n请勿更改 `config.json`。\n请运行 `npm test`。"
+    }},
+    {"id":"modality-request", "numbers":["2"], "literals":[], "text": {
+      "en":"The update may take 2 minutes. Please try again after it finishes.",
+      "ko":"업데이트에 2분이 걸릴 수 있습니다. 완료된 뒤 다시 시도해 주세요.",
+      "ja":"更新には2分かかる場合があります。完了後にもう一度お試しください。",
+      "zh-Hant":"更新可能需要 2 分鐘。請在完成後再試一次。",
+      "zh-Hans":"更新可能需要 2 分钟。请在完成后重试。"
+    }}
+  ]
+}

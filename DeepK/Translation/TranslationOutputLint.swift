@@ -226,7 +226,10 @@ enum TranslationOutputLint {
         init(source: String, sourceLanguage: String, targetLanguage: String) {
             var candidates: [Candidate] = []
             var allSentences: [Candidate] = []
-            let text = sourceLanguage == targetLanguage ? ""
+            // Shared Han in Japanese/Chinese and script conversion is normal, not an echo.
+            let sharesHan = (sourceLanguage == "ja" || sourceLanguage.hasPrefix("zh"))
+                && (targetLanguage == "ja" || targetLanguage.hasPrefix("zh"))
+            let text = sourceLanguage == targetLanguage || sharesHan ? ""
                 : prose(of: source.replacingOccurrences(of: "(?s)~~~.*?~~~", with: "\n", options: .regularExpression))
             // 원문이 이미 대상 언어로 쓰여 있으면 같은 문장이 남는 것이 정상이다.
             if letterCount(text, language: targetLanguage) * 2 < letterCount(text, language: sourceLanguage) {
@@ -783,6 +786,8 @@ enum TranslationOutputLint {
             switch language {
             case "ko": isHangul(scalar)
             case "en": ("a"..."z").contains(scalar) || ("A"..."Z").contains(scalar)
+            case "ja": isKana(scalar) || isHan(scalar)
+            case "zh", "zh-Hant", "zh-Hans": isHan(scalar)
             default: false
             }
         }.count

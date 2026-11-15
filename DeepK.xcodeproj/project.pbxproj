@@ -86,6 +86,9 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				ko,
+				ja,
+				"zh-Hant",
 				Base,
 			);
 			mainGroup = 5B7F64800000000000000001;

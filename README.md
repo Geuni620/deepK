@@ -3,7 +3,10 @@
 </p>
 
 <h1 align="center">deepK</h1>
-<p align="center"><b>한국어</b> · <a href="README.en.md">English</a></p>
+
+> 개발 중: 텍스트 번역에 일본어·대만 번체·간체 지원을 추가했습니다. 배포된 Homebrew 버전의 기능과 다를 수 있습니다. 기본 대상은 시스템 언어이며 설정에서 바꿀 수 있습니다. 원문이 기본 대상과 같으면 영어로 번역하고, 영어끼리는 대상을 선택하도록 안내합니다. 이미지 OCR 언어 지원은 이번 텍스트 확장과 별개입니다.
+
+<p align="center"><b>한국어</b> · <a href="README.en.md">English</a> · <a href="README.ja.md">日本語</a> · <a href="README.zh-TW.md">繁體中文</a></p>
 <p align="center"><b>읽던 글은 ⌘C 두 번. 글과 이미지를 같은 창에서, 쓰던 AI 구독으로 번역하는 Mac 메뉴 막대 앱입니다.</b></p>
 
 <p align="center">
@@ -198,3 +201,6 @@ deepK 자체 코드와 문서는 [MIT License](LICENSE)를 따릅니다. 이미�
 ## 문제·보안 제보
 
 일반 오류·기능 제안은 [GitHub Issues](https://github.com/Geuni620/deepK/issues), 보안 취약점은 [비공개 취약점 제보](https://github.com/Geuni620/deepK/security/advisories/new)로 보내주세요. 취약점 세부 내용이나 실제 원문·토큰·로그인 파일을 공개 이슈에 올리지 마세요. 제보에 필요한 정보와 대응 범위는 [보안 정책](SECURITY.md)에 있습니다.
+
+
+Claude 텍스트 번역에서 명시적 가능성 표현에 원문에 없는 시간 상한이 추가되면, 같은 모델로 한 번 교정 요청을 할 수 있습니다. 이 경우 구독 사용량과 완료 시간이 늘 수 있으며 재검사에도 실패하면 결과를 오류로 표시합니다. 일반적인 의미 정확성을 보증하는 검사는 아닙니다.

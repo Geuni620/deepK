@@ -26,7 +26,7 @@ final class AppModel: NSObject, NSWindowDelegate {
     /// 선택값과 분리해 두 제공자의 연결·인증 상태를 각각 보존한다.
     var providerStates: [TranslationProvider: ProviderState] = Dictionary(
         uniqueKeysWithValues: TranslationProvider.allCases.map {
-            ($0, .notChecked(message: "연결 확인 전"))
+            ($0, .notChecked(message: DKLocalized("연결 확인 전")))
         }
     )
     var providerModels: [TranslationProvider: [TranslationModelOption]] = [:]
@@ -36,8 +36,8 @@ final class AppModel: NSObject, NSWindowDelegate {
     /// Codex 번역에 Fast(priority) 계층을 쓸지 여부다. 기본은 꺼짐(default 계층)이다.
     var codexFastServiceTier = UserDefaults.standard.bool(forKey: "codexFastServiceTier")
     var requestModelLabel: String?
-    var providerMessages: [TranslationProvider: String] = [.codex: "연결 확인 전", .claude: "연결 확인 전"]
-    var connectionMessage = "번역 연결 확인 중"
+    var providerMessages: [TranslationProvider: String] = [.codex: DKLocalized("연결 확인 전"), .claude: DKLocalized("연결 확인 전")]
+    var connectionMessage = DKLocalized("번역 연결 확인 중")
     var connecting = false
     var showSettings = false
     var feedback = ""
@@ -52,14 +52,14 @@ final class AppModel: NSObject, NSWindowDelegate {
     var inputMonitoringAllowed = CGPreflightListenEventAccess()
     var shortcutMessage = TranslationFooterState.shortcutChecking
     var captureMessage: String?
-    var shortcutDiagnostic = "감시 시작 전"
+    var shortcutDiagnostic = DKLocalized("감시 시작 전")
     var inserting = false
     var elapsedMilliseconds: Int?
     /// 원래 위치에 삽입할 수 없는 이유. 하단 문구가 아니라 복사 버튼의 툴팁이며, 호출이 바뀌면 지운다.
     private(set) var insertionNote: String?
     /// 복사가 성공했다. '복사' 버튼이 누른 자리에서 약 2초 '복사됨'으로 바뀐다(하단 왼쪽 상태 칸은 버튼에서 멀다).
     private(set) var copyConfirmed = false
-    static let copyFailedMessage = "복사하지 못했습니다"
+    static let copyFailedMessage = DKLocalized("복사하지 못했습니다")
 
     /// 지금 안내가 단축키 감시 실패 문구다. 앱이 활성화될 때마다 다시 서므로, 하단은 진행 중·실패한 번역을 이 문구로
     /// 가리지 않는다(`TranslationFooterState.Input.feedbackIsStanding`).
@@ -71,17 +71,17 @@ final class AppModel: NSObject, NSWindowDelegate {
     }
 
     var inputMonitoringStatusText: String {
-        if !shortcutEnabled { return "감시 꺼짐" }
-        if shortcutReady { return "감지 중" }
-        return "감시 연결 안 됨"
+        if !shortcutEnabled { return DKLocalized("감시 꺼짐") }
+        if shortcutReady { return DKLocalized("감지 중") }
+        return DKLocalized("감시 연결 안 됨")
     }
 
     var accessibilityStatusText: String {
-        accessibilityReady ? "연결됨" : "앱 연결 미확인"
+        accessibilityReady ? DKLocalized("연결됨") : DKLocalized("앱 연결 미확인")
     }
 
     var permissionConnectionHelp: String {
-        "현재 앱의 입력 감시가 연결되지 않았습니다. ‘감시 다시 연결’을 눌러 주세요. 권한을 방금 허용했다면 앱을 다시 열어야 할 수 있습니다."
+        DKLocalized("현재 앱의 입력 감시가 연결되지 않았습니다. ‘감시 다시 연결’을 눌러 주세요. 권한을 방금 허용했다면 앱을 다시 열어야 할 수 있습니다.")
     }
 
     var canReconnectShortcut: Bool { shortcutEnabled && !shortcutReady }
@@ -193,8 +193,8 @@ final class AppModel: NSObject, NSWindowDelegate {
                 do {
                     let text = try await backend.translate(
                         text: request.modelInput,
-                        source: request.sourceLanguage.rawValue,
-                        target: request.targetLanguage.rawValue,
+                        source: request.sourceLanguage.promptName,
+                        target: request.targetLanguage.promptName,
                         model: selection.model,
                         fastServiceTier: codexFastServiceTier,
                         inlineMarkup: request.usesInlineMarkup,
@@ -207,7 +207,7 @@ final class AppModel: NSObject, NSWindowDelegate {
                     await MainActor.run {
                         let app = AppModel.shared
                         guard app.store.isActiveRequest(request) else { return }
-                        app.markProviderConnected(.codex, message: "Codex 구독 연결됨")
+                        app.markProviderConnected(.codex, message: DKLocalized("Codex 구독 연결됨"))
                     }
                     return text
                 } catch {
@@ -222,8 +222,8 @@ final class AppModel: NSObject, NSWindowDelegate {
                 do {
                     let text = try await claude.translate(
                         text: request.modelInput,
-                        source: request.sourceLanguage.rawValue,
-                        target: request.targetLanguage.rawValue,
+                        source: request.sourceLanguage.promptName,
+                        target: request.targetLanguage.promptName,
                         model: selection.model,
                         inlineMarkup: request.usesInlineMarkup,
                         onPartialText: { text in
@@ -235,7 +235,7 @@ final class AppModel: NSObject, NSWindowDelegate {
                     await MainActor.run {
                         let app = AppModel.shared
                         guard app.store.isActiveRequest(request) else { return }
-                        app.markProviderConnected(.claude, message: "Claude Code 연결 확인됨")
+                        app.markProviderConnected(.claude, message: DKLocalized("Claude Code 연결 확인됨"))
                     }
                     return text
                 } catch {
@@ -256,7 +256,7 @@ final class AppModel: NSObject, NSWindowDelegate {
             let codex = self.client, claude = self.claudeClient, fast = self.codexFastServiceTier
             return NativeImageTranslator(label: selection.label, provider:selection.provider, run: { [weak self] batch, source, target, partial in
                 guard await self?.imageTranslationAllowed(for:selection.provider) == true else {
-                    throw ImagePOCError.message("선택한 제공자의 연결을 해제했습니다. 설정에서 다시 연결해 주세요.")
+                    throw ImagePOCError.message(DKLocalized("선택한 제공자의 연결을 해제했습니다. 설정에서 다시 연결해 주세요."))
                 }
                 switch selection.provider {
                 case .codex:
@@ -280,10 +280,7 @@ final class AppModel: NSObject, NSWindowDelegate {
             model: initialSelection.model,
             modelLabel: initialSelection.label
         )
-        if let raw = UserDefaults.standard.string(forKey: "translationDirection"),
-           let direction = TranslationDirection(rawValue: raw) {
-            store.setDirection(direction)
-        }
+        store.loadLanguageSettings(from: .standard)
     }
 
     var canInsert: Bool {
@@ -294,8 +291,10 @@ final class AppModel: NSObject, NSWindowDelegate {
     }
 
     /// 연결 여부는 현재 기본 제공자와 무관하게 관찰한다.
+    var providerAwaitingConfirmation: Set<TranslationProvider> = []
+
     func providerState(for provider: TranslationProvider) -> ProviderState {
-        providerStates[provider] ?? .notChecked(message: "연결 확인 전")
+        providerStates[provider] ?? .notChecked(message: DKLocalized("연결 확인 전"))
     }
 
     var selectedProviderState: ProviderState {
@@ -333,7 +332,7 @@ final class AppModel: NSObject, NSWindowDelegate {
     @discardableResult func cancelCopyIfSourceChanged(from sourcePID:pid_t,frontmostPID:pid_t?) -> Bool {
         guard frontmostPID != sourcePID else { return false }
         captureMessage = nil
-        feedback = "호출 중 앱이 바뀌었습니다. 원래 앱에서 다시 복사해 주세요"
+        feedback = DKLocalized("호출 중 앱이 바뀌었습니다. 원래 앱에서 다시 복사해 주세요")
         originalApplication = nil
         invocation?.invalidate()
         invocation = nil
@@ -350,25 +349,25 @@ final class AppModel: NSObject, NSWindowDelegate {
             inputMonitoringAllowed = CGPreflightListenEventAccess()
             switch state.stage {
             case .stopped:
-                shortcutDiagnostic = "감시 중지"
+                shortcutDiagnostic = DKLocalized("감시 중지")
                 captureMessage = nil
-            case .checkingPermission: shortcutDiagnostic = "권한 확인 중"
-            case .creatingEventTap: shortcutDiagnostic = "키 감시 시작 중"
+            case .checkingPermission: shortcutDiagnostic = DKLocalized("권한 확인 중")
+            case .creatingEventTap: shortcutDiagnostic = DKLocalized("키 감시 시작 중")
             case .ready, .eventTapRecovered:
-                shortcutDiagnostic = "단축키 입력 대기"
+                shortcutDiagnostic = DKLocalized("단축키 입력 대기")
                 shortcutMessage = TranslationFooterState.shortcutWatching
                 clearShortcutFailureFeedback()
-            case .firstCopyDetected: shortcutDiagnostic = "첫 번째 복사 감지"
-            case .secondCopyDetected: shortcutDiagnostic = "두 번째 복사 감지"
-            case .waitingForClipboard: shortcutDiagnostic = "클립보드 갱신 확인 중"
-            case .clipboardCaptured: shortcutDiagnostic = "이번 복사 확인 완료"
-            case .recoveringEventTap: shortcutDiagnostic = "키 감시 복구 중"
-            case .failed: shortcutDiagnostic = "감시 또는 복사 확인 실패"
+            case .firstCopyDetected: shortcutDiagnostic = DKLocalized("첫 번째 복사 감지")
+            case .secondCopyDetected: shortcutDiagnostic = DKLocalized("두 번째 복사 감지")
+            case .waitingForClipboard: shortcutDiagnostic = DKLocalized("클립보드 갱신 확인 중")
+            case .clipboardCaptured: shortcutDiagnostic = DKLocalized("이번 복사 확인 완료")
+            case .recoveringEventTap: shortcutDiagnostic = DKLocalized("키 감시 복구 중")
+            case .failed: shortcutDiagnostic = DKLocalized("감시 또는 복사 확인 실패")
             case .gestureReset:
-                shortcutDiagnostic = "입력 간격 또는 앱 변경으로 호출 취소"
+                shortcutDiagnostic = DKLocalized("입력 간격 또는 앱 변경으로 호출 취소")
                 if captureMessage != nil {
                     captureMessage = nil
-                    feedback = "호출이 취소됐습니다. 원래 앱에서 다시 복사해 주세요"
+                    feedback = DKLocalized("호출이 취소됐습니다. 원래 앱에서 다시 복사해 주세요")
                     originalApplication = nil
                     invocation?.invalidate()
                     invocation = nil
@@ -390,7 +389,7 @@ final class AppModel: NSObject, NSWindowDelegate {
             // 첫 번째 ⌘C는 모든 앱의 복사라 쓰지 않고, 호출이 확정된 두 번째 ⌘C부터 준비한다.
             hintCodex()
             hintClaude(.capture)
-            captureMessage = "복사한 텍스트를 확인하는 중…"
+            captureMessage = DKLocalized("복사한 텍스트를 확인하는 중…")
             showWindow(activate: false, nearPointer: true)
         }
         monitor.onCopiedText = { [weak self] plain, html, sourcePID, uptime in
@@ -423,12 +422,12 @@ final class AppModel: NSObject, NSWindowDelegate {
             switch InvocationSession.capture() {
             case .success(let session):
                 invocation = session
-                if !session.isEditable { insertionNote = "읽기 전용 위치입니다. 복사를 사용하세요" }
+                if !session.isEditable { insertionNote = DKLocalized("읽기 전용 위치입니다. 복사를 사용하세요") }
             case .failure(.accessibilityPermissionDenied):
                 accessibilityReady = AXIsProcessTrusted()
-                insertionNote = "원래 위치에 삽입하기 위한 손쉬운 사용 연결을 확인하지 못했습니다. 복사는 사용할 수 있습니다"
+                insertionNote = DKLocalized("원래 위치에 삽입하기 위한 손쉬운 사용 연결을 확인하지 못했습니다. 복사는 사용할 수 있습니다")
             case .failure:
-                insertionNote = "원래 입력 위치를 확인하지 못했습니다. 복사를 사용하세요"
+                insertionNote = DKLocalized("원래 입력 위치를 확인하지 못했습니다. 복사를 사용하세요")
             }
             requestStarted = uptime
             // Show the translation without deactivating the app the user is reading.
@@ -448,24 +447,24 @@ final class AppModel: NSObject, NSWindowDelegate {
             #endif
             switch failure {
             case .inputMonitoringPermissionRequired:
-                feedback = "현재 앱의 키 입력 감시가 연결되지 않았습니다. 이미 허용했다면 앱을 다시 열어 주세요"
+                feedback = DKLocalized("현재 앱의 키 입력 감시가 연결되지 않았습니다. 이미 허용했다면 앱을 다시 열어 주세요")
                 shortcutFailureFeedback = feedback
-                shortcutMessage = "단축키 감시 연결 안 됨"
+                shortcutMessage = DKLocalized("단축키 감시 연결 안 됨")
             case .clipboardTextUnavailable, .clipboardNotUpdated, .clipboardTextEmpty, .clipboardNonText, .clipboardConcealed:
                 pendingCopy = nil
                 store.editSource("", isComposing: false)
                 switch failure {
-                case .clipboardNotUpdated: feedback = "복사한 내용이 갱신되지 않았습니다. 텍스트를 선택해 다시 복사해 주세요"
-                case .clipboardTextEmpty: feedback = "복사한 텍스트가 비어 있습니다. 번역할 문장을 선택해 주세요"
-                case .clipboardNonText: feedback = "이미지·파일은 번역하지 않습니다. 텍스트를 선택해 주세요"
-                case .clipboardConcealed: feedback = "비밀번호 등 민감한 항목으로 표시된 복사는 번역하지 않습니다"
-                default: feedback = "이번에 복사한 텍스트를 확인할 수 없습니다"
+                case .clipboardNotUpdated: feedback = DKLocalized("복사한 내용이 갱신되지 않았습니다. 텍스트를 선택해 다시 복사해 주세요")
+                case .clipboardTextEmpty: feedback = DKLocalized("복사한 텍스트가 비어 있습니다. 번역할 문장을 선택해 주세요")
+                case .clipboardNonText: feedback = DKLocalized("이미지·파일은 번역하지 않습니다. 텍스트를 선택해 주세요")
+                case .clipboardConcealed: feedback = DKLocalized("비밀번호 등 민감한 항목으로 표시된 복사는 번역하지 않습니다")
+                default: feedback = DKLocalized("이번에 복사한 텍스트를 확인할 수 없습니다")
                 }
                 showWindow()
             default:
-                feedback = "단축키를 시작하지 못했습니다. 설정에서 다시 시도해 주세요"
+                feedback = DKLocalized("단축키를 시작하지 못했습니다. 설정에서 다시 시도해 주세요")
                 shortcutFailureFeedback = feedback
-                shortcutMessage = "단축키 감시 시작 실패"
+                shortcutMessage = DKLocalized("단축키 감시 시작 실패")
             }
             updateShortcutMenu()
         }
@@ -507,7 +506,7 @@ final class AppModel: NSObject, NSWindowDelegate {
     private func invalidateProviderOperation(_ provider: TranslationProvider) {
         _ = beginProviderOperation(provider)
         if providerState(for: provider).isConnecting {
-            setProviderState(.notChecked(message: "연결 확인 전"), for: provider)
+            setProviderState(.notChecked(message: DKLocalized("연결 확인 전")), for: provider)
         }
     }
 
@@ -585,19 +584,19 @@ final class AppModel: NSObject, NSWindowDelegate {
             }
             switch error {
             case let .processStartFailed(message):
-                return .cliMissing(message: "Codex CLI를 찾거나 시작하지 못했습니다: \(message)")
+                return .cliMissing(message: DKFormat("Codex CLI를 찾거나 시작하지 못했습니다: %1$@", message))
             case .executableNotFound:
-                return .cliMissing(message: "Codex CLI를 찾지 못했습니다")
+                return .cliMissing(message: DKLocalized("Codex CLI를 찾지 못했습니다"))
             case let .executableUnsupported(details):
-                return .cliMissing(message: "Codex \(CodexTranslationClient.minimumCodexVersion) 이상이 필요합니다: \(details)")
+                return .cliMissing(message: DKFormat("Codex %1$@ 이상이 필요합니다: %2$@", CodexTranslationClient.minimumCodexVersion, details))
             case let .configuredExecutableInvalid(details):
-                return .cliMissing(message: "지정한 Codex 경로를 실행할 수 없습니다: \(details)")
+                return .cliMissing(message: DKFormat("지정한 Codex 경로를 실행할 수 없습니다: %1$@", details))
             case .notAuthenticated:
-                return .authenticationRequired(message: "Codex ChatGPT 구독 로그인이 필요합니다")
+                return .authenticationRequired(message: DKLocalized("Codex ChatGPT 구독 로그인이 필요합니다"))
             case let .unsupportedAccountType(type):
-                return .authenticationRequired(message: "ChatGPT 구독 계정으로 로그인해 주세요 (현재 계정: \(type))")
+                return .authenticationRequired(message: DKFormat("ChatGPT 구독 계정으로 로그인해 주세요 (현재 계정: %1$@)", type))
             case let .modelUnavailable(model):
-                return .failure(message: "선택한 Codex 모델을 사용할 수 없습니다: \(model)")
+                return .failure(message: DKFormat("선택한 Codex 모델을 사용할 수 없습니다: %1$@", model))
             default:
                 return .failure(message: error.localizedDescription)
             }
@@ -607,11 +606,13 @@ final class AppModel: NSObject, NSWindowDelegate {
             }
             switch error {
             case let .cliUnavailable(message), let .processStartFailed(message):
-                return .cliMissing(message: "Claude Code CLI를 찾거나 시작하지 못했습니다: \(message)")
+                return .cliMissing(message: DKFormat("Claude Code CLI를 찾거나 시작하지 못했습니다: %1$@", message))
             case let .authenticationRequired(message):
                 return .authenticationRequired(message: message)
             case let .modelUnavailable(model):
-                return .failure(message: "선택한 Claude Code 모델을 사용할 수 없습니다: \(model)")
+                return .failure(message: DKFormat("선택한 Claude Code 모델을 사용할 수 없습니다: %1$@", model))
+            case .unverifiedTimeBound:
+                return .failure(message: DKLocalized("원문에 없는 시간 상한이 번역에 추가됐습니다. 다시 번역하거나 다른 제공자를 선택해 주세요."))
             default:
                 return .failure(message: error.localizedDescription)
             }
@@ -689,6 +690,7 @@ final class AppModel: NSObject, NSWindowDelegate {
     /// 설정의 "연결 확인"처럼 사용자가 명시적으로 누른 확인이다. 앱 활성화·설정 열기 같은
     /// 자동 확인과 달리 Claude의 stream 비활성화와 대기 프로세스 backoff도 초기화한다.
     func connectProvider(_ provider: TranslationProvider) async {
+        providerAwaitingConfirmation.remove(provider)
         if provider == .claude, !providerState(for: provider).isConnecting {
             await claudeClient.resetStreamingRecovery()
         }
@@ -706,7 +708,7 @@ final class AppModel: NSObject, NSWindowDelegate {
         let preserveSelectedEngine = provider == selectedProvider
             && currentState.isConnected
             && store.engineReady
-        setProviderState(.connecting(message: "\(provider.title) 연결 확인 중"), for: provider)
+        setProviderState(.connecting(message: DKFormat("%1$@ 연결 확인 중", provider.title)), for: provider)
         if provider == selectedProvider, !preserveSelectedEngine {
             connecting = true
             connectionMessage = providerState(for: provider).message
@@ -734,7 +736,7 @@ final class AppModel: NSObject, NSWindowDelegate {
                     TranslationModelOption(id: $0.id, model: $0.model, displayName: $0.displayName)
                 }
                 if let account = await client.currentAccount {
-                    providerAccountLabels[.codex] = account.email ?? account.planType ?? "ChatGPT 구독"
+                    providerAccountLabels[.codex] = account.email ?? account.planType ?? DKLocalized("ChatGPT 구독")
                 }
             case .claude:
                 try await claudeClient.connect(forceRefresh: true)
@@ -750,7 +752,7 @@ final class AppModel: NSObject, NSWindowDelegate {
 
             guard isCurrentProviderOperation(provider, generation: generation) else { return }
             setProviderState(
-                .connected(message: provider == .codex ? "Codex 구독 연결됨" : "Claude Code 연결됨"),
+                .connected(message: provider == .codex ? DKLocalized("Codex 구독 연결됨") : DKLocalized("Claude Code 연결됨")),
                 for: provider
             )
             // 연결 중에 사용자가 기본 제공자·모델을 바꿨을 수 있다.
@@ -762,7 +764,7 @@ final class AppModel: NSObject, NSWindowDelegate {
                 if isSelectedModelAvailable {
                     flushPendingCopyIfReady(provider: provider, model: selectedModel)
                 } else {
-                    connectionMessage = "계정은 연결됐습니다. 사용 가능한 모델을 선택해 주세요"
+                    connectionMessage = DKLocalized("계정은 연결됐습니다. 사용 가능한 모델을 선택해 주세요")
                 }
             }
         } catch {
@@ -808,18 +810,20 @@ final class AppModel: NSObject, NSWindowDelegate {
     /// Codex는 공식 브라우저 로그인을 시작하고, Claude는 CLI가 제공하는
     /// 로그인 경로를 안내한다. 두 경우 모두 로그인 뒤 별도의 연결 확인이 필요하다.
     func loginProvider(_ provider: TranslationProvider) async {
+        providerAwaitingConfirmation.remove(provider)
         guard !providerState(for: provider).isConnecting else { return }
         disconnectedByUser.remove(provider)
         let generation = beginProviderOperation(provider)
-        setProviderState(.connecting(message: "로그인 준비 중…"), for: provider)
+        setProviderState(.connecting(message: DKLocalized("로그인 준비 중…")), for: provider)
         switch provider {
         case .codex:
             do {
                 let login = try await client.startChatGPTLogin()
                 guard isCurrentProviderOperation(provider, generation: generation) else { return }
                 NSWorkspace.shared.open(login.authURL)
+                providerAwaitingConfirmation.insert(provider)
                 setProviderState(
-                    .authenticationRequired(message: "브라우저에서 로그인한 뒤 연결 확인을 눌러 주세요"),
+                    .authenticationRequired(message: DKLocalized("브라우저에서 로그인한 뒤 연결 확인을 눌러 주세요")),
                     for: provider
                 )
             } catch {
@@ -828,8 +832,9 @@ final class AppModel: NSObject, NSWindowDelegate {
             }
         case .claude:
             guard isCurrentProviderOperation(provider, generation: generation) else { return }
+            providerAwaitingConfirmation.insert(provider)
             setProviderState(
-                .authenticationRequired(message: "Claude Code CLI에서 구독 계정으로 로그인한 뒤 연결 확인을 눌러 주세요"),
+                .authenticationRequired(message: DKLocalized("Claude Code CLI에서 구독 계정으로 로그인한 뒤 연결 확인을 눌러 주세요")),
                 for: provider
             )
         }
@@ -840,13 +845,14 @@ final class AppModel: NSObject, NSWindowDelegate {
     }
 
     func disconnectProvider(_ provider: TranslationProvider) async {
+        providerAwaitingConfirmation.remove(provider)
         guard !providerState(for: provider).isConnecting else { return }
         disconnectedByUser.insert(provider)
         #if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
         imageInput.providerDisconnected(provider)
         #endif
         let generation = beginProviderOperation(provider)
-        setProviderState(.connecting(message: "연결 해제 중…"), for: provider)
+        setProviderState(.connecting(message: DKLocalized("연결 해제 중…")), for: provider)
         let isSelected = provider == selectedProvider
         if isSelected {
             connecting = false
@@ -859,7 +865,7 @@ final class AppModel: NSObject, NSWindowDelegate {
         }
         guard isCurrentProviderOperation(provider, generation: generation) else { return }
         setProviderState(
-            .notChecked(message: "연결 해제됨 — 구독 로그인은 유지됩니다"),
+            .notChecked(message: DKLocalized("연결 해제됨 — 구독 로그인은 유지됩니다")),
             for: provider
         )
     }
@@ -871,17 +877,18 @@ final class AppModel: NSObject, NSWindowDelegate {
     /// 로그아웃은 호출부의 확인창을 통과한 명시적 동작에서만 사용한다.
     /// Claude는 어댑터가 실제 로그아웃을 지원하지 않으므로 사용자 설정을 바꾸지 않는다.
     func logoutProvider(_ provider: TranslationProvider) async {
+        providerAwaitingConfirmation.remove(provider)
         guard !providerState(for: provider).isConnecting else { return }
         let generation = beginProviderOperation(provider)
         guard provider == .codex else {
             setProviderState(
-                .failure(message: "Claude Code 로그아웃은 CLI에서 직접 관리해 주세요"),
+                .failure(message: DKLocalized("Claude Code 로그아웃은 CLI에서 직접 관리해 주세요")),
                 for: provider
             )
             return
         }
         disconnectedByUser.insert(provider)
-        setProviderState(.connecting(message: "로그아웃 중…"), for: provider)
+        setProviderState(.connecting(message: DKLocalized("로그아웃 중…")), for: provider)
         #if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
         imageInput.providerDisconnected(provider)
         #endif
@@ -897,7 +904,7 @@ final class AppModel: NSObject, NSWindowDelegate {
             providerModels[.codex] = []
             providerAccountLabels[.codex] = nil
             setProviderState(
-                .authenticationRequired(message: "ChatGPT 구독 로그인이 필요합니다"),
+                .authenticationRequired(message: DKLocalized("ChatGPT 구독 로그인이 필요합니다")),
                 for: provider
             )
         } catch {
@@ -1049,7 +1056,7 @@ final class AppModel: NSObject, NSWindowDelegate {
             echoRetries.count += 1
             let elapsed = requestStarted.map { Int((ProcessInfo.processInfo.systemUptime - $0) * 1_000) } ?? -1
             Self.latencyLog.notice("output echo retry \(elapsed, privacy: .public) ms early=\(early, privacy: .public) unit=\(unit, privacy: .public) provider=\(provider, privacy: .public) coverage=\(coverage, privacy: .public) candidates=\(report.candidates, privacy: .public)")
-            announce("원문이 그대로 나와 다시 번역합니다", priority: .medium)
+            announce(DKLocalized("원문이 그대로 나와 다시 번역합니다"), priority: .medium)
             return
         }
         let rules = report.rules.isEmpty ? "none" : report.rules.joined(separator: ",")
@@ -1057,7 +1064,7 @@ final class AppModel: NSObject, NSWindowDelegate {
         let code = "\(report.codeKept):\(report.codeRestored):\(report.codeRefenced):\(report.codeInserted)"
         Self.latencyLog.notice("output check \(report.outcome.rawValue, privacy: .public) attempt=\(report.attempt, privacy: .public) unit=\(unit, privacy: .public) provider=\(provider, privacy: .public) rules=\(rules, privacy: .public) coverage=\(coverage, privacy: .public) candidates=\(report.candidates, privacy: .public) hanja=\(report.hanjaReplaced, privacy: .public) unreadable=\(report.hanjaUnreadable, privacy: .public) kept=\(report.hanjaKept, privacy: .public) incode=\(report.hanjaInCode, privacy: .public) preamble=\(preamble, privacy: .public) code=\(code, privacy: .public)")
         if report.outcome == .unresolvedEcho {
-            announce("번역 결과에 원문이 그대로 남아 있을 수 있습니다", priority: .high)
+            announce(DKLocalized("번역 결과에 원문이 그대로 남아 있을 수 있습니다"), priority: .high)
         }
     }
 
@@ -1114,11 +1121,11 @@ final class AppModel: NSObject, NSWindowDelegate {
         inserting = true
         defer { inserting = false }
         guard case .success = await session.restoreFocus() else {
-            feedback = "원래 입력 위치를 확인할 수 없습니다. 복사를 사용해 주세요"
+            feedback = DKLocalized("원래 입력 위치를 확인할 수 없습니다. 복사를 사용해 주세요")
             return
         }
         guard generation == invocationGeneration, store.canInsert, store.result?.id == resultID, invocation?.id == session.id else {
-            feedback = "결과가 변경되어 삽입을 중단했습니다"
+            feedback = DKLocalized("결과가 변경되어 삽입을 중단했습니다")
             return
         }
         let insertionResult: Result<VerifiedInsertionReceipt, InvocationSessionError>
@@ -1131,9 +1138,9 @@ final class AppModel: NSObject, NSWindowDelegate {
         switch insertionResult {
         case .success:
             window?.orderOut(nil)
-            showBriefly("삽입됨")
+            showBriefly(DKLocalized("삽입됨"))
         case .failure:
-            feedback = "삽입을 확인하지 못했습니다. 원래 내용을 확인해 주세요"
+            feedback = DKLocalized("삽입을 확인하지 못했습니다. 원래 내용을 확인해 주세요")
         }
     }
 
@@ -1255,7 +1262,7 @@ final class AppModel: NSObject, NSWindowDelegate {
         let wasReady = shortcutReady
         shortcutReady = monitor.verifyReadiness()
         if wasReady && !shortcutReady {
-            shortcutMessage = shortcutEnabled ? "단축키 감시 연결 확인 필요" : TranslationFooterState.shortcutDisabled
+            shortcutMessage = shortcutEnabled ? DKLocalized("단축키 감시 연결 확인 필요") : TranslationFooterState.shortcutDisabled
             updateShortcutMenu()
         }
     }
@@ -1285,8 +1292,8 @@ final class AppModel: NSObject, NSWindowDelegate {
         restartShortcut()
         guard shortcutEnabled else { return }
         shortcutRecoveryMessage = shortcutReady
-            ? "입력 감시가 연결됐습니다. 다른 앱에서 ⌘C를 두 번 눌러 확인해 주세요."
-            : "입력 감시를 연결하지 못했습니다. 현재 앱의 권한을 확인하고, 이미 허용했다면 앱을 다시 열어 주세요."
+            ? DKLocalized("입력 감시가 연결됐습니다. 다른 앱에서 ⌘C를 두 번 눌러 확인해 주세요.")
+            : DKLocalized("입력 감시를 연결하지 못했습니다. 현재 앱의 권한을 확인하고, 이미 허용했다면 앱을 다시 열어 주세요.")
     }
 
     private func clearShortcutFailureFeedback() {
@@ -1353,10 +1360,10 @@ final class AppModel: NSObject, NSWindowDelegate {
 
     func confirmShortcutRelaunch() {
         let alert = NSAlert()
-        alert.messageText = "\(AppIdentity.displayName)를 다시 여시겠어요?"
-        alert.informativeText = "권한을 허용한 뒤에도 입력 감시가 연결되지 않으면 재실행이 필요할 수 있습니다. 현재 번역 창의 내용은 유지되지 않습니다."
-        alert.addButton(withTitle: "다시 열기")
-        alert.addButton(withTitle: "나중에")
+        alert.messageText = DKFormat("%1$@를 다시 여시겠어요?", AppIdentity.displayName)
+        alert.informativeText = DKLocalized("권한을 허용한 뒤에도 입력 감시가 연결되지 않으면 재실행이 필요할 수 있습니다. 현재 번역 창의 내용은 유지되지 않습니다.")
+        alert.addButton(withTitle: DKLocalized("다시 열기"))
+        alert.addButton(withTitle: DKLocalized("나중에"))
         NSApp.activate(ignoringOtherApps: true)
         if alert.runModal() == .alertFirstButtonReturn { relaunch() }
     }
@@ -1374,7 +1381,7 @@ final class AppModel: NSObject, NSWindowDelegate {
         do {
             try process.run()
         } catch {
-            feedback = "deepK를 다시 열지 못했습니다. 직접 다시 열어 주세요"
+            feedback = DKLocalized("deepK를 다시 열지 못했습니다. 직접 다시 열어 주세요")
             return
         }
         NSApp.terminate(nil)
@@ -1480,7 +1487,7 @@ final class AppModel: NSObject, NSWindowDelegate {
         store.editSource("", isComposing: false)
         imageInput.clear(preserveScanner:preserveScanner); imageInput.isImporting = true; imageInput.busy = true; imageInput.selectionText = plain
         imageInput.stage = .importing
-        imageInput.status = "선택한 이미지 불러오는 중…"
+        imageInput.status = DKLocalized("선택한 이미지 불러오는 중…")
         if present { showWindow(activate: false) }
         if expand, let window, window.frame.width < 720 {
             var frame = window.frame
@@ -1538,9 +1545,9 @@ final class AppModel: NSObject, NSWindowDelegate {
         let status = NSMenuItem(title: shortcutMessage, action: #selector(openSettings), keyEquivalent: "")
         status.target = self
         menu.addItem(status)
-        let sizeItem = NSMenuItem(title: "창 크기", action: nil, keyEquivalent: "")
-        let sizeMenu = NSMenu(title: "창 크기")
-        for (title, action) in [("작게 · 420×296", #selector(showSmallWindow)), ("크게 · 880×600", #selector(showLargeWindow))] {
+        let sizeItem = NSMenuItem(title: DKLocalized("창 크기"), action: nil, keyEquivalent: "")
+        let sizeMenu = NSMenu(title: DKLocalized("창 크기"))
+        for (title, action) in [(DKLocalized("작게 · 420×296"), #selector(showSmallWindow)), (DKLocalized("크게 · 880×600"), #selector(showLargeWindow))] {
             let option = NSMenuItem(title: title, action: action, keyEquivalent: "")
             option.target = self
             sizeMenu.addItem(option)
@@ -1550,7 +1557,7 @@ final class AppModel: NSObject, NSWindowDelegate {
 
         menu.addItem(.separator())
         shortcutMenuItem = status
-        for (title, action) in [("\(AppIdentity.displayName) 열기", #selector(openFromMenu)), ("설정", #selector(openSettings)), ("종료", #selector(quit))] {
+        for (title, action) in [(DKFormat("%1$@ 열기", AppIdentity.displayName), #selector(openFromMenu)), (DKLocalized("설정"), #selector(openSettings)), (DKLocalized("종료"), #selector(quit))] {
             let menuItem = NSMenuItem(title: title, action: action, keyEquivalent: "")
             menuItem.target = self
             menu.addItem(menuItem)
@@ -1576,7 +1583,7 @@ final class AppModel: NSObject, NSWindowDelegate {
             // 번역 탭은 Codex에서 다섯 행(제공자 둘·모델·Fast·복사 형식)이라 그 높이에 맞춘다.
             let settings = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 340, height: 376),
                                     styleMask: [.titled, .closable, .fullSizeContentView], backing: .buffered, defer: false)
-            settings.title = "\(AppIdentity.displayName) 설정"
+            settings.title = DKFormat("%1$@ 설정", AppIdentity.displayName)
             settings.titleVisibility = .hidden
             settings.titlebarAppearsTransparent = true
             settings.isMovableByWindowBackground = true

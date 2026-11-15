@@ -279,8 +279,8 @@ extension ResultStyle {
     /// E · macOS Native (eK0C3), the default. The card is a tint, so it stays darker than any window background.
     static let native = ResultStyle(
         id: .native, name: "macOS Native",
-        summary: "시스템 카드 · 시스템 칩 · 파란 링크",
-        detail: "시스템 카드 + 언어·줄 수 머리줄 · 시스템 칩 · 파란 링크",
+        summary: DKLocalized("시스템 카드 · 시스템 칩 · 파란 링크"),
+        detail: DKLocalized("시스템 카드 + 언어·줄 수 머리줄 · 시스템 칩 · 파란 링크"),
         // The design shows Native code only folded, above its footer; an unfolded block keeps 10 below its last line.
         box: Box(
             // Composites to the design's #F2F2F7 over white.
@@ -317,8 +317,8 @@ extension ResultStyle {
     /// B · GitHub (Ubex8), Primer light and dark.
     static let github = ResultStyle(
         id: .github, name: "GitHub",
-        summary: "테두리 카드 · 회색 칩 · 파란 링크",
-        detail: "테두리 카드 + 언어·복사 머리줄 · 회색 칩 · 파란 링크",
+        summary: DKLocalized("테두리 카드 · 회색 칩 · 파란 링크"),
+        detail: DKLocalized("테두리 카드 + 언어·복사 머리줄 · 회색 칩 · 파란 링크"),
         box: Box(
             fill: .hex(0xF6F8FA, dark: 0x151B23), border: Stroke(color: .hex(0xD0D7DE, dark: 0x3D444D)),
             radius: 6, insets: Insets(left: 16, right: 16), bodyTop: 14, bodyBottom: 17
@@ -380,7 +380,7 @@ enum CodeLanguageName {
         return title == name.lowercased() || title == tag?.lowercased() ? nil : name
     }
 
-    static func lineCountText(_ count: Int) -> String { "\(count)줄" }
+    static func lineCountText(_ count: Int) -> String { DKFormat("%1$@줄", count) }
 
     private static let names: [String: String] = [
         "bash": "Bash", "sh": "Shell", "shell": "Shell", "zsh": "Zsh", "fish": "Fish",

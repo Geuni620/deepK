@@ -109,33 +109,33 @@ final class DeepKApplicationDelegate: NSObject, NSApplicationDelegate {
         let applicationItem = NSMenuItem()
         let applicationMenu = NSMenu()
         applicationItem.submenu = applicationMenu
-        let settings = NSMenuItem(title: "설정…", action: #selector(AppModel.openSettings), keyEquivalent: ",")
+        let settings = NSMenuItem(title: DKLocalized("설정…"), action: #selector(AppModel.openSettings), keyEquivalent: ",")
         settings.target = AppModel.shared
         applicationMenu.addItem(settings)
         #if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
-        let richPOC = NSMenuItem(title: "번역창 열기", action: #selector(ImagePOCIntegration.show), keyEquivalent: "")
+        let richPOC = NSMenuItem(title: DKLocalized("번역창 열기"), action: #selector(ImagePOCIntegration.show), keyEquivalent: "")
         richPOC.target = ImagePOCIntegration.shared
         applicationMenu.addItem(richPOC)
-        let scan = NSMenuItem(title: "화면 영역 번역…", action: #selector(ImagePOCIntegration.scan), keyEquivalent: "")
+        let scan = NSMenuItem(title: DKLocalized("화면 영역 번역…"), action: #selector(ImagePOCIntegration.scan), keyEquivalent: "")
         scan.target = ImagePOCIntegration.shared
         applicationMenu.addItem(scan)
         #endif
         applicationMenu.addItem(.separator())
-        applicationMenu.addItem(NSMenuItem(title: "\(AppIdentity.displayName) 종료", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
+        applicationMenu.addItem(NSMenuItem(title: DKFormat("%1$@ 종료", AppIdentity.displayName), action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
         main.addItem(applicationItem)
 
         let fileItem = NSMenuItem()
-        let fileMenu = NSMenu(title: "파일")
+        let fileMenu = NSMenu(title: DKLocalized("파일"))
         fileItem.submenu = fileMenu
-        let closeWindow = NSMenuItem(title: "창 닫기", action: #selector(NSWindow.performClose(_:)), keyEquivalent: "w")
+        let closeWindow = NSMenuItem(title: DKLocalized("창 닫기"), action: #selector(NSWindow.performClose(_:)), keyEquivalent: "w")
         closeWindow.keyEquivalentModifierMask = .command
         fileMenu.addItem(closeWindow)
         main.addItem(fileItem)
 
         let viewItem = NSMenuItem()
-        let viewMenu = NSMenu(title: "보기")
+        let viewMenu = NSMenu(title: DKLocalized("보기"))
         viewItem.submenu = viewMenu
-        let size = NSMenuItem(title: "창 크기 전환", action: #selector(AppModel.toggleWindowSize), keyEquivalent: "e")
+        let size = NSMenuItem(title: DKLocalized("창 크기 전환"), action: #selector(AppModel.toggleWindowSize), keyEquivalent: "e")
         size.keyEquivalentModifierMask = [.command, .shift]
         size.target = AppModel.shared
         viewMenu.addItem(size)
@@ -143,14 +143,14 @@ final class DeepKApplicationDelegate: NSObject, NSApplicationDelegate {
 
 
         let editItem = NSMenuItem()
-        let edit = NSMenu(title: "편집")
+        let edit = NSMenu(title: DKLocalized("편집"))
         editItem.submenu = edit
         for (title, action, key) in [
-            ("실행 취소", NSSelectorFromString("undo:"), "z"),
-            ("잘라내기", #selector(NSText.cut(_:)), "x"),
-            ("복사", #selector(NSText.copy(_:)), "c"),
-            ("붙여넣기", #selector(NSText.paste(_:)), "v"),
-            ("전체 선택", #selector(NSText.selectAll(_:)), "a")
+            (DKLocalized("실행 취소"), NSSelectorFromString("undo:"), "z"),
+            (DKLocalized("잘라내기"), #selector(NSText.cut(_:)), "x"),
+            (DKLocalized("복사"), #selector(NSText.copy(_:)), "c"),
+            (DKLocalized("붙여넣기"), #selector(NSText.paste(_:)), "v"),
+            (DKLocalized("전체 선택"), #selector(NSText.selectAll(_:)), "a")
         ] {
             #if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
             if key == "v" {

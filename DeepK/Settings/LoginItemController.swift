@@ -43,15 +43,15 @@ public final class LoginItemController {
     public var statusText: String {
         switch status {
         case .disabled:
-            return "로그인 시 자동 실행 꺼짐"
+            return DKLocalized("로그인 시 자동 실행 꺼짐")
         case .enabled:
-            return "로그인 시 자동 실행 켜짐"
+            return DKLocalized("로그인 시 자동 실행 켜짐")
         case .requiresApproval:
-            return "시스템 설정에서 승인 필요"
+            return DKLocalized("시스템 설정에서 승인 필요")
         case .notFound:
-            return "로그인 항목을 찾을 수 없음"
+            return DKLocalized("로그인 항목을 찾을 수 없음")
         case .failure:
-            return error.map { "자동 실행 설정 실패: \($0)" } ?? "자동 실행 설정 실패"
+            return error.map { DKFormat("자동 실행 설정 실패: %1$@", $0) } ?? "자동 실행 설정 실패"
         }
     }
 

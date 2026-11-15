@@ -71,7 +71,7 @@ struct SourceEditor: NSViewRepresentable {
         editor.font = .systemFont(ofSize: fontSize)
         editor.textColor = .labelColor
         editor.drawsBackground = false
-        editor.setAccessibilityLabel("번역할 원문")
+        editor.setAccessibilityLabel(DKLocalized("번역할 원문"))
         scroll.documentView = editor
         return scroll
     }
@@ -615,7 +615,7 @@ private extension NSAttributedString.Key {
     }
 
     func makeMenuItem() -> NSMenuItem {
-        let item = NSMenuItem(title: "끝에 구분선 넣기", action: #selector(appendBoundary(_:)), keyEquivalent: "\r")
+        let item = NSMenuItem(title: DKLocalized("끝에 구분선 넣기"), action: #selector(appendBoundary(_:)), keyEquivalent: "\r")
         item.keyEquivalentModifierMask = .command
         item.target = self
         return item

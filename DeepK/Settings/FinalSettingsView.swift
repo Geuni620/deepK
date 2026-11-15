@@ -12,9 +12,9 @@ struct FinalSettingsView: View {
 
         var title: String {
             switch self {
-            case .general: "일반"
-            case .translation: "번역"
-            case .display: "표시"
+            case .general: DKLocalized("일반")
+            case .translation: DKLocalized("번역")
+            case .display: DKLocalized("표시")
             }
         }
     }
@@ -68,33 +68,33 @@ struct FinalSettingsView: View {
             }
         }
         .confirmationDialog(
-            "Codex에서 로그아웃하시겠어요?",
+            DKLocalized("Codex에서 로그아웃하시겠어요?"),
             isPresented: $confirmCodexLogout,
             titleVisibility: .visible
         ) {
-            Button("Codex 로그아웃", role: .destructive) {
+            Button(DKLocalized("Codex 로그아웃"), role: .destructive) {
                 runProviderAction { await app.logoutProvider(.codex) }
             }
-            Button("취소", role: .cancel) {}
+            Button(DKLocalized("취소"), role: .cancel) {}
         } message: {
-            Text("공유 Codex 로그인도 해제됩니다. 다른 Codex 앱에서 다시 로그인해야 할 수 있습니다. deepK만 끊으려면 연결 해제를 사용하세요.")
+            Text(DKLocalized("공유 Codex 로그인도 해제됩니다. 다른 Codex 앱에서 다시 로그인해야 할 수 있습니다. deepK만 끊으려면 연결 해제를 사용하세요."))
         }
         .alert(item: $installInstructionsProvider) { provider in
             if provider == .codex {
                 // 설치나 경로 지정 뒤 바로 다시 탐색할 수 있게 한다.
                 Alert(
-                    title: Text("\(provider.title) 설치 방법"),
+                    title: Text(DKFormat("%1$@ 설치 방법", provider.title)),
                     message: Text(installInstructions(for: provider)),
-                    primaryButton: .default(Text("연결 확인")) {
+                    primaryButton: .default(Text(DKLocalized("연결 확인"))) {
                         runProviderAction { await app.connectProvider(provider) }
                     },
-                    secondaryButton: .cancel(Text("닫기"))
+                    secondaryButton: .cancel(Text(DKLocalized("닫기")))
                 )
             } else {
                 Alert(
-                    title: Text("\(provider.title) 설치 방법"),
+                    title: Text(DKFormat("%1$@ 설치 방법", provider.title)),
                     message: Text(installInstructions(for: provider)),
-                    dismissButton: .default(Text("확인"))
+                    dismissButton: .default(Text(DKLocalized("확인")))
                 )
             }
         }
@@ -125,7 +125,7 @@ struct FinalSettingsView: View {
     private var tabBar: some View {
         HStack {
             Spacer(minLength: 0)
-            Picker("설정 영역", selection: $tab) {
+            Picker(DKLocalized("설정 영역"), selection: $tab) {
                 ForEach(Tab.allCases) { tab in
                     Text(tab.title).tag(tab)
                 }
@@ -144,8 +144,8 @@ struct FinalSettingsView: View {
     private var generalSettings: some View {
         VStack(spacing: 0) {
             settingToggleRow(
-                title: "⌘C 두 번 자동 번역",
-                subtitle: app.shortcutEnabled ? "선택한 텍스트를 두 번 복사하면 번역합니다" : "자동 번역을 사용하지 않습니다",
+                title: DKLocalized("⌘C 두 번 자동 번역"),
+                subtitle: app.shortcutEnabled ? DKLocalized("선택한 텍스트를 두 번 복사하면 번역합니다") : DKLocalized("자동 번역을 사용하지 않습니다"),
                 isOn: Binding(
                     get: { app.shortcutEnabled },
                     set: { app.setShortcutEnabled($0) }
@@ -182,7 +182,7 @@ struct FinalSettingsView: View {
                     .frame(width: 7, height: 7)
 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("권한")
+                    Text(DKLocalized("권한"))
                         .foregroundStyle(Color(nsColor: .labelColor))
                 }
 
@@ -200,25 +200,25 @@ struct FinalSettingsView: View {
         .buttonStyle(.plain)
         .padding(.horizontal, 20)
         .frame(minHeight: 54)
-        .accessibilityLabel("권한 \(permissionSummary.title)")
+        .accessibilityLabel(DKFormat("권한 %1$@", permissionSummary.title))
     }
 
     var permissionPopover: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text("권한")
+            Text(DKLocalized("권한"))
                 .font(.system(size: 13, weight: .semibold))
                 .padding(.bottom, 8)
 
             permissionDetailRow(
-                title: "입력 모니터링",
-                subtitle: "⌘C 두 번 감지",
+                title: DKLocalized("입력 모니터링"),
+                subtitle: DKLocalized("⌘C 두 번 감지"),
                 state: inputMonitoringState,
                 settingsAction: inputMonitoringSettingsAction
             )
             Divider()
             permissionDetailRow(
-                title: "손쉬운 사용",
-                subtitle: "원래 위치에 번역 삽입",
+                title: DKLocalized("손쉬운 사용"),
+                subtitle: DKLocalized("원래 위치에 번역 삽입"),
                 state: accessibilityState,
                 settingsAction: accessibilitySettingsAction
             )
@@ -226,11 +226,11 @@ struct FinalSettingsView: View {
             if app.canReconnectShortcut {
                 Divider()
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("입력 감시 연결 안 됨")
+                    Text(DKLocalized("입력 감시 연결 안 됨"))
                         .font(.system(size: 11, weight: .medium))
                     HStack {
-                        Button("감시 다시 연결", action: app.reconnectShortcut)
-                        Button("앱 다시 열기…", action: app.confirmShortcutRelaunch)
+                        Button(DKLocalized("감시 다시 연결"), action: app.reconnectShortcut)
+                        Button(DKLocalized("앱 다시 열기…"), action: app.confirmShortcutRelaunch)
                     }
                     .controlSize(.small)
                 }
@@ -246,7 +246,7 @@ struct FinalSettingsView: View {
             }
 
             if !app.shortcutEnabled {
-                Text("자동 번역이 꺼져 있으면 입력 모니터링을 사용하지 않습니다.")
+                Text(DKLocalized("자동 번역이 꺼져 있으면 입력 모니터링을 사용하지 않습니다."))
                     .font(.system(size: 11))
                     .foregroundStyle(Color(nsColor: .secondaryLabelColor))
                     .padding(.top, 10)
@@ -287,7 +287,7 @@ struct FinalSettingsView: View {
                     .foregroundStyle(Color(nsColor: .secondaryLabelColor))
                 Spacer(minLength: 4)
                 if let settingsAction {
-                    Button("설정 열기…", action: settingsAction)
+                    Button(DKLocalized("설정 열기…"), action: settingsAction)
                         .font(.system(size: 11))
                         .buttonStyle(.link)
                 }
@@ -299,11 +299,11 @@ struct FinalSettingsView: View {
     private var windowSizeRow: some View {
         HStack(spacing: 10) {
             VStack(alignment: .leading, spacing: 2) {
-                Text("열릴 때 창 크기")
+                Text(DKLocalized("열릴 때 창 크기"))
                 HStack(spacing: 4) {
-                    Text("지금 창: \(app.windowPresentation.currentSizeLabel) ·")
+                    Text(DKFormat("지금 창: %1$@ ·", app.windowPresentation.currentSizeLabel))
                         .foregroundStyle(.secondary)
-                    Button("창 보기") { app.previewTranslationWindow() }
+                    Button(DKLocalized("창 보기")) { app.previewTranslationWindow() }
                         .buttonStyle(.plain).foregroundStyle(.secondary)
                 }.font(.system(size: 11)).lineLimit(1)
             }
@@ -322,10 +322,10 @@ struct FinalSettingsView: View {
                     }
                 }
                 Divider()
-                Text("다음에 창을 열 때부터 적용됩니다.")
+                Text(DKLocalized("다음에 창을 열 때부터 적용됩니다."))
                 Divider()
-                Text("지금 창: \(app.windowPresentation.currentSizeLabel)")
-                Button("창 보기") { app.previewTranslationWindow() }
+                Text(DKFormat("지금 창: %1$@", app.windowPresentation.currentSizeLabel))
+                Button(DKLocalized("창 보기")) { app.previewTranslationWindow() }
             } label: {
                 HStack(spacing: 4) {
                     Text(app.windowPresentation.openingPreference.displayName)
@@ -336,7 +336,7 @@ struct FinalSettingsView: View {
                 .contentShape(Rectangle())
             }
             .menuStyle(.borderlessButton)
-            .accessibilityLabel("열릴 때 창 크기 \(app.windowPresentation.openingPreference.displayName)")
+            .accessibilityLabel(DKFormat("열릴 때 창 크기 %1$@", app.windowPresentation.openingPreference.displayName))
         }
         .padding(.horizontal, 20)
         .frame(minHeight: 54)
@@ -345,10 +345,10 @@ struct FinalSettingsView: View {
     private var loginItemRow: some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack(spacing: 10) {
-                Text("로그인 시 자동 실행")
+                Text(DKLocalized("로그인 시 자동 실행"))
                 Spacer(minLength: 8)
                 Toggle(
-                    "로그인 시 자동 실행",
+                    DKLocalized("로그인 시 자동 실행"),
                     isOn: Binding(
                         get: { app.loginItemController.isRegistered },
                         set: { app.loginItemController.setEnabled($0) }
@@ -368,7 +368,7 @@ struct FinalSettingsView: View {
                     .lineLimit(2)
                 Spacer(minLength: 4)
                 if app.loginItemController.requiresApproval || app.loginItemController.error != nil {
-                    Button("설정 열기…") { app.openLoginItemSettings() }
+                    Button(DKLocalized("설정 열기…")) { app.openLoginItemSettings() }
                         .font(.system(size: 11))
                         .buttonStyle(.link)
                 }
@@ -381,39 +381,68 @@ struct FinalSettingsView: View {
 
     private var translationSettings: some View {
         VStack(alignment: .leading, spacing: 0) {
+            HStack {
+                Text(DKLocalized("기본 대상 언어"))
+                Spacer()
+                Picker(DKLocalized("기본 대상 언어"), selection: Binding(
+                    get: { app.store.followsSystemTarget ? "system" : app.store.defaultTarget.rawValue },
+                    set: {
+                        app.store.setDefaultTarget(TranslationLanguage(rawValue: $0))
+                        app.store.saveLanguageSettings(to: .standard)
+                    }
+                )) {
+                    Text(DKLocalized("시스템 언어 따르기")).tag("system")
+                    ForEach(TranslationLanguage.selectable, id: \.rawValue) { language in
+                        Text(language.title).tag(language.rawValue)
+                    }
+                }.labelsHidden().controlSize(.small).frame(maxWidth: 190)
+            }.padding(.horizontal, 20).frame(minHeight: 48)
+            Text(DKLocalized("원문이 기본 대상과 같으면 영어로 번역합니다. 영어끼리는 대상을 선택하세요."))
+                .font(.system(size: 11)).foregroundStyle(.secondary)
+                .padding(.horizontal, 20).padding(.bottom, 8)
+            Text(DKLocalized("대상 언어 설정은 텍스트 번역에 적용됩니다. 이미지 번역은 현재 한국어와 영어를 지원합니다."))
+                .font(.system(size: 11)).foregroundStyle(.secondary)
+                .padding(.horizontal, 20).padding(.bottom, 8)
+            Divider().padding(.horizontal, 20)
+
             ForEach(TranslationProvider.allCases) { provider in
                 providerRow(provider)
                 Divider().padding(.horizontal, 20)
             }
             HStack(spacing: 12) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("모델")
-                    Text("\(app.selectedProvider.title) 모델").font(.system(size: 11)).foregroundStyle(.secondary)
+                    Text(DKLocalized("모델"))
+                    Text(DKFormat("%1$@ 모델", app.selectedProvider.title)).font(.system(size: 11)).foregroundStyle(.secondary)
                 }
                 Spacer(minLength: 6)
-                Picker("번역 모델", selection: Binding(get: { app.selectedModel }, set: { app.changeModel($0) })) {
+                Picker(DKLocalized("번역 모델"), selection: Binding(get: { app.selectedModel }, set: { app.changeModel($0) })) {
                     let options = modelOptions(for: app.selectedProvider)
                     ForEach(options) { Text($0.displayName).tag($0.model) }
                     if !options.contains(where: { $0.model == app.selectedModel }) {
-                        Text(app.providerState(for: app.selectedProvider).isConnected ? "모델 선택 필요" : "연결 후 선택").tag(app.selectedModel)
+                        Text(app.providerState(for: app.selectedProvider).isConnected ? DKLocalized("모델 선택 필요") : DKLocalized("연결 후 선택")).tag(app.selectedModel)
                     }
                 }
                 .labelsHidden().controlSize(.small).frame(maxWidth: 166)
                 .disabled(!app.providerState(for: app.selectedProvider).isConnected)
-                .help("새 선택은 ‘다시 번역’ 또는 다음 원문부터 사용합니다.")
+                .help(DKLocalized("새 선택은 ‘다시 번역’ 또는 다음 원문부터 사용합니다."))
             }.padding(.horizontal, 20).frame(minHeight: 54)
             if app.selectedProvider == .codex {
                 Divider().padding(.horizontal, 20)
                 // 정확한 사용량 배수는 모델 카탈로그에 없으므로 숫자를 쓰지 않는다.
                 settingToggleRow(
-                    title: "Codex 빠른 응답(Fast)",
-                    subtitle: "더 빠른 생성 · 구독 사용량 증가",
+                    title: DKLocalized("Codex 빠른 응답(Fast)"),
+                    subtitle: DKLocalized("더 빠른 생성 · 구독 사용량 증가"),
                     isOn: Binding(
                         get: { app.codexFastServiceTier },
                         set: { app.setCodexFastServiceTier($0) }
                     )
                 )
-                .help("새 설정은 ‘다시 번역’ 또는 다음 원문부터 사용합니다.")
+                .help(DKLocalized("새 설정은 ‘다시 번역’ 또는 다음 원문부터 사용합니다."))
+            }
+            if app.selectedProvider == .claude {
+                Text(DKLocalized("Claude 텍스트 번역은 시간 상한 교정 시 구독 요청이 한 번 늘 수 있습니다."))
+                    .font(.system(size: 11)).foregroundStyle(.secondary)
+                    .padding(.horizontal, 20).padding(.vertical, 8)
             }
             Divider().padding(.horizontal, 20)
             copyFormatRow
@@ -423,7 +452,7 @@ struct FinalSettingsView: View {
     private var copyFormatRow: some View {
         HStack(spacing: 10) {
             VStack(alignment: .leading, spacing: 2) {
-                Text("복사 형식")
+                Text(DKLocalized("복사 형식"))
                 Text(app.copyFormat.detail).font(.system(size: 11)).foregroundStyle(.secondary)
             }
             Spacer(minLength: 8)
@@ -447,7 +476,7 @@ struct FinalSettingsView: View {
             }
             .menuStyle(.borderlessButton)
             .fixedSize()
-            .accessibilityLabel("복사 형식 \(app.copyFormat.title)")
+            .accessibilityLabel(DKFormat("복사 형식 %1$@", app.copyFormat.title))
         }
         .padding(.horizontal, 20)
         .frame(minHeight: 54)
@@ -466,7 +495,7 @@ struct FinalSettingsView: View {
                     .frame(width: 18)
             }
             .buttonStyle(.plain)
-            .accessibilityLabel("기본 제공자 \(provider.title)")
+            .accessibilityLabel(DKFormat("기본 제공자 %1$@", provider.title))
             .disabled(!state.isConnected)
 
             Button {
@@ -509,12 +538,12 @@ struct FinalSettingsView: View {
                 .frame(width: 20)
         } else if state.isConnected {
             Menu {
-                Button("deepK에서 연결 해제") {
+                Button(DKLocalized("deepK에서 연결 해제")) {
                     runProviderAction { await app.disconnectProvider(provider) }
                 }
                 if provider == .codex {
                     Divider()
-                    Button("Codex 로그아웃…", role: .destructive) {
+                    Button(DKLocalized("Codex 로그아웃…"), role: .destructive) {
                         confirmCodexLogout = true
                     }
                 }
@@ -526,16 +555,16 @@ struct FinalSettingsView: View {
             }
             .menuStyle(.borderlessButton)
             .menuIndicator(.hidden)
-            .accessibilityLabel("\(provider.title) 연결 관리")
+            .accessibilityLabel(DKFormat("%1$@ 연결 관리", provider.title))
         } else {
-            Button(providerPrimaryActionTitle(state)) {
+            Button(providerPrimaryActionTitle(state, provider: provider)) {
                 if case .cliMissing = state {
                     installInstructionsProvider = provider
                 } else {
                     runProviderAction {
                         switch state {
                         case .authenticationRequired:
-                            if state.message.contains("확인") {
+                            if app.providerAwaitingConfirmation.contains(provider) {
                                 await app.connectProvider(provider)
                             } else {
                                 await app.loginProvider(provider)
@@ -582,11 +611,11 @@ struct FinalSettingsView: View {
 
         var title: String {
             switch self {
-            case .ready: "준비됨"
-            case .needsPermission: "확인 필요"
-            case .needsConnection: "연결 확인 필요"
-            case .disabled: "감시 꺼짐"
-            case .unknown: "확인 필요"
+            case .ready: DKLocalized("준비됨")
+            case .needsPermission: DKLocalized("확인 필요")
+            case .needsConnection: DKLocalized("연결 확인 필요")
+            case .disabled: DKLocalized("감시 꺼짐")
+            case .unknown: DKLocalized("확인 필요")
             }
         }
 
@@ -607,10 +636,10 @@ struct FinalSettingsView: View {
 
         var title: String {
             switch self {
-            case .ready: "준비됨"
-            case .oneNeeded: "1개 연결 확인 필요"
-            case .twoNeeded: "2개 연결 확인 필요"
-            case .unknown: "감시 연결 확인 필요"
+            case .ready: DKLocalized("준비됨")
+            case .oneNeeded: DKLocalized("1개 연결 확인 필요")
+            case .twoNeeded: DKLocalized("2개 연결 확인 필요")
+            case .unknown: DKLocalized("감시 연결 확인 필요")
             }
         }
 
@@ -687,9 +716,9 @@ struct FinalSettingsView: View {
 
     /// 실제 경로(홈은 `~`)와 버전을 보여 준다. 검증한 버전보다 새로우면 함께 알린다.
     private func codexExecutableText(_ info: CodexTranslationClient.ExecutableInfo) -> String {
-        var parts = ["실행 파일: \(info.displayPath)"]
+        var parts = [DKFormat("실행 파일: %1$@", info.displayPath)]
         if let version = info.version { parts.append(version) }
-        if info.isNewerThanTested { parts.append("검증 범위보다 새 버전") }
+        if info.isNewerThanTested { parts.append(DKLocalized("검증 범위보다 새 버전")) }
         return parts.joined(separator: " · ")
     }
 
@@ -705,7 +734,7 @@ struct FinalSettingsView: View {
             지정 해제: defaults delete \(AppIdentity.bundleIdentifier) codexExecutablePath
             """
         case .claude:
-            "Claude Code를 설치하고 scripts/setup-claude.sh\(AppIdentity.bundleIdentifier == "com.deepk.app" ? " --installed" : "")로 앱 전용 CLI를 준비한 뒤 연결 확인을 눌러 주세요."
+            DKFormat("Claude Code를 설치하고 scripts/setup-claude.sh%1$@로 앱 전용 CLI를 준비한 뒤 연결 확인을 눌러 주세요.", AppIdentity.bundleIdentifier == "com.deepk.app" ? " --installed" : "")
         }
     }
 
@@ -715,12 +744,12 @@ struct FinalSettingsView: View {
 
     private func providerStatusText(_ state: ProviderState) -> String {
         switch state {
-        case .connected: "연결됨"
-        case .connecting: "연결 중…"
-        case .authenticationRequired: "로그인 필요"
-        case .cliMissing: "CLI 설치 필요"
-        case .notChecked: "확인 전"
-        case .failure: "연결 실패"
+        case .connected: DKLocalized("연결됨")
+        case .connecting: DKLocalized("연결 중…")
+        case .authenticationRequired: DKLocalized("로그인 필요")
+        case .cliMissing: DKLocalized("CLI 설치 필요")
+        case .notChecked: DKLocalized("확인 전")
+        case .failure: DKLocalized("연결 실패")
         }
     }
 
@@ -741,14 +770,14 @@ struct FinalSettingsView: View {
         }
     }
 
-    private func providerPrimaryActionTitle(_ state: ProviderState) -> String {
+    private func providerPrimaryActionTitle(_ state: ProviderState, provider: TranslationProvider) -> String {
         switch state {
         case .authenticationRequired:
-            state.message.contains("확인") ? "연결 확인" : "로그인…"
-        case .cliMissing: "설치 방법"
-        case .notChecked, .failure: "연결 확인"
-        case .connecting: "연결 중…"
-        case .connected: "관리"
+            app.providerAwaitingConfirmation.contains(provider) ? DKLocalized("연결 확인") : DKLocalized("로그인…")
+        case .cliMissing: DKLocalized("설치 방법")
+        case .notChecked, .failure: DKLocalized("연결 확인")
+        case .connecting: DKLocalized("연결 중…")
+        case .connected: DKLocalized("관리")
         }
     }
 
@@ -779,8 +808,8 @@ struct FinalSettingsView: View {
         switch (version?.isEmpty == false, build?.isEmpty == false) {
         case (true, true): return "\(AppIdentity.displayName) \(version!) (\(build!))"
         case (true, false): return "\(AppIdentity.displayName) \(version!)"
-        case (false, true): return "\(AppIdentity.displayName) 빌드 \(build!)"
-        default: return "\(AppIdentity.displayName) 개발 버전"
+        case (false, true): return DKFormat("%1$@ 빌드 %2$@", AppIdentity.displayName, build!)
+        default: return DKFormat("%1$@ 개발 버전", AppIdentity.displayName)
         }
     }
 }

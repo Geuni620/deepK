@@ -10,6 +10,6 @@ SOURCES=(TranslationMarkup ResultClipboard ResultStyle ResultDisplaySettings Cod
 if [[ -f "$SOURCE_ROOT/DeepK/Translation/TranslationLists.swift" ]]; then SOURCES+=(TranslationLists); fi
 SOURCE_PATHS=()
 for source_name in "${SOURCES[@]}"; do SOURCE_PATHS+=("$SOURCE_ROOT/DeepK/Translation/$source_name.swift"); done
-swiftc -swift-version 6 -warnings-as-errors -parse-as-library -module-cache-path "$BUILD_DIR/cache" \
+swiftc "$PROJECT_ROOT/DeepK/Localization.swift" -swift-version 6 -warnings-as-errors -parse-as-library -module-cache-path "$BUILD_DIR/cache" \
   "${SOURCE_PATHS[@]}" "$PROJECT_ROOT/DeepKTests/Fixtures/FormatLayoutPreview.swift" -o "$BUILD_DIR/preview"
 "$BUILD_DIR/preview" "$@"

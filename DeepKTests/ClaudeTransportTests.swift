@@ -6,6 +6,7 @@ private enum ClaudeTransportTests {
     typealias Transport = ClaudeTranslationClient.Configuration.Transport
 
     static func runAll() async {
+        await inventedDurationBoundsAreRevisedOnce()
         inlineMarkupOnlyExtendsThePrompt()
         inheritedEnvironmentKeepsOnlyLaunchValues()
         await connectVerifiesSubscriptionWithoutInference()
@@ -107,6 +108,33 @@ private enum ClaudeTransportTests {
         )
     }
 
+    private static func inventedDurationBoundsAreRevisedOnce() async {
+        let source = "更新には2分かかる場合があります。"
+        require(ClaudeTranslationClient.addsUnsupportedTimeBound(source: source, translation: "최대 2분이 걸릴 수 있습니다."), "an invented duration bound is detected")
+        require(!ClaudeTranslationClient.addsUnsupportedTimeBound(source: "最大2分です。", translation: "최대 2분입니다."), "an explicit source bound is retained")
+        require(!ClaudeTranslationClient.addsUnsupportedTimeBound(source: "5分以上かかることはありません。", translation: "최대 5분이 걸립니다."), "a bound expressed by source negation is not rewritten")
+        require(!ClaudeTranslationClient.addsUnsupportedTimeBound(source: "2分です。", translation: "최대 2분입니다."), "the narrow guard only claims to check explicit possible durations")
+        require(!ClaudeTranslationClient.addsUnsupportedTimeBound(source: "Show `2min`.", translation: "최대 2분"), "code is not duration prose")
+        require(!ClaudeTranslationClient.addsUnsupportedTimeBound(source: source, translation: "2분이 걸릴 수 있습니다."), "ordinary possibility is accepted")
+        for transport in [Transport.automatic, .oneShotJSON] {
+            for mode in ["duration-once", "duration-always"] {
+                let fixture = Fixture(name: "fidelity-" + mode + transport.rawValue)
+                let client = makeClient(mode: mode, fixture: fixture, transport: transport)
+                let partial = PartialProbe()
+                do {
+                    let result = try await client.translate(text: source, source: "ja", target: "ko", onPartialText: { partial.record($0) })
+                    require(mode == "duration-once" && result == "2분이 걸릴 수 있습니다.", "one revision returns the corrected translation")
+                    require(partial.snapshots.allSatisfy { !$0.contains("최대") }, "unsafe draft is never streamed")
+                } catch ClaudeTranslationClient.ClientError.unverifiedTimeBound {
+                    require(mode == "duration-always", "still-invalid revisions are rejected")
+                    require(partial.snapshots.isEmpty, "invalid text is not published as a partial result")
+                } catch { fail("duration fidelity fixture failed: \(error)") }
+                require(count(fixture.start, "translation") == 2, "the fidelity revision is bounded to one extra request")
+                await client.disconnect(); fixture.cleanup()
+            }
+        }
+    }
+
     private static func normalTranslationUsesSubscriptionSafeFlags(transport: Transport) async {
         let argsMarker = temporaryMarker(named: "args")
         let environmentMarker = temporaryMarker(named: "environment")
@@ -152,6 +180,10 @@ private enum ClaudeTransportTests {
             require(result == "안녕하세요", "normal print-mode output should be returned")
 
             let args = try readJSONObject(at: argsMarker)
+            let system = args["system_prompt"] as? String ?? ""
+            require(system.contains("every source clause") && system.contains("never omit the object of a prohibition")
+                    && system.contains("never add time upper bounds"),
+                    "both subscription transports must receive the omission, negation and modality fidelity instructions")
             require(args["tools"] as? String == "", "all built-in tools must be disabled")
             require(args["strict_mcp_config"] as? Bool == true, "MCP config must be strict")
             require(args["setting_sources"] as? String == "", "project and user settings must be excluded")
