@@ -75,7 +75,7 @@ struct TranslationSelection: Equatable, Sendable {
     let provider: TranslationProvider
     let model: String
 
-    var cacheContext: String { "\(provider == .claude ? "v4" : "v1")|\(provider.rawValue)|\(model)" }
+    var cacheContext: String { "\(provider == .claude ? "v5" : "v1")|\(provider.rawValue)|\(model)" }
 
     var label: String { "\(provider.title) · \(model)" }
 

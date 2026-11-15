@@ -112,11 +112,23 @@ private enum ClaudeTransportTests {
         let source = "更新には2分かかる場合があります。"
         require(ClaudeTranslationClient.addsUnsupportedTimeBound(source: source, translation: "최대 2분이 걸릴 수 있습니다."), "an invented duration bound is detected")
         require(!ClaudeTranslationClient.addsUnsupportedTimeBound(source: "最大2分です。", translation: "최대 2분입니다."), "an explicit source bound is retained")
+        require(!ClaudeTranslationClient.addsUnsupportedTimeBound(source: "It may take 2 minutes or less.", translation: "최대 2분이 걸릴 수 있습니다."), "an explicit English upper bound must be preserved")
+        require(!ClaudeTranslationClient.addsUnsupportedTimeBound(source: "It could take as long as 2 minutes.", translation: "최대 2분이 걸릴 수 있습니다."), "an English duration upper bound must be preserved")
+        require(ClaudeTranslationClient.addsUnsupportedTimeBound(source: "It may take 2 minutes as long as backups are kept.", translation: "백업을 보관하면 최대 2분이 걸릴 수 있습니다."), "a condition unrelated to duration is not a source time bound")
         require(!ClaudeTranslationClient.addsUnsupportedTimeBound(source: "5分以上かかることはありません。", translation: "최대 5분이 걸립니다."), "a bound expressed by source negation is not rewritten")
         require(!ClaudeTranslationClient.addsUnsupportedTimeBound(source: "2分です。", translation: "최대 2분입니다."), "the narrow guard only claims to check explicit possible durations")
         require(!ClaudeTranslationClient.addsUnsupportedTimeBound(source: "Show `2min`.", translation: "최대 2분"), "code is not duration prose")
         require(!ClaudeTranslationClient.addsUnsupportedTimeBound(source: source, translation: "2분이 걸릴 수 있습니다."), "ordinary possibility is accepted")
         for transport in [Transport.automatic, .oneShotJSON] {
+            let validFixture = Fixture(name: "valid-bound-" + transport.rawValue)
+            let validClient = makeClient(mode: "duration-always", fixture: validFixture, transport: transport)
+            do {
+                let result = try await validClient.translate(text: "It may take 2 minutes or less.", source: "en", target: "ko")
+                require(result == "최대 2분이 걸릴 수 있습니다.", "a faithful upper bound is returned unchanged")
+                require(await validClient.lastFidelityRevisionCount == 0 && count(validFixture.start, "translation") == 1,
+                        "a valid source bound must not spend an extra correction request")
+            } catch { fail("valid source bound was rejected: \(error)") }
+            await validClient.disconnect(); validFixture.cleanup()
             for mode in ["duration-once", "duration-always"] {
                 let fixture = Fixture(name: "fidelity-" + mode + transport.rawValue)
                 let client = makeClient(mode: mode, fixture: fixture, transport: transport)

@@ -1149,17 +1149,22 @@ public actor ClaudeTranslationClient {
         text.replacingOccurrences(of: "(?s)```.*?```|`[^`]*`|https?://\\S+", with: " ", options: .regularExpression)
     }
 
+    private static let timeDurationPattern = "[0-9０-９]+\\s*(?:minutes?|mins?|seconds?|secs?|hours?|분|초|시간|分鐘|分钟|分|秒|小時|小时|時間)"
+
     private static func hasTimeDuration(_ text: String) -> Bool {
-        semanticProse(text).range(of: "[0-9０-９]+\\s*(?:minutes?|mins?|seconds?|secs?|hours?|분|초|시간|分鐘|分钟|分|秒|小時|小时|時間)",
-                                   options: [.regularExpression, .caseInsensitive]) != nil
+        semanticProse(text).range(of: timeDurationPattern, options: [.regularExpression, .caseInsensitive]) != nil
     }
 
     static func addsUnsupportedTimeBound(source: String, translation: String) -> Bool {
         guard hasTimeDuration(source), hasTimeDuration(translation),
               semanticProse(source).range(of: "\\b(?:may|might|can|could|possibly)\\b|수 있|가능|場合|可能|ことがあります", options: [.regularExpression, .caseInsensitive]) != nil else { return false }
         let bound = "\\b(?:at most|up to|no more than|not more than|within|maximum|upper bound)\\b|최대|최장|이내|상한|最多|最大|最長|最迟|最遲|以内|以內|上限|不超過|不超过|長くても|かかっても|以上|以下|未満|超え|超過|超过|초과|이하|이상|미만|\\b(?:at least|no less than|minimum)\\b"
-        return semanticProse(source).range(of: bound, options: [.regularExpression, .caseInsensitive]) == nil
-            && semanticProse(translation).range(of: bound, options: [.regularExpression, .caseInsensitive]) != nil
+        // These English phrases denote a bound only when attached to a quantified duration.
+        // An unrelated condition such as "as long as backups are kept" must not disable the check.
+        let durationBound = "\\bas long as\\s+\(timeDurationPattern)|\(timeDurationPattern)\\.?\\s+or less\\b"
+        let explicitBound = bound + "|" + durationBound
+        return semanticProse(source).range(of: explicitBound, options: [.regularExpression, .caseInsensitive]) == nil
+            && semanticProse(translation).range(of: explicitBound, options: [.regularExpression, .caseInsensitive]) != nil
     }
 
     private func requestTranslation(prompt: String, model selectedModel: String, entry: ContinuousClock.Instant,
