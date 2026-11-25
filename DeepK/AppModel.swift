@@ -401,7 +401,6 @@ final class AppModel: NSObject, NSWindowDelegate {
             hintCodex()
             hintClaude(.capture)
             captureMessage = DKLocalized("복사한 텍스트를 확인하는 중…")
-            showWindow(activate: false, nearPointer: true)
         }
         monitor.onCopiedText = { [weak self] plain, html, sourcePID, uptime in
             guard let self else { return }
@@ -442,42 +441,12 @@ final class AppModel: NSObject, NSWindowDelegate {
             }
             requestStarted = uptime
             // Show the translation without deactivating the app the user is reading.
-            showWindow(activate: false)
+            showWindow(activate: false, nearPointer: true)
             store.invokeCopiedSource(source)
             if !store.engineReady { pendingCopy = (text, store.inputVersion) }
         }
         monitor.onFailure = { [weak self] failure in
-            guard let self else { return }
-            captureMessage = nil
-            #if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
-            if (failure == .clipboardNonText || failure == .clipboardTextEmpty),
-               NSWorkspace.shared.frontmostApplication?.processIdentifier == originalApplication?.processIdentifier,
-               ImagePOCIntegration.shared.paste() {
-                return
-            }
-            #endif
-            switch failure {
-            case .inputMonitoringPermissionRequired:
-                feedback = DKLocalized("현재 앱의 키 입력 감시가 연결되지 않았습니다. 이미 허용했다면 앱을 다시 열어 주세요")
-                shortcutFailureFeedback = feedback
-                shortcutMessage = DKLocalized("단축키 감시 연결 안 됨")
-            case .clipboardTextUnavailable, .clipboardNotUpdated, .clipboardTextEmpty, .clipboardNonText, .clipboardConcealed:
-                pendingCopy = nil
-                store.editSource("", isComposing: false)
-                switch failure {
-                case .clipboardNotUpdated: feedback = DKLocalized("복사한 내용이 갱신되지 않았습니다. 텍스트를 선택해 다시 복사해 주세요")
-                case .clipboardTextEmpty: feedback = DKLocalized("복사한 텍스트가 비어 있습니다. 번역할 문장을 선택해 주세요")
-                case .clipboardNonText: feedback = DKLocalized("이미지·파일은 번역하지 않습니다. 텍스트를 선택해 주세요")
-                case .clipboardConcealed: feedback = DKLocalized("비밀번호 등 민감한 항목으로 표시된 복사는 번역하지 않습니다")
-                default: feedback = DKLocalized("이번에 복사한 텍스트를 확인할 수 없습니다")
-                }
-                showWindow()
-            default:
-                feedback = DKLocalized("단축키를 시작하지 못했습니다. 설정에서 다시 시도해 주세요")
-                shortcutFailureFeedback = feedback
-                shortcutMessage = DKLocalized("단축키 감시 시작 실패")
-            }
-            updateShortcutMenu()
+            self?.handleShortcutFailure(failure)
         }
         restartShortcut()
         activationObserver = NotificationCenter.default.addObserver(
@@ -506,6 +475,39 @@ final class AppModel: NSObject, NSWindowDelegate {
             #endif
         }
         Task { await connect() }
+    }
+
+    func handleShortcutFailure(_ failure: DoubleCopyMonitor.Failure) {
+        captureMessage = nil
+        #if DEEPK_IMAGE_TRANSLATION || DEEPK_IMAGE_TRANSLATION_POC
+        if (failure == .clipboardNonText || failure == .clipboardTextEmpty),
+           let originalApplication,
+           NSWorkspace.shared.frontmostApplication?.processIdentifier == originalApplication.processIdentifier,
+           ImagePOCIntegration.shared.paste() {
+            return
+        }
+        #endif
+        switch failure {
+        case .inputMonitoringPermissionRequired:
+            feedback = DKLocalized("현재 앱의 키 입력 감시가 연결되지 않았습니다. 이미 허용했다면 앱을 다시 열어 주세요")
+            shortcutFailureFeedback = feedback
+            shortcutMessage = DKLocalized("단축키 감시 연결 안 됨")
+        case .clipboardTextUnavailable, .clipboardNotUpdated, .clipboardTextEmpty, .clipboardNonText, .clipboardConcealed:
+            pendingCopy = nil
+            store.editSource("", isComposing: false)
+            switch failure {
+            case .clipboardNotUpdated: feedback = DKLocalized("복사한 내용이 갱신되지 않았습니다. 텍스트를 선택해 다시 복사해 주세요")
+            case .clipboardTextEmpty: feedback = DKLocalized("복사한 텍스트가 비어 있습니다. 번역할 문장을 선택해 주세요")
+            case .clipboardNonText: feedback = DKLocalized("이미지·파일은 번역하지 않습니다. 텍스트를 선택해 주세요")
+            case .clipboardConcealed: feedback = DKLocalized("비밀번호 등 민감한 항목으로 표시된 복사는 번역하지 않습니다")
+            default: feedback = DKLocalized("이번에 복사한 텍스트를 확인할 수 없습니다")
+            }
+        default:
+            feedback = DKLocalized("단축키를 시작하지 못했습니다. 설정에서 다시 시도해 주세요")
+            shortcutFailureFeedback = feedback
+            shortcutMessage = DKLocalized("단축키 감시 시작 실패")
+        }
+        updateShortcutMenu()
     }
 
     private func beginProviderOperation(_ provider: TranslationProvider) -> UInt64 {
@@ -1478,6 +1480,8 @@ final class AppModel: NSObject, NSWindowDelegate {
     }
 
     func showWindow(activate: Bool = true, nearPointer: Bool = false, preview: Bool = false) {
+        // A background shortcut may update a minimized window without restoring it.
+        if !activate && window?.isMiniaturized == true { return }
         let wasVisible = window?.isVisible == true
         if window == nil {
             let panel = TranslationPanel(
@@ -1487,9 +1491,6 @@ final class AppModel: NSObject, NSWindowDelegate {
             panel.title = AppIdentity.displayName
             panel.minSize = WindowPresentation.smallSize
             panel.appearance = NSAppearance(named: .aqua)
-            panel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
-            panel.level = .normal
-            panel.hidesOnDeactivate = false
             // Link tooltips show while the reader's app stays in front.
             panel.allowsToolTipsWhenApplicationIsInactive = true
             panel.contentView = NSHostingView(rootView: TranslationView().preferredColorScheme(.light))
@@ -1501,7 +1502,6 @@ final class AppModel: NSObject, NSWindowDelegate {
             hintCodex()
             hintClaude(.windowShown)
         }
-        if window?.isMiniaturized == true { window?.deminiaturize(nil) }
         if nearPointer, let window {
             let pointer = NSEvent.mouseLocation
             let screen = NSScreen.screens.first { $0.frame.contains(pointer) } ?? NSScreen.main
@@ -1514,6 +1514,7 @@ final class AppModel: NSObject, NSWindowDelegate {
         }
         if activate {
             NSApp.unhide(nil)
+            if window?.isMiniaturized == true { window?.deminiaturize(nil) }
             window?.makeKeyAndOrderFront(nil)
             NSApp.activate(ignoringOtherApps: true)
         } else {
