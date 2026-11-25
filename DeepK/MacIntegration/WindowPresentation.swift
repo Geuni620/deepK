@@ -208,7 +208,7 @@ final class WindowPresentation {
         let visibleFrame = window.screen?.visibleFrame
             ?? NSScreen.main?.visibleFrame
         let target = visibleFrame.map { Self.clampedFrame(proposed, within: $0) } ?? proposed
-        window.setFrame(target, display: true, animate: !reduceMotion())
+        window.setFrame(target, display: true, animate: window.isVisible && !reduceMotion())
         recordSize(target.size, frame: target)
     }
 
@@ -252,5 +252,12 @@ final class WindowPresentation {
 // An ordinary window activates on click and participates in normal window ordering.
 // Unlike an auxiliary panel, it remains visible when another app becomes active.
 final class TranslationPanel: NSWindow {
+    override init(contentRect: NSRect, styleMask style: NSWindow.StyleMask, backing: NSWindow.BackingStoreType, defer flag: Bool) {
+        super.init(contentRect: contentRect, styleMask: style, backing: backing, defer: flag)
+        collectionBehavior = [.moveToActiveSpace, .fullScreenNone]
+        level = .normal
+        hidesOnDeactivate = false
+    }
+
     override func animationResizeTime(_ newFrame: NSRect) -> TimeInterval { 0.25 }
 }

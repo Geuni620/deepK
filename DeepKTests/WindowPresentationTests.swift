@@ -11,11 +11,40 @@ struct WindowPresentationTests {
                      "translation uses normal ordering and remains visible when inactive")
         precondition(window.canBecomeKey && !window.styleMask.contains(.nonactivatingPanel),
                      "clicking translation must allow keyboard focus and app activation")
+        precondition(window.collectionBehavior == [.moveToActiveSpace, .fullScreenNone],
+                     "translation belongs to one Space and must not accompany full-screen windows")
+        testOpeningResizeDoesNotAnimate()
         testDefaultPolicyAndPersistence()
         testManualResizeAndPreviewPolicy()
         testToggleAndLayoutThreshold()
         testClampingRetainsTopLeft()
         print("Window presentation policy and geometry checks passed")
+    }
+
+    private final class ResizeRecordingWindow: NSWindow {
+        var resizeAnimationFlags: [Bool] = []
+
+        override func setFrame(_ frameRect: NSRect, display flag: Bool, animate animateFlag: Bool) {
+            resizeAnimationFlags.append(animateFlag)
+            super.setFrame(frameRect, display: flag, animate: animateFlag)
+        }
+    }
+
+    @MainActor
+    private static func testOpeningResizeDoesNotAnimate() {
+        let suite = "deepK.window-presentation-tests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suite)!
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let window = ResizeRecordingWindow(
+            contentRect: NSRect(origin: .zero, size: WindowPresentation.smallSize),
+            styleMask: [.titled], backing: .buffered, defer: true
+        )
+        precondition(!window.isVisible)
+        let presentation = WindowPresentation(defaults: defaults, reduceMotion: { false })
+        presentation.attach(window)
+        presentation.setPreset(.large)
+        presentation.applyOnOpen()
+        precondition(window.resizeAnimationFlags == [false], "resize completes before a hidden window is ordered forward")
     }
 
     @MainActor

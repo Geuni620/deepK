@@ -56,6 +56,7 @@ struct PermissionPresentationTests {
         settingsWindowSizes(app)
         settingsHostLeavesTheSizeToTheWindow()
         footerReadsTheModel(app)
+        shortcutFailureLeavesWindowHidden()
         briefFeedbackClearsItself(app)
         copyIsConfirmedOnThePill(app)
         newRequestClearsOldFeedback(app)
@@ -64,6 +65,22 @@ struct PermissionPresentationTests {
         hoverIsTrackedWhileInactive()
         resultTextIsParsedOncePerResult()
         print("Permission presentation, disabled shortcut and footer checks passed")
+    }
+
+    @MainActor private static func shortcutFailureLeavesWindowHidden() {
+        let app = AppModel()
+        let openWindows = NSApp.windows.filter(\.isVisible)
+        let wasActive = NSApp.isActive
+        let failures: [DoubleCopyMonitor.Failure] = [
+            .clipboardTextUnavailable, .clipboardNotUpdated, .clipboardTextEmpty, .clipboardNonText, .clipboardConcealed
+        ]
+        for failure in failures {
+            app.captureMessage = "복사한 텍스트를 확인하는 중…"
+            app.handleShortcutFailure(failure)
+            precondition(app.captureMessage == nil && !app.feedback.isEmpty, "capture failure still reports feedback")
+            precondition(NSApp.windows.filter(\.isVisible) == openWindows, "capture failure must not show a window")
+            precondition(NSApp.isActive == wasActive, "capture failure must not activate deepK")
+        }
     }
 
     @MainActor private static func shortcutRecoveryUsesActualReadiness(_ app: AppModel) {
